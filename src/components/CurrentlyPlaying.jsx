@@ -66,10 +66,23 @@ const CurrentlyPlaying = () => {
       setIsLiked(false);
     }, 30000);
     return () => clearInterval(interval);
+  }, [currentIndex]); // reset interval if user manually skips
+
+  const togglePlay = useCallback((e) => {
+    e.stopPropagation();
+    setIsPlaying(prev => !prev);
   }, []);
 
-  const togglePlay = useCallback(() => {
-    setIsPlaying(prev => !prev);
+  const nextSong = useCallback((e) => {
+    e.stopPropagation();
+    setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
+    setIsLiked(false);
+  }, []);
+
+  const prevSong = useCallback((e) => {
+    e.stopPropagation();
+    setCurrentIndex(prev => (prev - 1 + PLAYLIST.length) % PLAYLIST.length);
+    setIsLiked(false);
   }, []);
 
   const adjustVolume = useCallback((delta) => {
@@ -150,17 +163,39 @@ const CurrentlyPlaying = () => {
           boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 20px ${song.color}10`,
         }}
       >
-        {/* Play/Pause */}
-        <button
-          onClick={togglePlay}
-          className="flex-shrink-0 w-10 h-10 flex items-center justify-center text-gold hover:text-gold-light transition-colors rounded-full ml-1"
-        >
-          {isPlaying ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '2px' }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          )}
-        </button>
+        {/* Playback Controls Container */}
+        <div className="flex items-center gap-1 pl-3 pr-1">
+          {/* Previous Button */}
+          <button
+            onClick={prevSong}
+            className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-paper4 hover:text-gold transition-colors rounded-full"
+            title="Previous track"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" strokeWidth="2"></line></svg>
+          </button>
+
+          {/* Play/Pause Button */}
+          <button
+            onClick={togglePlay}
+            className="flex-shrink-0 w-8 h-8 flex items-center justify-center text-gold hover:text-gold-light transition-colors rounded-full"
+            title={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? (
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            ) : (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '2px' }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            )}
+          </button>
+
+          {/* Next Button */}
+          <button
+            onClick={nextSong}
+            className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-paper4 hover:text-gold transition-colors rounded-full"
+            title="Next track"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" strokeWidth="2"></line></svg>
+          </button>
+        </div>
 
         {/* Vinyl + Waveform */}
         <div className="flex items-center gap-2 pr-1">
