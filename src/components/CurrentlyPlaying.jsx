@@ -92,23 +92,22 @@ const CurrentlyPlaying = () => {
       transition={{ duration: 0.6 }}
       className="fixed bottom-6 left-4 sm:left-6 z-[60] pointer-events-auto"
     >
-      {/* Hidden Audio Player - Needs to be rendered in DOM off-screen, not display:none */}
-      <div style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', opacity: 0 }}>
-        <ReactPlayer
-          url="https://www.youtube.com/watch?v=5qap5aO4i9A" // Lofi hip hop mix (static video, more stable than livestream)
-          playing={isPlaying}
-          volume={volume}
-          width="1px"
-          height="1px"
-          loop
-          config={{
-            youtube: {
-              playerVars: { autoplay: 0, controls: 0 }
+      {/* Hidden Native Audio Player - Guaranteed to work across adblockers and mobile browsers */}
+      <audio
+        ref={(audioEl) => {
+          if (audioEl) {
+            audioEl.volume = volume;
+            if (isPlaying) {
+              audioEl.play().catch(e => console.error("Audio block:", e));
+            } else {
+              audioEl.pause();
             }
-          }}
-          onError={(e) => console.error("Audio playback error:", e)}
-        />
-      </div>
+          }
+        }}
+        src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"
+        loop
+        crossOrigin="anonymous"
+      />
 
       {/* Tooltip on hover */}
       <AnimatePresence>
