@@ -1,0 +1,399 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base */
+    --ink:          #09080f;
+    --ink2:         #110e1a;
+    --ink3:         #1a1626;
+    --ink4:         #221d30;
+
+    /* Gold — Asmeret's power color */
+    --gold:         #c4913a;
+    --gold-light:   #e8c47a;
+    --gold-pale:    rgba(196,145,58,0.09);
+    --gold-border:  rgba(196,145,58,0.2);
+    --gold-glow:    rgba(196,145,58,0.12);
+
+    /* Rose — Luna's color, feminine warmth */
+    --rose:         #c4856a;
+    --rose-light:   #d4a088;
+    --rose-pale:    rgba(196,133,106,0.09);
+    --rose-border:  rgba(196,133,106,0.22);
+
+    /* Teal — achievement, growth */
+    --teal:         #1a6b5a;
+    --teal-light:   #2d9a82;
+    --teal-pale:    rgba(45,154,130,0.09);
+
+    /* Lavender — soft girly accent */
+    --lavender:     #9b89c4;
+    --lavender-pale: rgba(155,137,196,0.09);
+
+    /* Text */
+    --paper:        #f5efe2;
+    --paper2:       rgba(245,239,226,0.65);
+    --paper3:       rgba(245,239,226,0.35);
+    --paper4:       rgba(245,239,226,0.18);
+
+    /* Borders (aliases) */
+    --border:       rgba(196,145,58,0.2);
+    --border-hover: rgba(196,145,58,0.5);
+
+    /* Typography */
+    --font-display: 'Cormorant Garamond', serif;
+    --font-ui:      'Syne', sans-serif;
+    --font-mono:    'DM Mono', monospace;
+    --r:            6px;
+  }
+
+  .light {
+    --ink:         #f9f7f1;
+    --ink2:        #eeeada;
+    --ink3:        #e3dfce;
+    --ink4:        #d8d4c3;
+    --paper:       #111625;
+    --paper2:      rgba(17,22,37,0.7);
+    --paper3:      rgba(17,22,37,0.45);
+    --paper4:      rgba(17,22,37,0.22);
+    --gold:        #b88229;
+    --gold-light:  #c4913a;
+    --gold-pale:   rgba(184,130,41,0.15);
+    --gold-border: rgba(184,130,41,0.3);
+    --gold-glow:   rgba(184,130,41,0.15);
+    --rose:        #b07050;
+    --rose-light:  #c4856a;
+    --rose-pale:   rgba(176,112,80,0.12);
+    --rose-border: rgba(176,112,80,0.25);
+    --teal:        #124d40;
+    --teal-light:  #1a6b5a;
+    --teal-pale:   rgba(18,77,64,0.1);
+    --lavender:    #7b69a4;
+    --lavender-pale: rgba(123,105,164,0.12);
+    --border:      rgba(184,130,41,0.3);
+    --border-hover:rgba(184,130,41,0.6);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-ui);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+}
+
+/* ── Selection color ── */
+::selection {
+  background: rgba(196,145,58,0.3);
+  color: var(--paper);
+}
+
+/* ── Focus rings ── */
+:focus-visible {
+  outline: 1.5px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Links default ── */
+a { cursor: none; }
+
+/* ── Smooth image loading ── */
+img {
+  transition: filter 0.5s ease, opacity 0.3s ease;
+}
+
+/* ── Section background alternation ── */
+.section-light { background: var(--ink2); }
+.section-dark  { background: var(--ink);  }
+
+/* ── Glass card ── */
+.glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--gold-border);
+  border-radius: 12px;
+}
+
+/* ══════════════════════════════════════════
+   BUTTON SYSTEM
+   ══════════════════════════════════════════ */
+
+/* ── Gold shimmer button ── */
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.85rem 2.2rem;
+  border-radius: 100px;
+  border: none;
+  cursor: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
+  transition: left 0.55s ease;
+}
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,145,58,0.28); }
+.btn-gold:hover::after { left: 150%; }
+.btn-gold:active { transform: translateY(0); }
+
+/* ── Ghost button ── */
+.btn-ghost {
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.85rem 2.2rem;
+  border-radius: 4px;
+  border: 1px solid rgba(245,239,226,0.22);
+  cursor: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+.btn-ghost:hover {
+  border-color: var(--gold);
+  color: var(--gold-light);
+  transform: translateY(-2px);
+  background: var(--gold-pale);
+}
+
+/* ── Rose button (Luna only) ── */
+.btn-rose {
+  background: var(--rose);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.85rem 2.2rem;
+  border-radius: 100px;
+  border: none;
+  cursor: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+.btn-rose:hover { background: var(--rose-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,133,106,0.28); }
+
+/* ── Text button ── */
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: none;
+  padding: 0.4rem 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s, gap 0.2s;
+}
+.btn-text:hover { color: var(--gold-light); gap: 0.65rem; }
+
+/* ── Legacy shimmer (keep for backward compat) ── */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.55s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+.btn-primary:hover::before {
+  transform: translateX(150%);
+}
+.btn-primary > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Divider ornament ── */
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.75rem 3rem;
+}
+.ornament::before, .ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(196,145,58,0.25), transparent);
+}
+
+/* ══════════════════════════════════════════
+   COMPONENT STYLES
+   ══════════════════════════════════════════ */
+
+/* ── Skill Item Hover Italic ── */
+.skill-item {
+  transition: all 0.2s ease;
+}
+.skill-item:hover {
+  font-style: italic;
+  transform: skewX(-3deg);
+  color: var(--gold-light);
+}
+
+/* ── Bounce-gentle for Scroll Indicator ── */
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ── Waveform bars ── */
+@keyframes waveform-1 { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+@keyframes waveform-2 { 0%, 100% { height: 8px; } 50% { height: 18px; } }
+@keyframes waveform-3 { 0%, 100% { height: 6px; } 50% { height: 16px; } }
+@keyframes waveform-4 { 0%, 100% { height: 10px; } 50% { height: 12px; } }
+
+.waveform-bar {
+  width: 2px;
+  background: var(--gold);
+  border-radius: 1px;
+  display: inline-block;
+}
+.waveform-bar:nth-child(1) { animation: waveform-1 1.2s ease-in-out infinite; }
+.waveform-bar:nth-child(2) { animation: waveform-2 1.2s ease-in-out infinite 0.15s; }
+.waveform-bar:nth-child(3) { animation: waveform-3 1.2s ease-in-out infinite 0.3s; }
+.waveform-bar:nth-child(4) { animation: waveform-4 1.2s ease-in-out infinite 0.45s; }
+
+/* ── Vinyl Spin ── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.vinyl-spin {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* ── Section Ornament Dividers ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  gap: 12px;
+  width: 100%;
+  padding: 0 24px;
+}
+.section-divider .divider-line {
+  flex: 1;
+  max-width: 200px;
+  height: 1px;
+  background: rgba(196,145,58,0.2);
+}
+.section-divider .divider-star {
+  font-family: var(--font-display);
+  color: var(--gold);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ── Photo Blob Frame ── */
+.blob-frame-wrapper {
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  transition: clip-path 0.6s ease;
+}
+.blob-frame-wrapper:hover {
+  clip-path: polygon(50% 0%, 85% 5%, 100% 50%, 95% 85%, 50% 100%, 15% 95%, 0% 50%, 5% 15%);
+}
+
+/* ── Heartbeat pulse animation ── */
+@keyframes heartbeat-pulse {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* ── Mobile Projects Horizontal Scroll ── */
+@media (max-width: 768px) {
+  .projects-mobile-scroll {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding-bottom: 16px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .projects-mobile-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .projects-mobile-scroll > * {
+    min-width: 80vw;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+
+/* ── Nav Logo Squiggly Underline ── */
+@keyframes squiggle-draw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Currently strip marquee ── */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── Luna chat dot texture ── */
+.luna-chat-dots {
+  background-image: radial-gradient(circle, rgba(196,133,106,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Song crossfade ── */
+@keyframes song-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.song-fade-enter {
+  animation: song-fade-in 0.4s ease forwards;
+}
