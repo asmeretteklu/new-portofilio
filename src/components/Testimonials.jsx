@@ -23,7 +23,7 @@ const Testimonials = () => {
           <div className="text-center">
             <span className="font-mono text-xs uppercase tracking-widest text-gold mb-4 block">// ENDORSEMENTS</span>
             <h2 className="font-display text-4xl md:text-5xl text-paper">
-              What her <span className="italic text-gold">professors say</span> ✦
+              What my <span className="italic text-gold">professors say</span> ✦
             </h2>
             <p className="font-display text-lg text-paper2 mt-4 max-w-xl mx-auto italic">
               Three letters. Three supervisors. All writing without reservation.

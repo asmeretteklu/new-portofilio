@@ -15,8 +15,6 @@ export const person = {
 export const stats = [
   { id: 'apps', value: '4', label: 'Production Apps', sub: 'Deployed' },
   { id: 'users', value: '500+', label: 'Real people using it', sub: 'Served' },
-  { id: 'sales', value: '$15k', label: 'Artisan Sales', sub: 'Facilitated' },
-  { id: 'gpa', value: '3.74', label: 'GPA', sub: 'Great Distinction' },
 ]
 
 export const projects = [
@@ -49,8 +47,8 @@ export const projects = [
     status: 'live',
     statusLabel: 'Live',
     featured: false,
-    description: 'MERN multi-vendor e-commerce for Ethiopian artisans. Chapa payment gateway, 50+ artisans onboarded, $15,000+ in sales facilitated.',
-    metrics: [{ value: '50+', label: 'Artisans' }, { value: '$15k', label: 'Sales' }],
+    description: 'MERN multi-vendor e-commerce for Ethiopian artisans. Chapa payment gateway, 50+ artisans onboarded.',
+    metrics: [{ value: '50+', label: 'Artisans' }],
     tags: ['MongoDB', 'Express', 'React', 'Node.js', 'Chapa'],
   },
   {
@@ -125,10 +123,10 @@ FACTS ABOUT ASMERET:
 - Full name: Asmeret Teklu Gebremedhin
 - From: Mekelle, Tigray, Ethiopia
 - Role: Full-Stack Developer and AI Enthusiast
-- Education: BSc Software Engineering, Microlink IT College, 2025. GPA 3.74/4.0, Great Distinction, top of cohort.
+- Education: BSc Software Engineering, Microlink IT College, 2025. Great Distinction, top of cohort.
 - She built apps through conflict, power cuts, and curfews in Tigray. Resilience is her superpower.
 - Flagship project in development: Luna AI — a menstrual cycle intelligence app for Ethiopian and African women using React Native, Supabase, and Gemini API.
-- Other projects: Keno Management Platform (5 role interfaces, live in production), EthioMarket (MERN, $15k+ artisan sales), Student Registration System (7 days → 5 minutes), MoodNotes (TensorFlow.js 85% accuracy), CodeCollab (WebRTC+Socket.io), Unfooler Tracker (ML bot detection).
+- Other projects: Keno Management Platform (5 role interfaces, live in production), EthioMarket (MERN, 50+ artisans), Student Registration System (7 days → 5 minutes), MoodNotes (TensorFlow.js 85% accuracy), CodeCollab (WebRTC+Socket.io), Unfooler Tracker (ML bot detection).
 - Skills: React, React Native, Node.js, TypeScript, Python, TensorFlow.js, Gemini API, Supabase, MySQL, MongoDB, Socket.io, WebRTC, Tailwind, Framer Motion, Linux, Git.
 - Contact: asmeretteklu03@gmail.com | github.com/asmeretteklu | linkedin.com/in/asmeretteklu
 - Research interests: AI for social good, women's health technology, HCI, culturally-adaptive software systems.

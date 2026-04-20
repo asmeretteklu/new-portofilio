@@ -57,7 +57,6 @@ const About = () => {
                   <span className="text-gold text-xs">↗</span>
                 </p>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="px-3 py-1 bg-teal-light/10 text-teal-light font-mono text-xs rounded border border-teal-light/20">GPA: 3.74/4.0</span>
                   <span className="text-sm text-gold italic font-display">Great Distinction</span>
                 </div>
               </div>

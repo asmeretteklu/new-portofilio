@@ -148,10 +148,19 @@ const ChatPanel = ({ isOpen, onClose }) => {
             transition={{ duration: 0.3, type: 'spring', damping: 25, stiffness: 200 }}
             className={`fixed z-50 flex flex-col overflow-hidden shadow-2xl origin-bottom-right
               sm:bottom-24 sm:right-12 sm:w-[360px] sm:h-[480px] sm:rounded-2xl sm:border sm:border-border/60
-              max-sm:inset-0 max-sm:rounded-none max-sm:border-0`}
+              max-sm:inset-0 max-sm:rounded-none max-sm:border-0 text-paper`}
             style={{
               background: 'rgba(17,14,26,0.96)',
               backdropFilter: 'blur(20px)',
+              '--ink': '#09080f',
+              '--ink2': '#110e1a',
+              '--ink3': '#1a1626',
+              '--paper': '#f5efe2',
+              '--paper2': 'rgba(245,239,226,0.65)',
+              '--paper3': 'rgba(245,239,226,0.35)',
+              '--gold': '#c4913a',
+              '--rose': '#c4856a',
+              '--border': 'rgba(196,145,58,0.2)',
             }}
           >
             {/* Header */}
