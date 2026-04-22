@@ -17,16 +17,16 @@ const ScrollIndicator = () => {
       style={{ opacity: visible ? 1 : 0 }}
     >
       <span
-        className="font-mono uppercase tracking-[0.25em]"
-        style={{ fontSize: '0.58rem', color: 'var(--gold)', opacity: 0.6 }}
+        className="font-body uppercase tracking-[0.25em]"
+        style={{ fontSize: '0.58rem', color: 'var(--muted)', opacity: 0.6 }}
       >
         scroll to explore
       </span>
       <span
-        className="text-gold"
         style={{
           fontSize: '1rem',
           opacity: 0.5,
+          color: 'var(--blush-mid)',
           animation: 'bounce-gentle 1.5s ease-in-out infinite',
         }}
       >

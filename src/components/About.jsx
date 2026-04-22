@@ -1,36 +1,31 @@
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { academicTimeline } from '../data/portfolio';
-import CrescentDecoration from './CrescentDecoration';
 
 const About = () => {
   const { ref, controls, variants } = useScrollReveal();
 
   return (
-    <section id="about" className="py-32 bg-ink2 border-t border-border/30 relative overflow-hidden">
-      {/* Crescent moon decoration */}
-      <CrescentDecoration section="about" />
-
+    <section id="about" className="py-24 relative overflow-hidden">
       <div className="max-w-4xl mx-auto px-6 lg:px-12">
         <motion.div 
           ref={ref}
           initial="hidden"
           animate={controls}
           variants={variants}
-          className="flex flex-col gap-12"
+          className="flex flex-col gap-10"
         >
           <div>
-            <span className="font-mono text-xs uppercase tracking-widest text-gold mb-4 block">// MY STORY</span>
-            <h2 className="font-display text-5xl md:text-6xl text-paper mb-8">
-              A builder from <span className="italic text-gold">Tigray</span>
+            <div className="section-label mb-4">My Story</div>
+            <h2 className="font-display text-4xl md:text-5xl mb-8" style={{ color: 'var(--text)' }}>
+              A builder from <span className="italic" style={{ color: 'var(--blush-mid)' }}>Tigray</span>
             </h2>
             
-            <div className="space-y-6 font-display text-xl md:text-2xl text-paper2 leading-relaxed">
-              {/* Large decorative quote mark */}
+            <div className="space-y-5 font-display text-xl md:text-2xl leading-relaxed" style={{ color: 'var(--text-mid)' }}>
               <div className="relative">
                 <span
-                  className="absolute -top-4 -left-2 font-display text-gold pointer-events-none select-none"
-                  style={{ fontSize: '9rem', opacity: 0.15, lineHeight: 1 }}
+                  className="absolute -top-4 -left-2 font-display pointer-events-none select-none"
+                  style={{ fontSize: '7rem', opacity: 0.08, lineHeight: 1, color: 'var(--blush-mid)' }}
                 >
                   "
                 </span>
@@ -47,57 +42,57 @@ const About = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-border/20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10" style={{ borderTop: '0.5px solid var(--taupe)' }}>
             <div>
-              <h3 className="font-mono text-sm uppercase tracking-widest text-gold mb-6 border-b border-border/30 pb-2">Education</h3>
+              <div className="section-label mb-5">Education</div>
               <div className="flex flex-col gap-2">
-                <h4 className="font-ui text-lg text-paper">BSc, Software Engineering</h4>
-                <p className="font-display text-paper2 flex items-center gap-1">
+                <h4 className="font-body text-lg" style={{ color: 'var(--text)', fontWeight: 500 }}>BSc, Software Engineering</h4>
+                <p className="font-display flex items-center gap-1" style={{ color: 'var(--text-mid)' }}>
                   Microlink IT College, Mekelle
-                  <span className="text-gold text-xs">↗</span>
+                  <span style={{ color: 'var(--blush-mid)', fontSize: '0.75rem' }}>↗</span>
                 </p>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="text-sm text-gold italic font-display">Great Distinction</span>
+                  <span className="font-display italic" style={{ fontSize: '0.9rem', color: 'var(--blush-mid)' }}>Great Distinction</span>
                 </div>
               </div>
-
-              {/* Human detail note */}
-              <p className="font-display italic text-paper3 mt-6" style={{ fontSize: '0.9rem' }}>
+              <p className="font-display italic mt-5" style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
                 est. August 2025 · Mekelle, Ethiopia ✦
               </p>
             </div>
             
             <div>
-              <h3 className="font-mono text-sm uppercase tracking-widest text-gold mb-6 border-b border-border/30 pb-2">Languages</h3>
-              <ul className="flex flex-col gap-4 font-ui text-paper2">
+              <div className="section-label mb-5">Languages</div>
+              <ul className="flex flex-col gap-3 font-body" style={{ color: 'var(--text-mid)' }}>
                 <li className="flex justify-between items-center group">
-                  <span className="group-hover:text-gold transition-colors">Tigrigna</span>
-                  <span className="font-mono text-xs text-border-hover uppercase tracking-widest">Native</span>
+                  <span className="group-hover:text-blush-mid transition-colors"  style={{ color: 'var(--text)' }}>Tigrigna</span>
+                  <span className="font-body uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>Native</span>
                 </li>
                 <li className="flex justify-between items-center group">
-                  <span className="group-hover:text-gold transition-colors">English</span>
-                  <span className="font-mono text-xs text-border-hover uppercase tracking-widest">Fluent</span>
+                  <span className="group-hover:text-blush-mid transition-colors" style={{ color: 'var(--text)' }}>English</span>
+                  <span className="font-body uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>Fluent</span>
                 </li>
                 <li className="flex justify-between items-center group">
-                  <span className="group-hover:text-gold transition-colors">Amharic</span>
-                  <span className="font-mono text-xs text-border-hover uppercase tracking-widest">Conversational</span>
+                  <span className="group-hover:text-blush-mid transition-colors" style={{ color: 'var(--text)' }}>Amharic</span>
+                  <span className="font-body uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>Conversational</span>
                 </li>
               </ul>
             </div>
           </div>
 
           {/* Research Interests */}
-          <div className="pt-8 border-t border-border/20">
-            <h3 className="font-mono text-sm uppercase tracking-widest text-gold mb-6">Research Interests</h3>
+          <div className="pt-6" style={{ borderTop: '0.5px solid var(--taupe)' }}>
+            <div className="section-label mb-5">Research Interests</div>
             <div className="flex flex-wrap gap-2">
               {['AI for Social Good', 'Women\'s Health Tech', 'HCI', 'Culturally-Adaptive Systems'].map(interest => (
                 <span
                   key={interest}
-                  className="px-4 py-2 rounded-full font-mono text-[0.72rem] uppercase tracking-wider border transition-colors"
+                  className="px-4 py-2 rounded-full font-body"
                   style={{
-                    background: 'var(--lavender-pale)',
-                    borderColor: 'rgba(155,137,196,0.3)',
+                    fontSize: '0.78rem',
+                    background: 'var(--lavender-light)',
+                    border: '0.5px solid rgba(159,139,189,0.3)',
                     color: 'var(--lavender)',
+                    fontWeight: 500,
                   }}
                 >
                   {interest}
@@ -107,29 +102,26 @@ const About = () => {
           </div>
 
           {/* Academic Timeline */}
-          <div className="mt-8 pt-16 border-t border-border/20">
-            <h3 className="font-mono text-sm uppercase tracking-widest text-gold mb-4 text-center md:text-left">
+          <div className="mt-4 pt-10" style={{ borderTop: '0.5px solid var(--taupe)' }}>
+            <div className="section-label mb-3">Academic Progression</div>
+            <p className="font-body text-sm mb-10" style={{ color: 'var(--muted)' }}>
               She got stronger every year — through conflict.
-            </h3>
-            <p className="font-mono text-xs text-paper2/50 mb-12 text-center md:text-left uppercase tracking-widest">Academic Progression</p>
+            </p>
             <div className="relative flex flex-col md:flex-row justify-between items-end gap-4 md:gap-0 w-full px-2">
-              {/* Horizontal Line Desktop */}
-              <div className="hidden md:block absolute top-[52px] left-0 w-full h-[1px] bg-border/50 z-0"></div>
+              <div className="hidden md:block absolute top-[52px] left-0 w-full h-[0.5px] z-0" style={{ background: 'var(--taupe)' }} />
               
               {academicTimeline.map((item, i) => {
                 const isFinal = i === academicTimeline.length - 1;
                 return (
-                  <div key={i} className="flex md:flex-col items-center md:items-start gap-6 relative z-10 w-full md:w-auto pb-6 md:pb-0 border-b md:border-b-0 border-border/30 last:border-0 group">
+                  <div key={i} className="flex md:flex-col items-center md:items-start gap-6 relative z-10 w-full md:w-auto pb-6 md:pb-0 last:border-0 group" style={{ borderBottom: 'none' }}>
                     <div className="flex flex-col md:mb-4 w-24 md:w-auto">
-                      <span className="font-ui text-paper mb-0.5">{item.year}</span>
-                      <span className="font-mono text-[0.65rem] text-paper2 uppercase tracking-widest">{item.semester}</span>
+                      <span className="font-body" style={{ color: 'var(--text)', fontWeight: 500 }}>{item.year}</span>
+                      <span className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>{item.semester}</span>
                     </div>
-                    {/* Node on line */}
-                    <div className="hidden md:flex w-3 h-3 rounded-full outline outline-4 outline-ink2 transition-colors group-hover:bg-gold relative z-10" style={{ background: isFinal ? 'var(--gold)' : 'var(--border)' }}></div>
-                    {/* GPA */}
+                    <div className="hidden md:flex w-3 h-3 rounded-full outline outline-4 transition-colors relative z-10" style={{ background: isFinal ? 'var(--blush-mid)' : 'var(--taupe)', outlineColor: 'var(--bg)' }} />
                     <div className="ml-auto md:ml-0 flex flex-col items-end md:items-start md:mt-4">
-                      <span className={`font-display text-3xl md:text-4xl ${isFinal ? 'text-gold' : 'text-paper group-hover:text-gold transition-colors'}`}>{item.gpa}</span>
-                      {item.distinction && <span className="font-display italic text-sm text-gold mt-1 max-w-[100px] leading-tight desktop-distinction">{item.distinction}</span>}
+                      <span className={`font-display text-3xl md:text-4xl ${isFinal ? '' : 'group-hover:text-blush-mid transition-colors'}`} style={{ color: isFinal ? 'var(--blush-mid)' : 'var(--text)' }}>{item.gpa}</span>
+                      {item.distinction && <span className="font-display italic text-sm mt-1 max-w-[100px] leading-tight" style={{ color: 'var(--blush-mid)' }}>{item.distinction}</span>}
                     </div>
                   </div>
                 );

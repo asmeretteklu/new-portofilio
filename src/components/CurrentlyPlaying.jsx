@@ -3,18 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ReactPlayer from 'react-player';
 
 const PLAYLIST = [
-  { title: "obsessed",        artist: "Olivia Rodrigo",      color: "#c4856a" },
-  { title: "golden hour",     artist: "JVKE",                color: "#c4913a" },
-  { title: "Creepin'",        artist: "Metro Boomin",         color: "#9b89c4" },
-  { title: "Flowers",         artist: "Miley Cyrus",          color: "#2d9a82" },
-  { title: "Kill Bill",       artist: "SZA",                  color: "#c4856a" },
-  { title: "Calm Down",       artist: "Rema & Selena Gomez",  color: "#c4913a" },
-  { title: "Lift Me Up",      artist: "Rihanna",              color: "#9b89c4" },
-  { title: "Escapism",        artist: "RAYE",                 color: "#2d9a82" },
+  { title: "willow",               artist: "sombr",            color: "#C9A96E", url: "https://www.youtube.com/watch?v=KLnLOT6qZH4" },
+  { title: "everything i wanted",  artist: "Billie Eilish",    color: "#9F8BBD", url: "https://www.youtube.com/watch?v=rodyJ8gGEFc" },
+  { title: "Caroline",             artist: "sombr",            color: "#ED93B1", url: "https://www.youtube.com/watch?v=aFPPIPV4vlk" },
+  { title: "ocean eyes",           artist: "Billie Eilish",    color: "#9F8BBD", url: "https://www.youtube.com/watch?v=HQitbbtPZz8" },
+  { title: "bad guy",              artist: "Billie Eilish",    color: "#ED93B1", url: "https://www.youtube.com/watch?v=4-TbQnONe_w" },
+  { title: "weak",                 artist: "sombr",            color: "#C9A96E", url: "https://www.youtube.com/watch?v=F1Y5sbeZx_k" },
+  { title: "happier than ever",    artist: "Billie Eilish",    color: "#9F8BBD", url: "https://www.youtube.com/watch?v=VC17QJXu0nc" },
 ];
-
-// Lofi ambient background audio (YouTube lofi stream)
-const AUDIO_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
 
 const VinylDisc = ({ color, spinning }) => (
   <svg width="28" height="28" viewBox="0 0 28 28" className={spinning ? 'vinyl-spin' : ''} style={{ flexShrink: 0 }}>
@@ -22,7 +18,7 @@ const VinylDisc = ({ color, spinning }) => (
     <circle cx="14" cy="14" r="10" fill="none" stroke={color} strokeWidth="0.5" opacity="0.3" />
     <circle cx="14" cy="14" r="7" fill="none" stroke={color} strokeWidth="0.5" opacity="0.3" />
     <circle cx="14" cy="14" r="4" fill={color} opacity="0.8" />
-    <circle cx="14" cy="14" r="1.5" fill="var(--ink)" />
+    <circle cx="14" cy="14" r="1.5" fill="var(--bg)" />
   </svg>
 );
 
@@ -59,22 +55,19 @@ const CurrentlyPlaying = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Rotate display song every 30s
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
-      setIsLiked(false);
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [currentIndex]); // reset interval if user manually skips
-
   const togglePlay = useCallback((e) => {
     e.stopPropagation();
     setIsPlaying(prev => !prev);
   }, []);
 
+  // nextSong without requiring event (for onEnded callback from ReactPlayer)
   const nextSong = useCallback((e) => {
-    e.stopPropagation();
+    if (e && e.stopPropagation) e.stopPropagation();
+    setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
+    setIsLiked(false);
+  }, []);
+
+  const handleEnded = useCallback(() => {
     setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
     setIsLiked(false);
   }, []);
@@ -105,22 +98,24 @@ const CurrentlyPlaying = () => {
       transition={{ duration: 0.6 }}
       className="fixed bottom-6 left-4 sm:left-6 z-[60] pointer-events-auto"
     >
-      {/* Hidden Native Audio Player - Guaranteed to work across adblockers and mobile browsers */}
-      <audio
-        ref={(audioEl) => {
-          if (audioEl) {
-            audioEl.volume = volume;
-            if (isPlaying) {
-              audioEl.play().catch(e => console.error("Audio block:", e));
-            } else {
-              audioEl.pause();
+      {/* ReactPlayer — Must technically be 'visible' inside the viewport so YouTube doesn't auto-pause it to save resources. We hide it behind everything else using a negative z-index. */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '300px', height: '300px', opacity: 0.01, pointerEvents: 'none', zIndex: -50 }}>
+        <ReactPlayer
+          url={song.url}
+          playing={isPlaying}
+          volume={volume}
+          width="300px"
+          height="300px"
+          onEnded={handleEnded}
+          playsinline={true}
+          onError={(e) => console.error("ReactPlayer Error:", e)}
+          config={{
+            youtube: {
+              playerVars: { showinfo: 0, controls: 0, playsinline: 1, origin: typeof window !== 'undefined' ? window.location.origin : '' }
             }
-          }
-        }}
-        src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"
-        loop
-        crossOrigin="anonymous"
-      />
+          }}
+        />
+      </div>
 
       {/* Tooltip on hover */}
       <AnimatePresence>
@@ -129,8 +124,8 @@ const CurrentlyPlaying = () => {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
-            className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-gold px-3 py-1 rounded-full border border-gold-border bg-ink2/90 backdrop-blur-sm shadow-lg"
-            style={{ fontSize: '0.55rem', letterSpacing: '0.1em' }}
+            className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1 rounded-full shadow-lg font-body"
+            style={{ fontSize: '0.55rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', background: 'var(--card-bg)', border: '0.5px solid var(--blush)' }}
           >
             asmeret's current vibe ✦
           </motion.div>
@@ -144,8 +139,8 @@ const CurrentlyPlaying = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute -top-9 left-1/2 -translate-x-1/2 font-mono text-gold px-3 py-1 rounded-full bg-ink2/95 backdrop-blur-sm border border-gold-border shadow-lg"
-            style={{ fontSize: '0.6rem' }}
+            className="absolute -top-9 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full shadow-lg font-body"
+            style={{ fontSize: '0.6rem', color: 'var(--blush-mid)', background: 'var(--card-bg)', border: '0.5px solid var(--blush)' }}
           >
             🔊 {Math.round(volume * 100)}%
           </motion.div>
@@ -157,29 +152,19 @@ const CurrentlyPlaying = () => {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          background: 'rgba(17,14,26,0.88)',
+          background: 'var(--card-bg)',
           backdropFilter: 'blur(12px)',
-          border: `1px solid ${song.color}33`,
-          boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 20px ${song.color}10`,
+          border: `0.5px solid ${song.color}44`,
+          boxShadow: `0 8px 32px rgba(0,0,0,0.08), 0 0 20px ${song.color}10`,
         }}
       >
-        {/* Playback Controls Container */}
+        {/* Playback Controls */}
         <div className="flex items-center gap-1 pl-3 pr-1">
-          {/* Previous Button */}
-          <button
-            onClick={prevSong}
-            className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-paper4 hover:text-gold transition-colors rounded-full"
-            title="Previous track"
-          >
+          <button onClick={prevSong} className="flex-shrink-0 w-6 h-6 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Previous track">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" strokeWidth="2"></line></svg>
           </button>
 
-          {/* Play/Pause Button */}
-          <button
-            onClick={togglePlay}
-            className="flex-shrink-0 w-8 h-8 flex items-center justify-center text-gold hover:text-gold-light transition-colors rounded-full"
-            title={isPlaying ? "Pause" : "Play"}
-          >
+          <button onClick={togglePlay} className="flex-shrink-0 w-8 h-8 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--blush-mid)' }} title={isPlaying ? "Pause" : "Play"}>
             {isPlaying ? (
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
             ) : (
@@ -187,12 +172,7 @@ const CurrentlyPlaying = () => {
             )}
           </button>
 
-          {/* Next Button */}
-          <button
-            onClick={nextSong}
-            className="flex-shrink-0 w-6 h-6 flex items-center justify-center text-paper4 hover:text-gold transition-colors rounded-full"
-            title="Next track"
-          >
+          <button onClick={nextSong} className="flex-shrink-0 w-6 h-6 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Next track">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" strokeWidth="2"></line></svg>
           </button>
         </div>
@@ -203,11 +183,8 @@ const CurrentlyPlaying = () => {
           <WaveformBars active={isPlaying} />
         </div>
 
-        {/* Track info — click opens Spotify */}
-        <button
-          onClick={openSpotify}
-          className="flex flex-col items-start overflow-hidden flex-1 relative z-10 px-2 py-2 text-left min-w-0"
-        >
+        {/* Track info */}
+        <button onClick={openSpotify} className="flex flex-col items-start overflow-hidden flex-1 relative z-10 px-2 py-2 text-left min-w-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
@@ -217,36 +194,22 @@ const CurrentlyPlaying = () => {
               transition={{ duration: 0.35 }}
               className="w-full"
             >
-              <span
-                className="font-mono uppercase tracking-widest block truncate"
-                style={{ fontSize: '0.65rem', color: song.color }}
-              >
+              <span className="font-body uppercase tracking-widest block truncate" style={{ fontSize: '0.65rem', color: song.color, fontWeight: 500 }}>
                 {song.title}
               </span>
-              <span
-                className="font-ui block truncate"
-                style={{ fontSize: '0.55rem', color: 'var(--paper3)' }}
-              >
+              <span className="font-body block truncate" style={{ fontSize: '0.55rem', color: 'var(--muted)' }}>
                 {song.artist}
               </span>
             </motion.div>
           </AnimatePresence>
         </button>
 
-        {/* Volume controls */}
+        {/* Volume */}
         <div className="flex items-center gap-0 flex-shrink-0 pr-1">
-          <button
-            onClick={(e) => { e.stopPropagation(); adjustVolume(-0.1); }}
-            className="w-7 h-7 flex items-center justify-center text-paper3 hover:text-gold transition-colors rounded-full"
-            title="Volume down"
-          >
+          <button onClick={(e) => { e.stopPropagation(); adjustVolume(-0.1); }} className="w-7 h-7 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Volume down">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); adjustVolume(0.1); }}
-            className="w-7 h-7 flex items-center justify-center text-paper3 hover:text-gold transition-colors rounded-full"
-            title="Volume up"
-          >
+          <button onClick={(e) => { e.stopPropagation(); adjustVolume(0.1); }} className="w-7 h-7 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Volume up">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </div>
@@ -255,7 +218,7 @@ const CurrentlyPlaying = () => {
         <button
           onClick={(e) => { e.stopPropagation(); setIsLiked(!isLiked); }}
           className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm transition-transform hover:scale-110 active:scale-90 mr-2"
-          style={{ color: isLiked ? song.color : 'var(--paper4)' }}
+          style={{ color: isLiked ? song.color : 'var(--muted)' }}
         >
           {isLiked ? '♥' : '♡'}
         </button>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,218 +6,167 @@
 
 @layer base {
   :root {
-    /* Base */
-    --ink:          #09080f;
-    --ink2:         #110e1a;
-    --ink3:         #1a1626;
-    --ink4:         #221d30;
+    /* ── Ivory / Blush Palette ── */
+    --ivory:          #FDF6F0;
+    --blush:          #F5C4D3;
+    --blush-light:    #FBF0F4;
+    --blush-mid:      #ED93B1;
+    --gold:           #C9A96E;
+    --gold-light:     #F5ECD9;
+    --lavender:       #9F8BBD;
+    --lavender-light: #EEEDFE;
+    --taupe:          #E8D5C4;
+    --dark:           #2E1F1F;
+    --dark-mid:       #5C4545;
+    --muted:          #9B8080;
 
-    /* Gold — Asmeret's power color */
-    --gold:         #c4913a;
-    --gold-light:   #e8c47a;
-    --gold-pale:    rgba(196,145,58,0.09);
-    --gold-border:  rgba(196,145,58,0.2);
-    --gold-glow:    rgba(196,145,58,0.12);
-
-    /* Rose — Luna's color, feminine warmth */
-    --rose:         #c4856a;
-    --rose-light:   #d4a088;
-    --rose-pale:    rgba(196,133,106,0.09);
-    --rose-border:  rgba(196,133,106,0.22);
-
-    /* Teal — achievement, growth */
-    --teal:         #1a6b5a;
-    --teal-light:   #2d9a82;
-    --teal-pale:    rgba(45,154,130,0.09);
-
-    /* Lavender — soft girly accent */
-    --lavender:     #9b89c4;
-    --lavender-pale: rgba(155,137,196,0.09);
-
-    /* Text */
-    --paper:        #f5efe2;
-    --paper2:       rgba(245,239,226,0.65);
-    --paper3:       rgba(245,239,226,0.35);
-    --paper4:       rgba(245,239,226,0.18);
-
-    /* Borders (aliases) */
-    --border:       rgba(196,145,58,0.2);
-    --border-hover: rgba(196,145,58,0.5);
+    /* Semantic aliases */
+    --bg:             var(--ivory);
+    --text:           var(--dark);
+    --text-mid:       var(--dark-mid);
+    --text-muted:     var(--muted);
+    --accent:         var(--blush-mid);
+    --accent-light:   var(--blush-light);
+    --border-color:   var(--blush);
+    --card-bg:        #FFFFFF;
+    --card-border:    var(--taupe);
 
     /* Typography */
     --font-display: 'Cormorant Garamond', serif;
-    --font-ui:      'Syne', sans-serif;
-    --font-mono:    'DM Mono', monospace;
-    --r:            6px;
+    --font-body:    'DM Sans', sans-serif;
   }
 
-  .light {
-    --ink:         #f9f7f1;
-    --ink2:        #eeeada;
-    --ink3:        #e3dfce;
-    --ink4:        #d8d4c3;
-    --paper:       #111625;
-    --paper2:      rgba(17,22,37,0.7);
-    --paper3:      rgba(17,22,37,0.45);
-    --paper4:      rgba(17,22,37,0.22);
-    --gold:        #b88229;
-    --gold-light:  #c4913a;
-    --gold-pale:   rgba(184,130,41,0.15);
-    --gold-border: rgba(184,130,41,0.3);
-    --gold-glow:   rgba(184,130,41,0.15);
-    --rose:        #b07050;
-    --rose-light:  #c4856a;
-    --rose-pale:   rgba(176,112,80,0.12);
-    --rose-border: rgba(176,112,80,0.25);
-    --teal:        #124d40;
-    --teal-light:  #1a6b5a;
-    --teal-pale:   rgba(18,77,64,0.1);
-    --lavender:    #7b69a4;
-    --lavender-pale: rgba(123,105,164,0.12);
-    --border:      rgba(184,130,41,0.3);
-    --border-hover:rgba(184,130,41,0.6);
+  /* ── Night Mode ── */
+  .dark {
+    --ivory:          #1a1520;
+    --blush:          #3d2a35;
+    --blush-light:    #2a1f2d;
+    --blush-mid:      #ED93B1;
+    --gold:           #C9A96E;
+    --gold-light:     #3a3020;
+    --lavender:       #9F8BBD;
+    --lavender-light: #2a2640;
+    --taupe:          #3a2e28;
+    --dark:           #f0e8e0;
+    --dark-mid:       #c8b8b0;
+    --muted:          #9B8888;
+
+    --bg:             #12101a;
+    --text:           #f0e8e0;
+    --text-mid:       #c8b8b0;
+    --text-muted:     #9B8888;
+    --accent:         #ED93B1;
+    --accent-light:   #2a1f2d;
+    --border-color:   #3d2a35;
+    --card-bg:        rgba(30,24,36,0.8);
+    --card-border:    rgba(80,60,60,0.4);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--ink);
-    color: var(--paper);
-    font-family: var(--font-ui);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
     overflow-x: hidden;
     cursor: none;
+    -webkit-font-smoothing: antialiased;
   }
 
   ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: var(--ink); }
-  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--blush-mid); border-radius: 2px; }
 }
 
-/* ── Selection color ── */
+/* ── Selection ── */
 ::selection {
-  background: rgba(196,145,58,0.3);
-  color: var(--paper);
+  background: rgba(237,147,177,0.25);
+  color: var(--dark);
 }
 
 /* ── Focus rings ── */
 :focus-visible {
-  outline: 1.5px solid var(--gold);
+  outline: 1.5px solid var(--blush-mid);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* ── Links default ── */
+/* ── Links ── */
 a { cursor: none; }
 
-/* ── Smooth image loading ── */
+/* ── Images ── */
 img {
   transition: filter 0.5s ease, opacity 0.3s ease;
-}
-
-/* ── Section background alternation ── */
-.section-light { background: var(--ink2); }
-.section-dark  { background: var(--ink);  }
-
-/* ── Glass card ── */
-.glass {
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--gold-border);
-  border-radius: 12px;
 }
 
 /* ══════════════════════════════════════════
    BUTTON SYSTEM
    ══════════════════════════════════════════ */
 
-/* ── Gold shimmer button ── */
-.btn-gold {
-  position: relative;
-  overflow: hidden;
-  background: var(--gold);
-  color: var(--ink);
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+/* ── Primary blush button ── */
+.btn-primary-blush {
+  background: var(--blush-mid);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
   padding: 0.85rem 2.2rem;
-  border-radius: 100px;
+  border-radius: 30px;
   border: none;
   cursor: none;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(237,147,177,0.25);
 }
-.btn-gold::after {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%; width: 60%; height: 100%;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
-  transition: left 0.55s ease;
+.btn-primary-blush:hover {
+  background: #e07da0;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(237,147,177,0.35);
 }
-.btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,145,58,0.28); }
-.btn-gold:hover::after { left: 150%; }
-.btn-gold:active { transform: translateY(0); }
+.btn-primary-blush:active { transform: translateY(0); }
 
 /* ── Ghost button ── */
 .btn-ghost {
   background: transparent;
-  color: var(--paper);
-  font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
   padding: 0.85rem 2.2rem;
-  border-radius: 4px;
-  border: 1px solid rgba(245,239,226,0.22);
+  border-radius: 30px;
+  border: 1.5px solid var(--dark);
   cursor: none;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
+}
+.dark .btn-ghost {
+  border-color: var(--text-muted);
+  color: var(--text);
 }
 .btn-ghost:hover {
-  border-color: var(--gold);
-  color: var(--gold-light);
+  border-color: var(--blush-mid);
+  color: var(--blush-mid);
   transform: translateY(-2px);
-  background: var(--gold-pale);
+  background: rgba(237,147,177,0.06);
 }
-
-/* ── Rose button (Luna only) ── */
-.btn-rose {
-  background: var(--rose);
-  color: var(--ink);
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 0.85rem 2.2rem;
-  border-radius: 100px;
-  border: none;
-  cursor: none;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
-}
-.btn-rose:hover { background: var(--rose-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,133,106,0.28); }
 
 /* ── Text button ── */
 .btn-text {
   background: transparent;
   border: none;
-  color: var(--gold);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  color: var(--blush-mid);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   cursor: none;
   padding: 0.4rem 0;
   text-decoration: none;
@@ -226,58 +175,76 @@ img {
   gap: 0.4rem;
   transition: color 0.2s, gap 0.2s;
 }
-.btn-text:hover { color: var(--gold-light); gap: 0.65rem; }
+.btn-text:hover { color: #e07da0; gap: 0.65rem; }
 
-/* ── Legacy shimmer (keep for backward compat) ── */
-.btn-primary {
-  position: relative;
-  overflow: hidden;
-}
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
-  transform: translateX(-100%);
-  transition: transform 0.55s ease;
-  z-index: 1;
-  pointer-events: none;
-}
-.btn-primary:hover::before {
-  transform: translateX(150%);
-}
-.btn-primary > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* ── Divider ornament ── */
-.ornament {
+/* ══════════════════════════════════════════
+   SECTION LABELS
+   ══════════════════════════════════════════ */
+.section-label {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 1rem;
-  padding: 0.75rem 3rem;
+  font-family: var(--font-body);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--blush-mid);
+  font-weight: 500;
 }
-.ornament::before, .ornament::after {
+.section-label::before,
+.section-label::after {
   content: '';
   flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(196,145,58,0.25), transparent);
+  height: 0.5px;
+  background: var(--blush);
 }
 
 /* ══════════════════════════════════════════
-   COMPONENT STYLES
+   SECTION DIVIDER — ✦ ✦ ✦
+   ══════════════════════════════════════════ */
+.section-divider-ornament {
+  text-align: center;
+  color: var(--blush-mid);
+  letter-spacing: 10px;
+  font-size: 12px;
+  opacity: 0.7;
+  padding: 1.5rem 0;
+}
+
+/* ══════════════════════════════════════════
+   GLASS CARD
+   ══════════════════════════════════════════ */
+.glass {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 0.5px solid var(--card-border);
+  border-radius: 16px;
+}
+
+/* ══════════════════════════════════════════
+   SCROLL-REVEAL ANIMATION
+   ══════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════
+   COMPONENT-SPECIFIC STYLES
    ══════════════════════════════════════════ */
 
-/* ── Skill Item Hover Italic ── */
+/* ── Skill pill hover ── */
 .skill-item {
   transition: all 0.2s ease;
 }
 .skill-item:hover {
-  font-style: italic;
-  transform: skewX(-3deg);
-  color: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(237,147,177,0.15);
 }
 
 /* ── Bounce-gentle for Scroll Indicator ── */
@@ -294,7 +261,7 @@ img {
 
 .waveform-bar {
   width: 2px;
-  background: var(--gold);
+  background: var(--blush-mid);
   border-radius: 1px;
   display: inline-block;
 }
@@ -312,42 +279,31 @@ img {
   animation: spin-slow 3s linear infinite;
 }
 
-/* ── Section Ornament Dividers ── */
-.section-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  gap: 12px;
-  width: 100%;
-  padding: 0 24px;
-}
-.section-divider .divider-line {
-  flex: 1;
-  max-width: 200px;
-  height: 1px;
-  background: rgba(196,145,58,0.2);
-}
-.section-divider .divider-star {
-  font-family: var(--font-display);
-  color: var(--gold);
-  font-size: 1rem;
-  line-height: 1;
-}
-
-/* ── Photo Blob Frame ── */
-.blob-frame-wrapper {
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  transition: clip-path 0.6s ease;
-}
-.blob-frame-wrapper:hover {
-  clip-path: polygon(50% 0%, 85% 5%, 100% 50%, 95% 85%, 50% 100%, 15% 95%, 0% 50%, 5% 15%);
-}
-
-/* ── Heartbeat pulse animation ── */
+/* ── Heartbeat ECG ── */
 @keyframes heartbeat-pulse {
   0% { stroke-dashoffset: 100; }
   100% { stroke-dashoffset: 0; }
+}
+
+/* ── Marquee animation ── */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── Luna chat dot texture ── */
+.luna-chat-dots {
+  background-image: radial-gradient(circle, rgba(237,147,177,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Pulsing dot ── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+.pulse-blush {
+  animation: pulse-dot 2s ease-in-out infinite;
 }
 
 /* ── Mobile Projects Horizontal Scroll ── */
@@ -369,31 +325,4 @@ img {
     scroll-snap-align: start;
     flex-shrink: 0;
   }
-}
-
-/* ── Nav Logo Squiggly Underline ── */
-@keyframes squiggle-draw {
-  from { stroke-dashoffset: 100; }
-  to { stroke-dashoffset: 0; }
-}
-
-/* ── Currently strip marquee ── */
-@keyframes marquee-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-/* ── Luna chat dot texture ── */
-.luna-chat-dots {
-  background-image: radial-gradient(circle, rgba(196,133,106,0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* ── Song crossfade ── */
-@keyframes song-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.song-fade-enter {
-  animation: song-fade-in 0.4s ease forwards;
 }

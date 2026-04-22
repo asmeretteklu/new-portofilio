@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatPanel from './ChatPanel';
 
-/* CMD-10: Crescent Moon SVG icon for floating button */
 const CrescentMoonIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -22,15 +21,15 @@ const LunaChat = () => {
     <div className="fixed bottom-6 right-6 sm:right-12 z-[90]">
       <ChatPanel isOpen={isOpen} onClose={() => setIsOpen(false)} />
       
-      {/* CMD-10: Rose background instead of gold, crescent moon icon */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={toggleOpen}
-        className="w-14 h-14 rounded-full flex items-center justify-center text-ink shadow-[0_0_20px_rgba(196,133,106,0.3)] hover:shadow-[0_0_30px_rgba(196,133,106,0.5)] transition-shadow relative z-50 border-2"
+        className="w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg transition-shadow relative z-50"
         style={{
-          background: 'var(--rose)',
-          borderColor: 'rgba(196,133,106,0.5)',
+          background: 'var(--blush-mid)',
+          border: '2px solid rgba(237,147,177,0.5)',
+          boxShadow: '0 0 20px rgba(237,147,177,0.3)',
         }}
       >
         <AnimatePresence mode="wait">
@@ -61,13 +60,13 @@ const LunaChat = () => {
           )}
         </AnimatePresence>
 
-        {/* Unread indicator popup */}
         {!hasOpened && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 2, duration: 0.5 }}
-            className="absolute -top-1 -right-1 w-4 h-4 bg-teal-light rounded-full border-2 border-ink"
+            className="absolute -top-1 -right-1 w-4 h-4 rounded-full"
+            style={{ background: '#4ade80', border: '2px solid var(--bg)' }}
           />
         )}
       </motion.button>

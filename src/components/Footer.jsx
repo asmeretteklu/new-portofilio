@@ -1,11 +1,10 @@
 import { ArrowUp } from 'lucide-react';
 
-/* Heartbeat ECG SVG — animated, gold, 80px wide */
 const HeartbeatLine = () => (
   <svg width="80" height="24" viewBox="0 0 80 24" fill="none" className="my-3">
     <path
       d="M0,12 L20,12 L28,2 L36,22 L44,12 L80,12"
-      stroke="var(--gold)"
+      stroke="var(--blush-mid)"
       strokeWidth="1.5"
       fill="none"
       strokeDasharray="120"
@@ -23,42 +22,38 @@ const Footer = () => {
   };
 
   return (
-    <footer className="py-12 bg-ink border-t border-border/10">
+    <footer className="py-12" style={{ borderTop: '0.5px solid var(--taupe)' }}>
       <div className="max-w-6xl mx-auto px-6 lg:px-12">
         
-        {/* Main footer content */}
         <div className="flex flex-col items-center gap-4 mb-8">
-          {/* Row 1: Heartbeat */}
           <HeartbeatLine />
-          
-          {/* Row 2: Designed & built by */}
-          <p className="font-mono text-paper2/50" style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}>
+          <p className="font-body" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: 'var(--muted)', opacity: 0.7 }}>
             Designed & built by Asmeret Teklu Gebremedhin
           </p>
         </div>
 
-        {/* Row 3: Two columns */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-border/10 pt-6">
-          <p className="font-mono text-paper2/40" style={{ fontSize: '0.58rem', letterSpacing: '0.08em' }}>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-6" style={{ borderTop: '0.5px solid var(--taupe)' }}>
+          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--muted)', opacity: 0.5 }}>
             asmeret.netlify.app · {new Date().getFullYear()}
           </p>
-          <p className="font-mono text-paper2/40" style={{ fontSize: '0.58rem', letterSpacing: '0.08em' }}>
+          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--muted)', opacity: 0.5 }}>
             Made in Mekelle, Tigray ✦ Powered by curiosity
           </p>
         </div>
 
-        {/* Luna teaser at very bottom */}
         <div className="mt-8 text-center">
-          <p className="font-display italic" style={{ fontSize: '0.75rem', color: 'var(--rose-pale)' }}>
+          <p className="font-display italic" style={{ fontSize: '0.75rem', color: 'var(--blush-mid)', opacity: 0.5 }}>
             Luna AI is coming. Stay close. 🌙
           </p>
         </div>
 
-        {/* Scroll to top */}
         <div className="flex justify-center mt-6">
           <button 
             onClick={scrollToTop}
-            className="w-10 h-10 rounded-full border border-border/20 flex items-center justify-center text-paper2/40 hover:text-gold hover:border-gold/50 transition-all bg-ink2/30 group"
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all group"
+            style={{ border: '0.5px solid var(--taupe)', color: 'var(--muted)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--blush-mid)'; e.currentTarget.style.color = 'var(--blush-mid)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--taupe)'; e.currentTarget.style.color = 'var(--muted)'; }}
           >
             <ArrowUp size={16} className="group-hover:-translate-y-1 transition-transform" />
           </button>

@@ -3,34 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { person } from '../data/portfolio';
 
-/* CMD-11: Nav Logo Hand-Drawn Squiggly Underline */
-const SquigglyUnderline = ({ visible }) => (
-  <svg
-    className="absolute -bottom-1 left-0 w-full overflow-visible pointer-events-none"
-    height="8"
-    viewBox="0 0 90 8"
-    preserveAspectRatio="none"
-    fill="none"
-  >
-    <path
-      d="M0,4 Q15,0 30,4 Q45,8 60,4 Q75,0 90,4"
-      stroke="var(--gold)"
-      strokeWidth="1.5"
-      fill="none"
-      strokeDasharray="100"
-      strokeDashoffset={visible ? '0' : '100'}
-      style={{
-        transition: 'stroke-dashoffset 0.4s ease',
-      }}
-    />
-  </svg>
-);
-
 const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLight, setIsLight] = useState(false);
-  const [logoHovered, setLogoHovered] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,20 +18,20 @@ const Nav = () => {
 
   useEffect(() => {
     const saved = localStorage.getItem('theme');
-    if (saved === 'light' || (!saved && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-      setIsLight(true);
-      document.documentElement.classList.add('light');
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setIsDark(true);
+      document.documentElement.classList.add('dark');
     }
   }, []);
 
   const toggleTheme = () => {
-    setIsLight(!isLight);
-    if (!isLight) {
-      document.documentElement.classList.add('light');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.documentElement.classList.remove('light');
+    setIsDark(!isDark);
+    if (!isDark) {
+      document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
   };
 
@@ -69,20 +45,20 @@ const Nav = () => {
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-ink/80 backdrop-blur-md border-b-[1px] border-border py-4' : 'bg-transparent py-6'
+        scrolled ? 'py-3' : 'py-5'
       }`}
+      style={{
+        background: scrolled ? 'rgba(253,246,240,0.85)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        borderBottom: scrolled ? '0.5px solid var(--blush)' : '0.5px solid transparent',
+        ...(isDark && scrolled ? { background: 'rgba(18,16,26,0.85)' } : {}),
+      }}
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-12 flex justify-between items-center">
-        {/* Logo with CMD-11 squiggly underline */}
-        <a
-          href="#"
-          className="flex items-baseline gap-1 group z-50 relative"
-          onMouseEnter={() => setLogoHovered(true)}
-          onMouseLeave={() => setLogoHovered(false)}
-        >
-          <span className="font-display italic text-gold text-2xl group-hover:scale-105 transition-transform origin-left">Asmeret</span>
-          <span className="font-ui font-semibold text-paper text-xl">Teklu</span>
-          <SquigglyUnderline visible={logoHovered} />
+        {/* Logo */}
+        <a href="#" className="flex items-baseline gap-1.5 group z-50 relative">
+          <span className="font-display text-2xl" style={{ fontWeight: 400, color: 'var(--text)' }}>Asmeret</span>
+          <span className="font-display italic text-2xl" style={{ color: 'var(--blush-mid)' }}>Teklu</span>
         </a>
 
         {/* Desktop Links */}
@@ -91,24 +67,29 @@ const Nav = () => {
             <a 
               key={link.name} 
               href={link.href}
-              className="font-mono text-[0.68rem] uppercase tracking-widest text-paper2 hover:text-gold transition-colors relative group"
+              className="font-body uppercase tracking-wider transition-colors relative group"
+              style={{ fontSize: '12px', letterSpacing: '0.1em', color: 'var(--muted)' }}
+              onMouseEnter={(e) => e.target.style.color = 'var(--blush-mid)'}
+              onMouseLeave={(e) => e.target.style.color = 'var(--muted)'}
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gold transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] transition-all duration-300 group-hover:w-full" style={{ background: 'var(--blush-mid)' }} />
             </a>
           ))}
           <a
             href="#contact"
-            className="px-5 py-2 font-mono text-[0.7rem] uppercase tracking-wider border border-border hover:border-gold text-gold rounded-full transition-colors"
+            className="btn-primary-blush"
+            style={{ padding: '0.55rem 1.4rem', fontSize: '11px' }}
           >
             Say hello ✦
           </a>
           <button 
             onClick={toggleTheme}
-            className="text-paper2 hover:text-gold transition-colors ml-2"
+            className="transition-colors ml-2"
+            style={{ color: 'var(--muted)' }}
             aria-label="Toggle Theme"
           >
-            {isLight ? <Moon size={20} /> : <Sun size={20} />}
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </div>
 
@@ -116,14 +97,16 @@ const Nav = () => {
         <div className="flex md:hidden items-center gap-4 z-50">
           <button 
             onClick={toggleTheme}
-            className="text-paper2 hover:text-gold transition-colors"
+            className="transition-colors"
+            style={{ color: 'var(--muted)' }}
             aria-label="Toggle Theme"
           >
-            {isLight ? <Moon size={20} /> : <Sun size={20} />}
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
           
           <button 
-            className="md:hidden text-paper2 hover:text-gold transition-colors"
+            className="md:hidden transition-colors"
+            style={{ color: 'var(--muted)' }}
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -139,14 +122,16 @@ const Nav = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-ink/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 pt-20"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 pt-20"
+            style={{ background: isDark ? 'rgba(18,16,26,0.97)' : 'rgba(253,246,240,0.97)', backdropFilter: 'blur(20px)' }}
           >
             {links.map(link => (
               <a 
                 key={link.name} 
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="font-ui text-2xl text-paper hover:text-gold transition-colors"
+                className="font-display text-3xl transition-colors"
+                style={{ color: 'var(--text)' }}
               >
                 {link.name}
               </a>
@@ -154,7 +139,8 @@ const Nav = () => {
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="mt-4 px-8 py-3 bg-gold text-ink font-ui font-semibold rounded-full"
+              className="btn-primary-blush mt-4"
+              style={{ padding: '0.85rem 2rem' }}
             >
               Let's talk
             </a>

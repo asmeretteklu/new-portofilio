@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import StarField from './components/StarField';
 import Cursor from './components/Cursor';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
@@ -13,7 +12,6 @@ import Community from './components/Community';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import LunaChat from './components/LunaChat';
-import NoiseOverlay from './components/NoiseOverlay';
 import SplashScreen from './components/SplashScreen';
 import SectionDivider from './components/SectionDivider';
 import CurrentlyPlaying from './components/CurrentlyPlaying';
@@ -26,7 +24,6 @@ import ScrollProgress from './components/ScrollProgress';
 // 4. Drag `dist/` to Netlify.
 
 function App() {
-  // Prevent double scrolling issues occasionally seen with hidden cursors
   useEffect(() => {
     document.body.style.cursor = 'none';
     return () => {
@@ -36,19 +33,15 @@ function App() {
 
   return (
     <>
-      {/* CMD-01: Loading Splash Screen */}
       <SplashScreen />
       <ScrollProgress />
 
-      <NoiseOverlay />
-      <StarField />
-      
-      {/* Hide custom cursor on very small touch devices since it's redundant/buggy */}
+      {/* Hide custom cursor on very small touch devices */}
       <div className="hidden md:block">
         <Cursor />
       </div>
 
-      <div className="relative z-10 font-ui text-paper selection:bg-gold selection:text-ink">
+      <div className="relative z-10 font-body" style={{ color: 'var(--text)' }}>
         <Nav />
         <main>
           <Hero />
@@ -70,8 +63,6 @@ function App() {
         </main>
         <Footer />
         <LunaChat />
-
-        {/* CMD-12: Currently Playing Easter Egg */}
         <CurrentlyPlaying />
       </div>
     </>

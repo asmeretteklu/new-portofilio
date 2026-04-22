@@ -5,7 +5,6 @@ const SplashScreen = () => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    // Only show once per session
     if (!sessionStorage.getItem('splash_shown')) {
       setShow(true);
       const timer = setTimeout(() => {
@@ -23,19 +22,19 @@ const SplashScreen = () => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center"
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
+          style={{ background: 'var(--ivory)' }}
         >
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="font-display italic text-gold"
-            style={{ fontSize: '7rem', lineHeight: 1 }}
+            className="font-display italic"
+            style={{ fontSize: '7rem', lineHeight: 1, color: 'var(--blush-mid)' }}
           >
             AT
           </motion.span>
 
-          {/* Gold line that grows left to right */}
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
@@ -44,7 +43,7 @@ const SplashScreen = () => {
             style={{
               width: '120px',
               height: '1px',
-              background: 'var(--gold)',
+              background: 'var(--blush-mid)',
             }}
           />
         </motion.div>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-/* Typewriter effect hook — 15ms per character */
 const useTypewriter = (text, speed = 15, enabled = false) => {
   const [displayed, setDisplayed] = useState(enabled ? '' : text);
 
@@ -36,28 +35,30 @@ const Message = ({ role, content, typewriter = false }) => {
       className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 w-full`}
     >
       {!isUser && (
-        <div className="w-6 h-6 rounded-full bg-paper/10 flex items-center justify-center shrink-0 mr-2 mt-auto mb-1">
-          <span className="font-display italic text-gold text-xs">L</span>
+        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mr-2 mt-auto mb-1" style={{ background: 'rgba(237,147,177,0.15)' }}>
+          <span className="font-display italic text-xs" style={{ color: 'var(--blush-mid)' }}>L</span>
         </div>
       )}
       
-      {/* CMD-10: Luna message bubbles use --rose-pale bg + left border */}
       <div 
         className={`max-w-[85%] px-4 py-3 rounded-2xl ${
           isUser 
-            ? 'bg-gold text-ink font-mono text-[0.82rem] rounded-br-sm' 
-            : 'text-paper font-display text-lg leading-snug rounded-tl-sm'
+            ? 'font-body text-sm rounded-br-sm text-white' 
+            : 'font-display text-lg leading-snug rounded-tl-sm'
         }`}
-        style={!isUser ? {
-          background: 'var(--rose-pale)',
-          borderLeft: '2px solid var(--rose)',
-        } : undefined}
+        style={isUser ? {
+          background: 'var(--blush-mid)',
+        } : {
+          background: 'rgba(237,147,177,0.08)',
+          borderLeft: '2px solid var(--blush-mid)',
+          color: '#f0e8e0',
+        }}
       >
         {isUser ? (
           content
         ) : (
           <div dangerouslySetInnerHTML={{ 
-            __html: displayedContent.replace(/Asmeret/g, '<span class="italic text-gold">Asmeret</span>') 
+            __html: displayedContent.replace(/Asmeret/g, '<span class="italic" style="color:var(--blush-mid)">Asmeret</span>') 
           }} />
         )}
       </div>
