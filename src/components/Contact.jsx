@@ -46,25 +46,29 @@ const Contact = () => {
     setSubmitStatus(null);
     setErrorMessage('');
 
-    const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-    if (!serviceID || !templateID || !publicKey) {
-      setSubmitStatus('error');
-      setErrorMessage('Email service not configured. Please email me directly at asmeretteklu03@gmail.com');
-      setIsSubmitting(false);
-      return;
-    }
+    const formData = new FormData(formRef.current);
+    const data = Object.fromEntries(formData.entries());
 
     try {
-      await emailjs.sendForm(serviceID, templateID, formRef.current, { publicKey });
-      setSubmitStatus('success');
-      formRef.current.reset();
-      setTimeout(() => setSubmitStatus(null), 5000);
+      const response = await fetch("https://formsubmit.co/ajax/asmeretteklu03@gmail.com", {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        formRef.current.reset();
+        setTimeout(() => setSubmitStatus(null), 5000);
+      } else {
+        throw new Error('Network response was not ok');
+      }
     } catch (error) {
       setSubmitStatus('error');
-      setErrorMessage(error.text || 'Network error. Please try again or email me directly.');
+      setErrorMessage('Network error. Please try again or email me directly at asmeretteklu03@gmail.com.');
       setTimeout(() => setSubmitStatus(null), 5000);
     } finally {
       setIsSubmitting(false);
