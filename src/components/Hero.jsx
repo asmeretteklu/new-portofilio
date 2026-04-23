@@ -17,8 +17,8 @@ const StatCard = ({ stat }) => {
   const { ref, display } = useCountUp(stat.value, 1500);
   return (
     <div ref={ref} className="flex flex-col items-center">
-      <span className="font-display text-3xl sm:text-4xl" style={{ fontWeight: 300, color: '#FDF6F0' }}>{display}</span>
-      <span className="font-body uppercase tracking-wider" style={{ color: 'rgba(253,246,240,0.6)', fontSize: '9px' }}>{stat.label}</span>
+      <span className="font-display text-3xl sm:text-4xl" style={{ fontWeight: 300, color: 'var(--blush-light)' }}>{display}</span>
+      <span className="font-body uppercase tracking-wider" style={{ color: 'rgba(245,196,211,0.6)', fontSize: '9px' }}>{stat.label}</span>
     </div>
   );
 };
@@ -44,6 +44,23 @@ const getTimeAgo = (dateStr) => {
 
 const Hero = () => {
   const [currentRepo, setCurrentRepo] = useState(null);
+  const photoList = [
+    { src: '/photo2.jpg', id: 0 },
+    { src: person.photo, id: 1 },
+    { src: '/photo.jpg', id: 2 },
+    { src: '/photo2.jpg', id: 3 }
+  ];
+  const [stackOrder, setStackOrder] = useState([0, 1, 2, 3]);
+
+  const handleFlip = () => {
+    setStackOrder(prev => [...prev.slice(1), prev[0]]);
+  };
+
+  useEffect(() => {
+    // Flip every 6 seconds to be less intrusive, and use a ref for manual reset if needed
+    const flipInterval = setInterval(handleFlip, 6000);
+    return () => clearInterval(flipInterval);
+  }, [stackOrder]); // Re-running on stackOrder change effectively resets the timer on manual click
 
   /* Fetch latest pushed repo from GitHub */
   useEffect(() => {
@@ -95,16 +112,13 @@ const Hero = () => {
         animate="show"
         className="w-full flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-20 items-center lg:items-start"
       >
-        {/* Left Col — Text */}
         <div className="flex flex-col gap-4 sm:gap-5 relative z-10 pt-4 sm:pt-8">
-          {/* Name */}
           <motion.h1 variants={item} className="font-display leading-[0.92]" style={{ fontSize: 'clamp(2.8rem, 8vw, 7rem)' }}>
             <span style={{ fontWeight: 300, color: 'var(--text)' }}>{person.name.first}</span>
             <br />
             <span className="italic" style={{ fontWeight: 400, color: 'var(--blush-mid)' }}>{person.name.last}</span>
           </motion.h1>
           
-          {/* Manifesto quote */}
           <motion.blockquote 
             variants={item} 
             className="font-display italic text-base sm:text-lg leading-relaxed pl-5"
@@ -113,7 +127,6 @@ const Hero = () => {
             "I don't build for the resume. I build because someone out there needs it and isn't being seen."
           </motion.blockquote>
 
-          {/* Currently building — LIVE from GitHub */}
           <motion.div variants={item}>
             <AnimatePresence mode="wait">
               {currentRepo ? (
@@ -126,8 +139,6 @@ const Hero = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex items-center gap-3 py-2.5 px-4 rounded-xl w-fit group transition-all duration-300 no-underline"
                   style={{ background: 'var(--blush-light)', border: '0.5px solid var(--blush)' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--blush-mid)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--blush)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                   <span className="pulse-blush inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#4ade80' }} />
                   <div className="flex flex-col min-w-0">
@@ -144,94 +155,69 @@ const Hero = () => {
                       <span className="font-body" style={{ fontSize: '0.6rem', color: 'var(--muted)' }}>
                         · {getTimeAgo(currentRepo.updatedAt)}
                       </span>
-                      {currentRepo.stars > 0 && (
-                        <span className="font-body" style={{ fontSize: '0.6rem', color: 'var(--gold)' }}>
-                          ★ {currentRepo.stars}
-                        </span>
-                      )}
                     </div>
                   </div>
                   <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity ml-1" style={{ color: 'var(--blush-mid)' }}>↗</span>
                 </motion.a>
-              ) : (
-                <motion.div className="flex items-center gap-2.5">
-                  <span className="pulse-blush inline-block w-2 h-2 rounded-full" style={{ background: 'var(--blush-mid)' }} />
-                  <span className="font-body text-sm" style={{ color: 'var(--muted)' }}>Loading from GitHub...</span>
-                </motion.div>
-              )}
+              ) : null}
             </AnimatePresence>
           </motion.div>
 
-          {/* Skill tags */}
           <motion.div variants={item} className="flex flex-wrap gap-2 mt-1">
             {skillTags.map(tag => (
-              <span 
-                key={tag.label}
-                className="font-body text-xs px-3 py-1.5 rounded-full"
-                style={{ background: tag.bg, color: tag.color, fontWeight: 500 }}
-              >
-                {tag.label}
-              </span>
+              <span key={tag.label} className="font-body text-xs px-3 py-1.5 rounded-full" style={{ background: tag.bg, color: tag.color, fontWeight: 500 }}>{tag.label}</span>
             ))}
           </motion.div>
           
-          {/* Buttons */}
           <motion.div variants={item} className="flex flex-wrap items-center gap-3 mt-3">
-            <a href="#work" className="btn-primary-blush">
-              View Work <span className="text-sm">↓</span>
-            </a>
-            <a href="#contact" className="btn-ghost">
-              Let's talk
-            </a>
+            <a href="#work" className="btn-primary-blush">View Work <span className="text-sm">↓</span></a>
+            <a href="#contact" className="btn-ghost">Let's talk</a>
             <a href="/Asmeret_Teklu_CV.pdf" download className="btn-ghost" title="Download CV">
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               CV
             </a>
           </motion.div>
           
-          {/* Social */}
           <motion.div variants={item} className="flex items-center gap-6 mt-4">
-            <a href={person.github} target="_blank" rel="noreferrer" className="transition-colors" style={{ color: 'var(--muted)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--blush-mid)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>
-              <GithubIcon size={20} />
-            </a>
-            <a href={person.linkedin} target="_blank" rel="noreferrer" className="transition-colors" style={{ color: 'var(--muted)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--blush-mid)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>
-              <LinkedinIcon size={20} />
-            </a>
-            <a href={`mailto:${person.email}`} className="transition-colors" style={{ color: 'var(--muted)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--blush-mid)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>
-              <Mail size={20} />
-            </a>
+            <a href={person.github} target="_blank" rel="noreferrer" className="transition-colors text-[var(--muted)] hover:text-[var(--blush-mid)]"><GithubIcon size={20} /></a>
+            <a href={person.linkedin} target="_blank" rel="noreferrer" className="transition-colors text-[var(--muted)] hover:text-[var(--blush-mid)]"><LinkedinIcon size={20} /></a>
+            <a href={`mailto:${person.email}`} className="transition-colors text-[var(--muted)] hover:text-[var(--blush-mid)]"><Mail size={20} /></a>
           </motion.div>
         </div>
 
         {/* Right Col — Photo */}
         <motion.div variants={item} className="relative z-10 flex flex-col items-center lg:items-end w-full lg:pr-8">
-          <div className="relative group w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] md:w-[320px] md:h-[320px] mb-8 sm:mb-12">
-            
-            {/* Decorative blobs */}
-            <div className="absolute -top-12 -left-12 w-[200px] h-[200px] rounded-full pointer-events-none z-[-1]" style={{ background: 'rgba(245,196,211,0.3)', filter: 'blur(60px)' }} />
-            <div className="absolute -bottom-8 -right-8 w-[160px] h-[160px] rounded-full pointer-events-none z-[-1]" style={{ background: 'rgba(201,169,110,0.25)', filter: 'blur(50px)' }} />
-
-            {/* Main hexagon photo */}
-            <div className="absolute inset-0" style={{ padding: '3px', background: 'var(--blush-mid)', clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
-              <div className="w-full h-full overflow-hidden" style={{ background: 'var(--bg)', clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }} />
-            </div>
-            <div className="absolute inset-[3px] overflow-hidden flex items-center justify-center z-10" style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
-              <img src={person.photo} alt={person.fullName} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
-              <div className="absolute inset-0 hidden items-center justify-center font-display text-7xl italic" style={{ background: 'var(--blush-light)', color: 'var(--blush-mid)' }}>
-                {person.name.first[0]}{person.name.last[0]}
-              </div>
-            </div>
-
-            {/* Second candid photo — pill */}
-            <div className="absolute -bottom-4 -left-4 sm:-left-6 z-20 overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-105" style={{ width: '90px', height: '115px', borderRadius: '50px', border: '3px solid white', boxShadow: '0 8px 24px rgba(0,0,0,0.12)' }}>
-              <img src="/photo2.jpg" alt={`${person.fullName} candid`} className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
-              <div className="absolute inset-0 hidden items-center justify-center font-display text-2xl italic" style={{ background: 'var(--blush-light)', color: 'var(--blush-mid)' }}>✦</div>
-            </div>
-          </div>
+          <motion.div 
+            className="fan-stack" 
+            onClick={handleFlip}
+            whileHover="hover"
+          >
+            {stackOrder.map((photoIdx, i) => (
+              <motion.div 
+                key={i} 
+                className={`fan-card fan-card-${i + 1}`}
+                variants={{
+                  hover: { 
+                    rotate: (i - 1.5) * 12,
+                    x: (i - 1.5) * 45,
+                    y: Math.abs(i - 1.5) * -10,
+                    scale: 1.05,
+                    zIndex: i === 3 ? 100 : i
+                  }
+                }}
+                transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+              >
+                <img src={photoList[photoIdx].src} alt="Asmeret" />
+              </motion.div>
+            ))}
+            <span className="fan-star">✦</span>
+            <div className="fan-dot-1"></div>
+            <div className="fan-dot-2"></div>
+            <div className="fan-badge"><span>Tigray</span><strong>Builder ✦</strong></div>
+          </motion.div>
         </motion.div>
       </motion.div>
 
-      {/* Stats Bar */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -244,7 +230,6 @@ const Hero = () => {
         ))}
       </motion.div>
 
-      <ScrollIndicator />
     </section>
   );
 };

@@ -16,12 +16,12 @@ const StarterChips = ({ onSelect }) => {
             fontSize: '0.65rem', 
             textTransform: 'uppercase', 
             letterSpacing: '0.06em',
-            border: '0.5px solid rgba(237,147,177,0.3)', 
-            background: 'rgba(237,147,177,0.05)', 
-            color: 'rgba(240,232,224,0.6)',
+            border: '0.5px solid var(--border-color)', 
+            background: 'var(--card-bg)', 
+            color: 'var(--text-muted)',
           }}
-          onMouseEnter={(e) => { e.target.style.background = 'rgba(237,147,177,0.12)'; e.target.style.borderColor = 'var(--blush-mid)'; e.target.style.color = 'var(--blush-mid)'; }}
-          onMouseLeave={(e) => { e.target.style.background = 'rgba(237,147,177,0.05)'; e.target.style.borderColor = 'rgba(237,147,177,0.3)'; e.target.style.color = 'rgba(240,232,224,0.6)'; }}
+          onMouseEnter={(e) => { e.target.style.background = 'var(--blush-light)'; e.target.style.borderColor = 'var(--blush-mid)'; e.target.style.color = 'var(--blush-mid)'; }}
+          onMouseLeave={(e) => { e.target.style.background = 'var(--card-bg)'; e.target.style.borderColor = 'var(--border-color)'; e.target.style.color = 'var(--text-muted)'; }}
         >
           {q}
         </motion.button>

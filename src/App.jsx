@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
-import Cursor from './components/Cursor';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
+import FunFacts from './components/FunFacts';
+import FriendlyTips from './components/FriendlyTips';
 import Ticker from './components/Ticker';
 import LunaFeature from './components/LunaFeature';
 import Projects from './components/Projects';
+import Certificates from './components/Certificates';
 import Testimonials from './components/Testimonials';
 import About from './components/About';
 import Skills from './components/Skills';
@@ -14,42 +16,30 @@ import Footer from './components/Footer';
 import LunaChat from './components/LunaChat';
 import SplashScreen from './components/SplashScreen';
 import SectionDivider from './components/SectionDivider';
-import CurrentlyPlaying from './components/CurrentlyPlaying';
 import ScrollProgress from './components/ScrollProgress';
-
-// SETUP INSTRUCTIONS for Deployment:
-// 1. Drop your photo as public/photo.jpg
-// 2. Set VITE_GEMINI_API_KEY inside your .env file or deployment variables.
-// 3. run `npm run build`
-// 4. Drag `dist/` to Netlify.
+import CurrentlyPlaying from './components/CurrentlyPlaying';
+import ScrollIndicator from './components/ScrollIndicator';
 
 function App() {
-  useEffect(() => {
-    document.body.style.cursor = 'none';
-    return () => {
-      document.body.style.cursor = 'auto';
-    };
-  }, []);
-
   return (
     <>
       <SplashScreen />
       <ScrollProgress />
 
-      {/* Hide custom cursor on very small touch devices */}
-      <div className="hidden md:block">
-        <Cursor />
-      </div>
-
       <div className="relative z-10 font-body" style={{ color: 'var(--text)' }}>
         <Nav />
         <main>
           <Hero />
+          <SectionDivider />
+          <FriendlyTips />
+          <SectionDivider />
           <Ticker />
           <SectionDivider />
           <LunaFeature />
           <SectionDivider />
           <Projects />
+          <SectionDivider />
+          <Certificates />
           <SectionDivider />
           <Testimonials />
           <SectionDivider />
@@ -64,6 +54,7 @@ function App() {
         <Footer />
         <LunaChat />
         <CurrentlyPlaying />
+        <ScrollIndicator />
       </div>
     </>
   );

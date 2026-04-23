@@ -21,40 +21,53 @@ const Skills = () => {
           variants={variants}
           className="flex flex-col gap-12"
         >
-          {/* Dark section card */}
-          <div className="rounded-3xl p-8 md:p-12" style={{ background: 'var(--dark)' }}>
-            <div className="mb-10">
+          {/* Theme-responsive section card */}
+          <div 
+            className="rounded-3xl p-8 md:p-12 relative overflow-hidden transition-colors duration-300" 
+            style={{ 
+              background: 'var(--card-bg)', 
+              boxShadow: '0 20px 60px rgba(0,0,0,0.05)', 
+              border: '1px solid var(--card-border)' 
+            }}
+          >
+            <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] rounded-full filter blur-[80px] opacity-20 pointer-events-none" style={{ background: 'var(--blush-mid)' }}></div>
+            <div className="absolute bottom-[-20%] left-[-10%] w-[300px] h-[300px] rounded-full filter blur-[80px] opacity-10 pointer-events-none" style={{ background: 'var(--gold)' }}></div>
+            
+            <div className="mb-10 relative z-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="font-body uppercase" style={{ fontSize: '10px', letterSpacing: '0.18em', color: 'var(--blush-mid)', fontWeight: 500 }}>Capabilities</span>
-                <div className="flex-1 h-[0.5px]" style={{ background: 'rgba(237,147,177,0.3)' }} />
+                <div className="flex-1 h-[0.5px]" style={{ background: 'var(--blush)', opacity: 0.3 }} />
               </div>
-              <h2 className="font-display text-4xl md:text-5xl" style={{ color: '#FDF6F0' }}>
+              <h2 className="font-display text-4xl md:text-5xl" style={{ color: 'var(--text)' }}>
                 The <span className="italic" style={{ color: 'var(--blush-mid)' }}>stack</span> ✦
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 relative z-10">
               {skills.map((skillGroup, idx) => {
                 const colors = GROUP_COLORS[skillGroup.group] || GROUP_COLORS['Frontend'];
                 return (
                   <div key={idx} className="flex flex-col gap-4">
-                    <h3 className="font-body text-lg pb-3" style={{ color: '#FDF6F0', borderBottom: '0.5px solid rgba(255,255,255,0.1)', fontWeight: 500 }}>
+                    <h3 className="font-body text-lg pb-3" style={{ color: 'var(--text)', borderBottom: '0.5px solid var(--card-border)', fontWeight: 500 }}>
                       {skillGroup.group}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {skillGroup.items.map((item, i) => (
-                        <span 
+                        <motion.span 
                           key={i} 
-                          className="skill-item font-body text-sm px-3 py-1.5 rounded-full cursor-default"
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                          className="font-body text-sm px-4 py-2 rounded-full cursor-pointer relative overflow-hidden"
                           style={{ 
                             background: colors.bg, 
                             border: `0.5px solid ${colors.border}`, 
                             color: colors.text,
                             fontWeight: 400,
+                            boxShadow: `0 4px 12px ${colors.bg}`
                           }}
                         >
                           {item}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
                   </div>

@@ -1,138 +1,185 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { person, projects } from '../data/portfolio';
+import { projects } from '../data/portfolio';
 
 const LunaFeature = () => {
   const { ref, controls, variants } = useScrollReveal();
   const luna = projects.find(p => p.id === 'luna');
+  
+  useEffect(() => {
+    (function() {
+      // ── API KEY CONFIGURATION ──
+      const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+      // ─────────────────────────────────────
+
+      const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY;
+
+      const LUNA_SYSTEM = "You are Luna, a warm friendly knowledgeable AI assistant for women's health built for Ethiopian and African women by Asmeret Teklu. Answer health questions with empathy warmth and accuracy. You are not a doctor but give clear helpful culturally sensitive information. Be encouraging and kind. Keep responses 2-4 sentences max. End with 🌸";
+
+      let lunaHistory = [];
+      let isWaiting = false;
+
+      const messagesEl = document.getElementById("lunaMessages");
+      const inputEl = document.getElementById("lunaInput");
+      const sendBtn = document.getElementById("lunaSend");
+      const typingEl = document.getElementById("lunaTyping");
+
+      if (!messagesEl || !inputEl || !sendBtn) return;
+      
+      // Clear messages on mount to prevent double init in strict mode
+      messagesEl.innerHTML = "";
+      lunaHistory = [];
+
+      function addMsg(text, sender) {
+        const div = document.createElement("div");
+        div.className = "luna-msg " + (sender === "luna" ? "assistant-msg" : "user-msg");
+        div.textContent = text;
+        messagesEl.appendChild(div);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      function addQuickReplies() {
+        const chipsDiv = document.createElement("div");
+        chipsDiv.className = "luna-chips";
+        chipsDiv.id = "lunaChips";
+        chipsDiv.innerHTML = `
+          <button class="luna-chip" onclick="chipClick('Period pain 🌸')">Period pain 🌸</button>
+          <button class="luna-chip" onclick="chipClick('Irregular cycles')">Irregular cycles</button>
+          <button class="luna-chip" onclick="chipClick('Ethiopian diet & health')">Ethiopian diet & health</button>
+          <button class="luna-chip" onclick="chipClick('Cycle tracking tips')">Cycle tracking tips</button>
+        `;
+        messagesEl.appendChild(chipsDiv);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      window.chipClick = function(text) {
+        const chips = document.getElementById("lunaChips");
+        if (chips) chips.remove();
+        addMsg(text, "user");
+        sendToLuna(text);
+      };
+
+      addMsg("Hi! I'm Luna 🌸 I'm here to answer your women's health questions safely and privately. What's on your mind?", "luna");
+      addQuickReplies();
+
+      async function sendToLuna(userText) {
+        if (isWaiting || !userText.trim()) return;
+        isWaiting = true;
+        sendBtn.disabled = true;
+
+        lunaHistory.push({ role: "user", parts: [{ text: userText }] });
+
+        typingEl.style.display = "flex";
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        try {
+          const response = await fetch(GEMINI_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              system_instruction: { parts: [{ text: LUNA_SYSTEM }] },
+              contents: lunaHistory,
+              generationConfig: { maxOutputTokens: 300, temperature: 0.75 }
+            })
+          });
+
+          if (!response.ok) throw new Error("API error " + response.status);
+
+          const data = await response.json();
+          const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text
+            || "I'm having a little trouble right now 🌸 Please try again in a moment.";
+
+          lunaHistory.push({ role: "model", parts: [{ text: reply }] });
+          typingEl.style.display = "none";
+          addMsg(reply, "luna");
+
+        } catch (err) {
+          console.error("Luna error:", err);
+          typingEl.style.display = "none";
+          addMsg("I'm having a little trouble connecting right now 🌸 Please try again in a moment.", "luna");
+        }
+
+        isWaiting = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+
+      // Remove existing event listeners by cloning
+      const newSendBtn = sendBtn.cloneNode(true);
+      sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+      const newInputEl = inputEl.cloneNode(true);
+      inputEl.parentNode.replaceChild(newInputEl, inputEl);
+      
+      newSendBtn.addEventListener("click", function() {
+        const text = newInputEl.value.trim();
+        if (!text) return;
+        addMsg(text, "user");
+        newInputEl.value = "";
+        sendToLuna(text);
+      });
+
+      newInputEl.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          newSendBtn.click();
+        }
+      });
+    })();
+  }, []);
 
   return (
-    <section id="luna" className="py-24 relative overflow-hidden z-10">
-      <div className="max-w-6xl mx-auto px-6 lg:px-12">
+    <section id="luna" className="py-20 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div 
           ref={ref}
           initial="hidden"
           animate={controls}
           variants={variants}
         >
-          {/* Full-width featured card */}
-          <div 
-            className="rounded-[20px] p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-            style={{ 
-              background: 'var(--blush-light)', 
-              border: '0.5px solid var(--blush)',
-            }}
-          >
-            {/* Left — Text */}
-            <div className="flex flex-col gap-6 order-2 lg:order-1">
-              {/* Featured badge */}
-              <span 
-                className="w-fit font-body uppercase px-3.5 py-1.5 rounded-full"
-                style={{ fontSize: '10px', letterSpacing: '0.1em', color: 'var(--blush-mid)', border: '1px solid var(--blush-mid)', fontWeight: 500 }}
-              >
-                ✦ Featured project
-              </span>
-
-              <h2 className="font-display leading-tight" style={{ fontSize: '2rem', color: 'var(--text)' }}>
-                <span style={{ fontWeight: 400 }}>Luna</span> — <span className="italic" style={{ color: 'var(--blush-mid)' }}>AI for women's health in Africa</span>
-              </h2>
-
-              <p className="font-body leading-relaxed" style={{ color: 'var(--text-mid)', fontSize: '0.95rem' }}>
-                {luna?.description || "Women's health & menstrual cycle intelligence app for Ethiopian and African women. Phase-based AI recommendations. Adjusted nutritional AI models for Ethiopian dietary staples like Teff and regional fasting cycles."}
+          <div className="luna-featured-card">
+            <div className="luna-info">
+              <span className="luna-badge">✦ Featured Project · AI for Women's Health</span>
+              <h2 className="luna-title">Luna — <em>AI for women's health in Africa</em></h2>
+              <blockquote className="luna-quote">"I built Luna because no woman in my family had access to a doctor they could talk to honestly. That has to change."</blockquote>
+              <p className="luna-desc" style={{ color: 'var(--text-mid)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
+                <span className="lead">Women's health & menstrual cycle intelligence app for Ethiopian and African women.</span>
+                Phase-based AI recommendations. Adjusted nutritional AI models for Ethiopian dietary staples like Teff and regional fasting cycles.
               </p>
-
-              {/* Personal motivation quote */}
-              <blockquote 
-                className="font-display italic leading-relaxed pl-5"
-                style={{ borderLeft: '3px solid var(--blush)', color: 'var(--blush-mid)', fontSize: '0.95rem' }}
-              >
-                "I built Luna because my mother, my aunts, every woman I grew up around — none of them had access to a doctor they could talk to honestly. That has to change."
-              </blockquote>
-
-              <div className="flex flex-wrap gap-2">
-                {(luna?.tags || ['React Native', 'Expo', 'Supabase', 'Gemini API', 'Node.js']).map(tech => (
-                  <span 
-                    key={tech} 
-                    className="font-body uppercase rounded-md px-3 py-1.5"
-                    style={{ fontSize: '0.7rem', letterSpacing: '0.06em', background: 'var(--card-bg)', border: '0.5px solid var(--taupe)', color: 'var(--text-mid)', fontWeight: 500 }}
-                  >
-                    {tech}
-                  </span>
-                ))}
+              <div className="luna-tags flex flex-wrap gap-2 mb-8">
+                <span className="pill pill-blush font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--blush-light)] text-[var(--blush-mid)]">Flutter</span>
+                <span className="pill pill-lavender font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--lavender-light)] text-[var(--lavender)]">Gemini AI</span>
+                <span className="pill pill-gold font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--gold-light)] text-[var(--gold)]">Firebase</span>
+                <span className="pill pill-taupe font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[#f5e6e8] text-[var(--taupe)]">Amharic NLP</span>
               </div>
-
-              <a 
-                href={`mailto:${person.email}?subject=Luna%20AI%20Early%20Access%20Request`} 
-                className="btn-primary-blush w-fit mt-2 group"
-              >
-                <span>Come with me</span> <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
-              </a>
+              <div className="luna-try-hint">
+                Try it live
+                <svg width="40" height="16" viewBox="0 0 40 16" fill="none">
+                  <path d="M0 8 Q20 2 38 8" stroke="#ED93B1" strokeWidth="1.5" fill="none" strokeDasharray="3 2"/>
+                  <path d="M34 5 L38 8 L34 11" stroke="#ED93B1" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                </svg>
+              </div>
             </div>
-
-            {/* Right — Phone Mockup */}
-            <motion.div 
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="order-1 lg:order-2 flex justify-center lg:justify-end"
-            >
-              <motion.div
-                animate={{ y: [-12, 12, -12] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="w-full flex justify-center lg:justify-end"
-              >
-                <motion.div 
-                  whileHover={{ y: -5, scale: 1.02 }}
-                  className="relative w-[260px] h-[540px] rounded-[40px] p-[6px] flex flex-col items-center cursor-pointer"
-                  style={{ border: '1.5px solid var(--blush)', background: 'var(--card-bg)', boxShadow: '0 20px 60px rgba(237,147,177,0.12)' }}
-                >
-                  {/* Notch */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90px] h-[24px] rounded-b-[16px] z-20" style={{ background: 'var(--card-bg)', borderLeft: '1px solid var(--blush)', borderRight: '1px solid var(--blush)', borderBottom: '1px solid var(--blush)' }} />
-                  
-                  {/* Screen */}
-                  <div className="w-full h-full rounded-[34px] overflow-hidden relative flex flex-col p-5 pt-12 gap-5" style={{ background: 'var(--dark)', border: '0.5px solid rgba(237,147,177,0.2)' }}>
-                    
-                    <div className="w-full flex justify-between items-center">
-                      <span className="font-display italic text-2xl" style={{ color: 'var(--blush-mid)' }}>luna</span>
-                      <span className="w-8 h-8 rounded-full flex items-center justify-center font-body text-xs" style={{ background: 'rgba(255,255,255,0.1)', color: '#fff' }}>AT</span>
-                    </div>
-
-                    {/* Cycle Ring */}
-                    <div className="relative self-center w-[145px] h-[145px] mt-2 flex items-center justify-center">
-                      <div className="absolute inset-0 rounded-full" style={{ border: '2px solid rgba(237,147,177,0.2)' }} />
-                      <div className="absolute inset-0 rounded-full rotate-45" style={{ borderTop: '2px solid var(--blush-mid)', borderRight: '2px solid var(--blush-mid)', borderBottom: '2px solid transparent', borderLeft: '2px solid transparent' }} />
-                      <div className="flex flex-col items-center">
-                        <span className="font-body uppercase text-xs tracking-wider mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Cycle Day</span>
-                        <span className="font-display text-5xl" style={{ color: '#fff' }}>14</span>
-                      </div>
-                    </div>
-
-                    <div className="w-fit mx-auto px-4 py-1.5 rounded-full font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', background: 'rgba(237,147,177,0.1)', border: '1px solid rgba(237,147,177,0.3)', color: 'var(--blush-mid)' }}>
-                      ✦ Ovulation Phase
-                    </div>
-
-                    <div className="flex flex-col gap-2.5 mt-2">
-                      {[
-                        { icon: '🥑', title: 'Nutrition Focus', desc: 'Zinc & Magnesium' },
-                        { icon: '🧘', title: 'Movement', desc: 'High Energy Flow' },
-                        { icon: '✨', title: 'Mood Expectation', desc: 'Peak Sociability' }
-                      ].map((card, i) => (
-                        <div key={i} className="w-full rounded-xl p-3 flex items-center gap-3" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                          <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg" style={{ background: 'rgba(237,147,177,0.1)' }}>
-                            {card.icon}
-                          </div>
-                          <div>
-                            <h4 className="font-body text-sm" style={{ color: '#fff' }}>{card.title}</h4>
-                            <p className="font-body" style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)' }}>{card.desc}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
+            <div className="luna-chat-widget">
+              <div className="luna-chat-header">
+                <div className="luna-avatar">✦</div>
+                <div><div className="luna-chat-name">Luna</div><div className="luna-chat-sub">Women's Health AI</div></div>
+                <div className="luna-online-dot"></div>
+              </div>
+              <div className="luna-messages-wrap">
+                <div className="luna-messages" id="lunaMessages"></div>
+              </div>
+              <div className="luna-typing" id="lunaTyping" style={{ display: 'none' }}><span></span><span></span><span></span></div>
+              <div className="luna-input-bar">
+                <input type="text" id="lunaInput" placeholder="Ask Luna anything..." autoComplete="off" />
+                <button id="lunaSend" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
@@ -141,3 +188,4 @@ const LunaFeature = () => {
 };
 
 export default LunaFeature;
+

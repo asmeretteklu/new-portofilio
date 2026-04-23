@@ -24,31 +24,31 @@ const Footer = () => {
   return (
     <footer className="py-12" style={{ borderTop: '0.5px solid var(--taupe)' }}>
       <div className="max-w-6xl mx-auto px-6 lg:px-12">
-        
+
         <div className="flex flex-col items-center gap-4 mb-8">
           <HeartbeatLine />
-          <p className="font-body" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: 'var(--muted)', opacity: 0.7 }}>
+          <p className="font-body" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: 'var(--text)', opacity: 0.9 }}>
             Designed & built by Asmeret Teklu Gebremedhin
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-6" style={{ borderTop: '0.5px solid var(--taupe)' }}>
-          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--muted)', opacity: 0.5 }}>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-6" style={{ borderTop: '1px solid var(--taupe)' }}>
+          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--text)', opacity: 0.8 }}>
             asmeret.netlify.app · {new Date().getFullYear()}
           </p>
-          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--muted)', opacity: 0.5 }}>
+          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--text)', opacity: 0.8 }}>
             Made in Mekelle, Tigray ✦ Powered by curiosity
           </p>
         </div>
 
         <div className="mt-8 text-center">
-          <p className="font-display italic" style={{ fontSize: '0.75rem', color: 'var(--blush-mid)', opacity: 0.5 }}>
+          <p className="font-display italic" style={{ fontSize: '0.75rem', color: 'var(--blush-mid)' }}>
             Luna AI is coming. Stay close. 🌙
           </p>
         </div>
 
         <div className="flex justify-center mt-6">
-          <button 
+          <button
             onClick={scrollToTop}
             className="w-10 h-10 rounded-full flex items-center justify-center transition-all group"
             style={{ border: '0.5px solid var(--taupe)', color: 'var(--muted)' }}

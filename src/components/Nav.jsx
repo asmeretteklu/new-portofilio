@@ -38,6 +38,7 @@ const Nav = () => {
   const links = [
     { name: 'Work', href: '#work' },
     { name: 'Luna AI', href: '#luna' },
+    { name: 'Certificates', href: '#certificates' },
     { name: 'Skills', href: '#skills' },
     { name: 'About', href: '#about' },
   ];

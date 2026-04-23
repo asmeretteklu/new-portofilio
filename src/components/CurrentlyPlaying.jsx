@@ -1,230 +1,122 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ReactPlayer from 'react-player';
-
-const PLAYLIST = [
-  { title: "willow",               artist: "sombr",            color: "#C9A96E", url: "https://www.youtube.com/watch?v=KLnLOT6qZH4" },
-  { title: "everything i wanted",  artist: "Billie Eilish",    color: "#9F8BBD", url: "https://www.youtube.com/watch?v=rodyJ8gGEFc" },
-  { title: "Caroline",             artist: "sombr",            color: "#ED93B1", url: "https://www.youtube.com/watch?v=aFPPIPV4vlk" },
-  { title: "ocean eyes",           artist: "Billie Eilish",    color: "#9F8BBD", url: "https://www.youtube.com/watch?v=HQitbbtPZz8" },
-  { title: "bad guy",              artist: "Billie Eilish",    color: "#ED93B1", url: "https://www.youtube.com/watch?v=4-TbQnONe_w" },
-  { title: "weak",                 artist: "sombr",            color: "#C9A96E", url: "https://www.youtube.com/watch?v=F1Y5sbeZx_k" },
-  { title: "happier than ever",    artist: "Billie Eilish",    color: "#9F8BBD", url: "https://www.youtube.com/watch?v=VC17QJXu0nc" },
-];
-
-const VinylDisc = ({ color, spinning }) => (
-  <svg width="28" height="28" viewBox="0 0 28 28" className={spinning ? 'vinyl-spin' : ''} style={{ flexShrink: 0 }}>
-    <circle cx="14" cy="14" r="13" fill="none" stroke={color} strokeWidth="1" opacity="0.5" />
-    <circle cx="14" cy="14" r="10" fill="none" stroke={color} strokeWidth="0.5" opacity="0.3" />
-    <circle cx="14" cy="14" r="7" fill="none" stroke={color} strokeWidth="0.5" opacity="0.3" />
-    <circle cx="14" cy="14" r="4" fill={color} opacity="0.8" />
-    <circle cx="14" cy="14" r="1.5" fill="var(--bg)" />
-  </svg>
-);
-
-const WaveformBars = ({ active }) => (
-  <div className="flex items-end gap-[2px] h-3">
-    {[1,2,3,4].map(i => (
-      <div
-        key={i}
-        className="waveform-bar"
-        style={{
-          height: active ? undefined : `${3 + i * 2}px`,
-          animationPlayState: active ? 'running' : 'paused',
-        }}
-      />
-    ))}
-  </div>
-);
 
 const CurrentlyPlaying = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [volume, setVolume] = useState(0.3);
-  const [showVolume, setShowVolume] = useState(false);
-  const volumeTimeout = useRef(null);
+  const [expanded, setExpanded] = useState(false);
+  const [playlistUrl, setPlaylistUrl] = useState("https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0");
+  const [inputUrl, setInputUrl] = useState("");
+  const [showInput, setShowInput] = useState(false);
 
-  const song = PLAYLIST[currentIndex];
+  const [isMini, setIsMini] = useState(false);
 
-  // Fade in after 3s
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const togglePlay = useCallback((e) => {
-    e.stopPropagation();
-    setIsPlaying(prev => !prev);
-  }, []);
-
-  // nextSong without requiring event (for onEnded callback from ReactPlayer)
-  const nextSong = useCallback((e) => {
-    if (e && e.stopPropagation) e.stopPropagation();
-    setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
-    setIsLiked(false);
-  }, []);
-
-  const handleEnded = useCallback(() => {
-    setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
-    setIsLiked(false);
-  }, []);
-
-  const prevSong = useCallback((e) => {
-    e.stopPropagation();
-    setCurrentIndex(prev => (prev - 1 + PLAYLIST.length) % PLAYLIST.length);
-    setIsLiked(false);
-  }, []);
-
-  const adjustVolume = useCallback((delta) => {
-    setVolume(prev => Math.min(1, Math.max(0, +(prev + delta).toFixed(2))));
-    setShowVolume(true);
-    if (volumeTimeout.current) clearTimeout(volumeTimeout.current);
-    volumeTimeout.current = setTimeout(() => setShowVolume(false), 1500);
-  }, []);
-
-  const openSpotify = useCallback(() => {
-    window.open(`https://open.spotify.com/search/${encodeURIComponent(song.title + ' ' + song.artist)}`, '_blank');
-  }, [song]);
-
-  if (!visible) return null;
+  const handleUrlSubmit = (e) => {
+    if (e.key === 'Enter') {
+      let finalUrl = inputUrl;
+      if (inputUrl.includes('open.spotify.com/playlist/')) {
+        const id = inputUrl.split('playlist/')[1].split('?')[0];
+        finalUrl = `https://open.spotify.com/embed/playlist/${id}?utm_source=generator&theme=0`;
+      }
+      setPlaylistUrl(finalUrl);
+      setShowInput(false);
+      setInputUrl("");
+    }
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="fixed bottom-6 left-4 sm:left-6 z-[60] pointer-events-auto"
-    >
-      {/* ReactPlayer — Must technically be 'visible' inside the viewport so YouTube doesn't auto-pause it to save resources. We hide it behind everything else using a negative z-index. */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '300px', height: '300px', opacity: 0.01, pointerEvents: 'none', zIndex: -50 }}>
-        <ReactPlayer
-          url={song.url}
-          playing={isPlaying}
-          volume={volume}
-          width="300px"
-          height="300px"
-          onEnded={handleEnded}
-          playsinline={true}
-          onError={(e) => console.error("ReactPlayer Error:", e)}
-          config={{
-            youtube: {
-              playerVars: { showinfo: 0, controls: 0, playsinline: 1, origin: typeof window !== 'undefined' ? window.location.origin : '' }
-            }
-          }}
-        />
-      </div>
-
-      {/* Tooltip on hover */}
+    <div style={{ position: 'fixed', bottom: '24px', left: '24px', zIndex: 600, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
       <AnimatePresence>
-        {hovered && (
-          <motion.div
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1 rounded-full shadow-lg font-body"
-            style={{ fontSize: '0.55rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', background: 'var(--card-bg)', border: '0.5px solid var(--blush)' }}
+        {expanded && (
+          <motion.div 
+            initial={{ opacity: 0, y: 15, scale: 0.9, rotate: -2 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, y: 15, scale: 0.9, rotate: -2 }}
+            style={{
+              background: 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '24px',
+              padding: '12px',
+              boxShadow: '0 20px 50px rgba(237,147,177,0.3)',
+              width: '350px',
+              border: '1.5px solid rgba(245,196,211,0.5)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
           >
-            asmeret's current vibe ✦
+            <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '80px', height: '80px', background: 'var(--blush-light)', borderRadius: '50%', filter: 'blur(30px)', opacity: 0.6 }}></div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', padding: '4px 8px', position: 'relative', zIndex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--blush-mid)' }}>Vibes ✦</span>
+                <div className="w-1 h-1 rounded-full bg-[#4ade80] animate-pulse"></div>
+              </div>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <button 
+                  onClick={() => setShowInput(!showInput)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--blush-mid)', fontSize: '10px', fontWeight: 600 }}
+                >
+                  {showInput ? "CANCEL" : "CHANGE"}
+                </button>
+                <button 
+                  onClick={() => setIsMini(!isMini)} 
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '18px', padding: 0 }}
+                  title={isMini ? "Expand" : "Minimize"}
+                >
+                  {isMini ? "□" : "—"}
+                </button>
+                <button onClick={() => setExpanded(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '20px', padding: 0 }}>&times;</button>
+              </div>
+            </div>
+
+            {showInput ? (
+              <div style={{ padding: '0 8px 10px 8px', position: 'relative', zIndex: 1 }}>
+                <input 
+                  type="text" 
+                  placeholder="Paste Spotify Link & Press Enter..."
+                  value={inputUrl}
+                  onChange={(e) => setInputUrl(e.target.value)}
+                  onKeyDown={handleUrlSubmit}
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: '10px', border: '1px solid var(--blush)', fontSize: '12px', outline: 'none' }}
+                />
+              </div>
+            ) : (
+              <iframe 
+                style={{ borderRadius: '16px', position: 'relative', zIndex: 1, boxShadow: '0 4px 15px rgba(0,0,0,0.05)', transition: 'height 0.3s ease' }} 
+                src={playlistUrl}
+                width="100%" 
+                height={isMini ? "80" : "380"}
+                frameBorder="0" 
+                allowFullScreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy"
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Volume indicator */}
-      <AnimatePresence>
-        {showVolume && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute -top-9 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full shadow-lg font-body"
-            style={{ fontSize: '0.6rem', color: 'var(--blush-mid)', background: 'var(--card-bg)', border: '0.5px solid var(--blush)' }}
-          >
-            🔊 {Math.round(volume * 100)}%
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div
-        className="relative overflow-hidden rounded-full flex items-center transition-all duration-300 group"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+      <motion.button 
+        onClick={() => setExpanded(!expanded)}
+        whileHover={{ scale: 1.1, rotate: 12 }}
+        whileTap={{ scale: 0.9 }}
         style={{
-          background: 'var(--card-bg)',
-          backdropFilter: 'blur(12px)',
-          border: `0.5px solid ${song.color}44`,
-          boxShadow: `0 8px 32px rgba(0,0,0,0.08), 0 0 20px ${song.color}10`,
+          background: 'linear-gradient(135deg, #ED93B1, #D4437C)',
+          color: 'white', width: '54px', height: '54px',
+          borderRadius: '27px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          border: '2px solid white', cursor: 'pointer', 
+          boxShadow: '0 8px 20px rgba(237,147,177,0.4)',
+          fontSize: '22px', position: 'relative'
         }}
       >
-        {/* Playback Controls */}
-        <div className="flex items-center gap-1 pl-3 pr-1">
-          <button onClick={prevSong} className="flex-shrink-0 w-6 h-6 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Previous track">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" strokeWidth="2"></line></svg>
-          </button>
-
-          <button onClick={togglePlay} className="flex-shrink-0 w-8 h-8 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--blush-mid)' }} title={isPlaying ? "Pause" : "Play"}>
-            {isPlaying ? (
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            ) : (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ marginLeft: '2px' }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            )}
-          </button>
-
-          <button onClick={nextSong} className="flex-shrink-0 w-6 h-6 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Next track">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" strokeWidth="2"></line></svg>
-          </button>
-        </div>
-
-        {/* Vinyl + Waveform */}
-        <div className="flex items-center gap-2 pr-1">
-          <VinylDisc color={song.color} spinning={isPlaying} />
-          <WaveformBars active={isPlaying} />
-        </div>
-
-        {/* Track info */}
-        <button onClick={openSpotify} className="flex flex-col items-start overflow-hidden flex-1 relative z-10 px-2 py-2 text-left min-w-0">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35 }}
-              className="w-full"
-            >
-              <span className="font-body uppercase tracking-widest block truncate" style={{ fontSize: '0.65rem', color: song.color, fontWeight: 500 }}>
-                {song.title}
-              </span>
-              <span className="font-body block truncate" style={{ fontSize: '0.55rem', color: 'var(--muted)' }}>
-                {song.artist}
-              </span>
-            </motion.div>
-          </AnimatePresence>
-        </button>
-
-        {/* Volume */}
-        <div className="flex items-center gap-0 flex-shrink-0 pr-1">
-          <button onClick={(e) => { e.stopPropagation(); adjustVolume(-0.1); }} className="w-7 h-7 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Volume down">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </button>
-          <button onClick={(e) => { e.stopPropagation(); adjustVolume(0.1); }} className="w-7 h-7 flex items-center justify-center transition-colors rounded-full" style={{ color: 'var(--muted)' }} title="Volume up">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </button>
-        </div>
-
-        {/* Heart */}
-        <button
-          onClick={(e) => { e.stopPropagation(); setIsLiked(!isLiked); }}
-          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-sm transition-transform hover:scale-110 active:scale-90 mr-2"
-          style={{ color: isLiked ? song.color : 'var(--muted)' }}
-        >
-          {isLiked ? '♥' : '♡'}
-        </button>
-      </div>
-    </motion.div>
+        <span className="relative z-10">♪</span>
+        {/* Ring animation */}
+        <motion.div 
+          animate={{ scale: [1, 1.4], opacity: [0.3, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{ position: 'absolute', inset: -2, border: '2px solid #ED93B1', borderRadius: '50%' }}
+        />
+      </motion.button>
+    </div>
   );
 };
 
 export default CurrentlyPlaying;
+

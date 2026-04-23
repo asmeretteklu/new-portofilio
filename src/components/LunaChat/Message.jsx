@@ -49,9 +49,10 @@ const Message = ({ role, content, typewriter = false }) => {
         style={isUser ? {
           background: 'var(--blush-mid)',
         } : {
-          background: 'rgba(237,147,177,0.08)',
-          borderLeft: '2px solid var(--blush-mid)',
-          color: '#f0e8e0',
+          background: 'var(--blush-light)',
+          borderLeft: '4px solid var(--blush-mid)',
+          color: 'var(--text)',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
         }}
       >
         {isUser ? (

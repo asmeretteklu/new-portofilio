@@ -1,92 +1,71 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import emailjs from '@emailjs/browser';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { person } from '../data/portfolio';
 
-const FormField = ({ id, label, type = "text", ...props }) => (
-  <div className="flex flex-col gap-1.5">
-    <label htmlFor={id} className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', fontWeight: 500 }}>
-      {label}
-    </label>
-    {type === 'textarea' ? (
-      <textarea
-        id={id}
-        className="w-full rounded-xl px-4 py-3 outline-none font-body text-sm transition-all resize-none"
-        style={{ background: 'var(--blush-light)', border: '0.5px solid var(--taupe)', color: 'var(--text)' }}
-        onFocus={(e) => e.target.style.borderColor = 'var(--blush-mid)'}
-        onBlur={(e) => e.target.style.borderColor = 'var(--taupe)'}
-        {...props}
-      />
-    ) : (
-      <input
-        id={id}
-        type={type}
-        className="w-full rounded-xl px-4 py-3 outline-none font-body text-sm transition-all"
-        style={{ background: 'var(--blush-light)', border: '0.5px solid var(--taupe)', color: 'var(--text)' }}
-        onFocus={(e) => e.target.style.borderColor = 'var(--blush-mid)'}
-        onBlur={(e) => e.target.style.borderColor = 'var(--taupe)'}
-        {...props}
-      />
-    )}
-  </div>
-);
-
 const Contact = () => {
   const { ref, controls, variants } = useScrollReveal();
-  
-  const formRef = useRef();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus(null);
-    setErrorMessage('');
+  useEffect(() => {
+    const form = document.getElementById("contactForm");
+    if (!form) return;
+    
+    // remove existing listeners if any
+    const newForm = form.cloneNode(true);
+    form.parentNode.replaceChild(newForm, form);
 
-    const formData = new FormData(formRef.current);
-    const data = Object.fromEntries(formData.entries());
+    newForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      const msg = document.getElementById("formMessage");
+      btn.textContent = "Sending... ✦";
+      btn.disabled = true;
+      
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    try {
-      const response = await fetch("https://formsubmit.co/ajax/asmeretteklu03@gmail.com", {
-        method: "POST",
-        headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        formRef.current.reset();
-        setTimeout(() => setSubmitStatus(null), 5000);
-      } else {
-        throw new Error('Network response was not ok');
+      if (!serviceId || !templateId || !publicKey) {
+        msg.textContent = "Email service not configured. Please add your EmailJS keys to .env 🌸";
+        msg.style.cssText = "display:block;color:#9B8080;font-size:13px;margin-top:10px";
+        btn.textContent = "Send message ✦"; btn.disabled = false;
+        return;
       }
-    } catch (error) {
-      setSubmitStatus('error');
-      setErrorMessage('Network error. Please try again or email me directly at asmeretteklu03@gmail.com.');
-      setTimeout(() => setSubmitStatus(null), 5000);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
-  const advantages = [
-    { icon: "🎓", text: "2025 SE Graduate" },
-    { icon: "🤖", text: "AI & Tech Specialist" },
-    { icon: "⚡", text: "Adaptable Learner" },
-    { icon: "💡", text: "Creative Problem Solver" }
-  ];
+      // Initialize if not done
+      if (window.emailjs) {
+        window.emailjs.init(publicKey);
+        window.emailjs.sendForm(serviceId, templateId, this)
+          .then(() => {
+            msg.textContent = "Message sent! I'll get back to you soon 🌸";
+            msg.style.cssText = "display:block;color:#ED93B1;font-size:13px;margin-top:10px;animation:msg-in 0.3s ease";
+            this.reset(); btn.textContent = "Send message ✦"; btn.disabled = false;
+          }).catch((err) => {
+            console.error("EmailJS Error:", err);
+            msg.textContent = "Something went wrong — please email me directly ✦";
+            msg.style.cssText = "display:block;color:#9B8080;font-size:13px;margin-top:10px";
+            btn.textContent = "Send message ✦"; btn.disabled = false;
+          });
+      } else {
+        msg.textContent = "Loading email service... please try again in a moment.";
+        msg.style.cssText = "display:block;color:#9B8080;font-size:13px;margin-top:10px";
+        btn.textContent = "Send message ✦"; btn.disabled = false;
+      }
+    });
+  }, []);
 
   const infoCards = [
     { icon: '📍', label: 'Location', value: 'Mekelle, Ethiopia', sub: 'Remote Available' },
     { icon: '💼', label: 'Availability', value: 'Open to Opportunities', sub: 'Roles & Collabs' },
     { icon: '🌍', label: 'Timezone', value: 'EAT (UTC+3)', sub: 'Flexible Hours' },
     { icon: '⚡', label: 'Response', value: 'Within 24 Hours', sub: 'Usually Faster' }
+  ];
+
+  const advantages = [
+    { icon: "🎓", text: "2025 SE Graduate" },
+    { icon: "🤖", text: "AI & Tech Specialist" },
+    { icon: "⚡", text: "Adaptable Learner" },
+    { icon: "💡", text: "Creative Problem Solver" }
   ];
 
   return (
@@ -149,8 +128,8 @@ const Contact = () => {
 
               {/* Social Links */}
               <div className="flex gap-2.5">
-                <a href={`mailto:${person.email}`} className="flex-1 py-3 px-2 rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300" style={{ border: '0.5px solid var(--card-border)', background: 'var(--card-bg)' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--blush-mid)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--card-border)'}>
-                  <span>📧</span> <span className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.04em', color: 'var(--muted)' }}>Email</span>
+                <a href="/Asmeret_Teklu_CV.pdf" download className="flex-1 py-3 px-2 rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300" style={{ border: '0.5px solid var(--card-border)', background: 'var(--card-bg)' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--blush-mid)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--card-border)'}>
+                  <span>📄</span> <span className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.04em', color: 'var(--muted)' }}>CV</span>
                 </a>
                 <a href={person.linkedin} target="_blank" rel="noreferrer" className="flex-1 py-3 px-2 rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300" style={{ border: '0.5px solid var(--card-border)', background: 'var(--card-bg)' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--blush-mid)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--card-border)'}>
                   <span>💼</span> <span className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.04em', color: 'var(--muted)' }}>LinkedIn</span>
@@ -167,78 +146,37 @@ const Contact = () => {
                 className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 relative overflow-hidden"
                 style={{ background: 'var(--card-bg)', border: '0.5px solid var(--card-border)', boxShadow: '0 20px 60px rgba(0,0,0,0.04)' }}
               >
-                {/* Status messages */}
-                <AnimatePresence mode="wait">
-                  {submitStatus === 'success' && (
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
-                      className="absolute inset-0 z-50 flex items-center justify-center flex-col gap-4 rounded-3xl"
-                      style={{ background: 'var(--card-bg)' }}
-                    >
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring" }} className="text-5xl">✅</motion.div>
-                      <h3 className="font-display text-2xl" style={{ color: 'var(--text)' }}>Message Sent!</h3>
-                      <p className="font-body text-sm" style={{ color: 'var(--text-mid)' }}>I'll get back to you within 24 hours.</p>
-                    </motion.div>
-                  )}
-                  {submitStatus === 'error' && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                      className="mb-4 text-sm px-4 py-3 rounded-lg text-center z-40"
-                      style={{ background: 'rgba(237,147,177,0.15)', border: '1px solid var(--blush-mid)', color: 'var(--blush-mid)' }}
-                    >
-                      ❌ {errorMessage}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
                 <div className="mb-6">
                   <h3 className="font-display text-xl sm:text-2xl mb-1" style={{ color: 'var(--text)' }}>Send me a message</h3>
                   <p className="font-body text-sm" style={{ color: 'var(--text-mid)' }}>Have a project in mind? Let's discuss how we can work together.</p>
                 </div>
 
-                <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form id="contactForm" className="flex flex-col gap-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FormField id="name" name="from_name" label="Full Name *" placeholder="Your name" required />
-                    <FormField id="email" name="from_email" type="email" label="Email *" placeholder="you@email.com" required />
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="from_name" className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', fontWeight: 500 }}>Full Name *</label>
+                      <input id="from_name" name="from_name" placeholder="Your name" required className="w-full rounded-xl px-4 py-3 outline-none font-body text-sm transition-all" style={{ background: 'var(--blush-light)', border: '0.5px solid var(--taupe)', color: 'var(--text)' }} onFocus={(e) => e.target.style.borderColor = 'var(--blush-mid)'} onBlur={(e) => e.target.style.borderColor = 'var(--taupe)'} />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="from_email" className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', fontWeight: 500 }}>Email *</label>
+                      <input id="from_email" name="from_email" type="email" placeholder="you@email.com" required className="w-full rounded-xl px-4 py-3 outline-none font-body text-sm transition-all" style={{ background: 'var(--blush-light)', border: '0.5px solid var(--taupe)', color: 'var(--text)' }} onFocus={(e) => e.target.style.borderColor = 'var(--blush-mid)'} onBlur={(e) => e.target.style.borderColor = 'var(--taupe)'} />
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="subject" className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', fontWeight: 500 }}>
-                      Subject *
-                    </label>
-                    <select 
-                      id="subject" name="subject" required defaultValue=""
-                      className="w-full rounded-xl px-4 py-3 outline-none font-body text-sm transition-all appearance-none cursor-pointer"
-                      style={{ background: 'var(--blush-light)', border: '0.5px solid var(--taupe)', color: 'var(--text)' }}
-                    >
-                      <option value="" disabled hidden>Select an option...</option>
-                      <option value="💼 Job Opportunity">💼 Job Opportunity</option>
-                      <option value="🎓 Internship Inquiry">🎓 Internship</option>
-                      <option value="🤝 Project Collaboration">🤝 Collaboration</option>
-                      <option value="⚡ Freelance Work">⚡ Freelance</option>
-                      <option value="💬 General Inquiry">💬 General</option>
-                    </select>
+                    <label htmlFor="message" className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', fontWeight: 500 }}>Your Message *</label>
+                    <textarea id="message" name="message" placeholder="Tell me about your project..." rows="4" required className="w-full rounded-xl px-4 py-3 outline-none font-body text-sm transition-all resize-none" style={{ background: 'var(--blush-light)', border: '0.5px solid var(--taupe)', color: 'var(--text)' }} onFocus={(e) => e.target.style.borderColor = 'var(--blush-mid)'} onBlur={(e) => e.target.style.borderColor = 'var(--taupe)'}></textarea>
                   </div>
 
-                  <FormField id="message" name="message" type="textarea" label="Your Message *" placeholder="Tell me about your project..." rows="4" required />
-
-                  <motion.button 
+                  <button 
+                    id="submitBtn"
                     type="submit" 
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={isSubmitting || submitStatus === 'success'}
-                    className="btn-primary-blush w-full justify-center mt-2 py-4"
+                    className="btn-primary-blush w-full justify-center mt-2 py-4 transition-all"
                     style={{ fontSize: '0.8rem', letterSpacing: '0.08em' }}
                   >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        Sending...
-                      </span>
-                    ) : (
-                      <>Send Message 🚀</>
-                    )}
-                  </motion.button>
+                    Send message ✦
+                  </button>
+                  <span id="formMessage" style={{ display: 'none' }}></span>
                 </form>
               </div>
             </div>
