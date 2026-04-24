@@ -1,144 +1,10 @@
-import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { projects, lunaSystemPrompt } from '../data/portfolio';
+import { projects } from '../data/portfolio';
 
 const LunaFeature = () => {
   const { ref, controls, variants } = useScrollReveal();
   const luna = projects.find(p => p.id === 'luna');
-  
-  useEffect(() => {
-    (function() {
-      // ── API KEY CONFIGURATION ──
-      const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-      // ─────────────────────────────────────
-
-      let conversationHistory = [];
-      let isWaiting = false;
-
-      const messagesEl = document.getElementById("lunaMessages");
-      const inputEl = document.getElementById("lunaInput");
-      const sendBtn = document.getElementById("lunaSend");
-      const typingEl = document.getElementById("lunaTyping");
-
-      if (!messagesEl || !inputEl || !sendBtn) return;
-      
-      // Clear messages on mount to prevent double init in strict mode
-      messagesEl.innerHTML = "";
-      conversationHistory = [];
-
-      function addMsg(text, sender) {
-        const div = document.createElement("div");
-        div.className = "luna-msg " + (sender === "luna" ? "assistant-msg" : "user-msg");
-        div.textContent = text;
-        messagesEl.appendChild(div);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-      }
-
-      function addQuickReplies() {
-        const chipsDiv = document.createElement("div");
-        chipsDiv.className = "luna-chips";
-        chipsDiv.id = "lunaChips";
-        chipsDiv.innerHTML = `
-          <button class="luna-chip" onclick="chipClick('What has Asmeret built?')">What has she built? ✦</button>
-          <button class="luna-chip" onclick="chipClick('Tell me about Luna AI')">Luna AI 🌙</button>
-          <button class="luna-chip" onclick="chipClick('What makes Asmeret different?')">What makes her different? 💛</button>
-          <button class="luna-chip" onclick="chipClick('How do I work with Asmeret?')">Work with her 📩</button>
-        `;
-        messagesEl.appendChild(chipsDiv);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-      }
-
-      window.chipClick = function(text) {
-        const chips = document.getElementById("lunaChips");
-        if (chips) chips.remove();
-        addMsg(text, "user");
-        sendToLuna(text);
-      };
-
-      addMsg("Hey, I'm Luna 🌙 I know everything about Asmeret — her work, her story, and how to reach her. What would you like to know?", "luna");
-      addQuickReplies();
-
-      async function sendToLuna(userText) {
-        if (isWaiting || !userText.trim()) return;
-        isWaiting = true;
-        sendBtn.disabled = true;
-
-        typingEl.style.display = "flex";
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-
-        try {
-          const response = await fetch(
-            'https://api.groq.com/openai/v1/chat/completions',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_KEY}`,
-              },
-              body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
-                max_tokens: 300,
-                messages: [
-                  { role: 'system', content: lunaSystemPrompt },
-                  ...conversationHistory,
-                  { role: 'user', content: userText }
-                ],
-              }),
-            }
-          );
-
-          if (!response.ok) throw new Error("API error " + response.status);
-
-          const data = await response.json();
-          const reply = data.choices?.[0]?.message?.content || "Luna is resting 🌙 Try again in a moment.";
-
-          conversationHistory.push(
-            { role: 'user', content: userText },
-            { role: 'assistant', content: reply }
-          );
-          typingEl.style.display = "none";
-          addMsg(reply, "luna");
-
-        } catch (err) {
-          console.error("Luna error:", err);
-          typingEl.style.display = "none";
-          const errorMsg = 
-            err.message.includes('401') 
-              ? "Luna needs her API key set up — check Netlify environment variables."
-            : err.message.includes('429') 
-              ? "Luna is resting for a moment ✦ Try again shortly."
-            : "Luna had a moment — try again! 🌙";
-          addMsg(errorMsg, "luna");
-        }
-
-        isWaiting = false;
-        sendBtn.disabled = false;
-        inputEl.focus();
-      }
-
-      // Remove existing event listeners by cloning
-      const newSendBtn = sendBtn.cloneNode(true);
-      sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
-      const newInputEl = inputEl.cloneNode(true);
-      inputEl.parentNode.replaceChild(newInputEl, inputEl);
-      
-      newSendBtn.addEventListener("click", function() {
-        const text = newInputEl.value.trim();
-        if (!text) return;
-        addMsg(text, "user");
-        newInputEl.value = "";
-        sendToLuna(text);
-      });
-
-      newInputEl.addEventListener("keydown", function(e) {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          newSendBtn.click();
-        }
-      });
-    })();
-  }, []);
 
   return (
     <section id="luna" className="py-20 relative overflow-hidden">
@@ -164,34 +30,59 @@ const LunaFeature = () => {
                 <span className="pill pill-gold font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--gold-light)] text-[var(--gold)]">Supabase</span>
                 <span className="pill pill-taupe font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[#f5e6e8] text-[var(--taupe)]">Amharic NLP</span>
               </div>
-              <div className="luna-try-hint">
-                Try it live
-                <svg width="40" height="16" viewBox="0 0 40 16" fill="none">
-                  <path d="M0 8 Q20 2 38 8" stroke="#ED93B1" strokeWidth="1.5" fill="none" strokeDasharray="3 2"/>
-                  <path d="M34 5 L38 8 L34 11" stroke="#ED93B1" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                </svg>
+            </div>
+            
+            {/* Luna Health App UI Mockup */}
+            <div style={{ 
+              background: 'var(--card-bg)', 
+              borderRadius: '24px', 
+              boxShadow: '0 8px 40px rgba(237,147,177,0.18)', 
+              border: '0.5px solid var(--border-color)', 
+              display: 'flex', 
+              flexDirection: 'column', 
+              height: '420px', 
+              overflow: 'hidden' 
+            }}>
+              <div style={{ 
+                background: 'var(--blush-light)', 
+                padding: '14px 18px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '10px', 
+                borderBottom: '0.5px solid var(--border-color)' 
+              }}>
+                <div style={{ width: '36px', height: '36px', background: 'var(--blush-mid)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px' }}>🌙</div>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text)' }}>Luna Health</div>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)' }}>Cycle & Nutrition Intelligence</div>
+                </div>
+              </div>
+              
+              <div style={{ 
+                padding: '24px 20px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '20px', 
+                flex: 1, 
+                background: 'var(--bg)',
+                overflowY: 'auto'
+              }}>
+                <div style={{ display: 'flex', gap: '12px', alignSelf: 'flex-end', maxWidth: '85%' }}>
+                  <div style={{ background: 'var(--text)', color: 'var(--bg)', padding: '12px 16px', borderRadius: '16px 16px 4px 16px', fontSize: '0.85rem', fontFamily: "'DM Sans', sans-serif" }}>
+                    I'm feeling really fatigued today. I'm on day 22 of my cycle and fasting for Lent.
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', gap: '12px', alignSelf: 'flex-start', maxWidth: '85%' }}>
+                  <div style={{ width: '28px', height: '28px', background: 'var(--blush-mid)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', flexShrink: 0, marginTop: '4px' }}>🌙</div>
+                  <div style={{ background: 'var(--blush-light)', color: 'var(--text)', padding: '14px 16px', borderRadius: '16px 16px 16px 4px', fontSize: '0.85rem', fontFamily: "'DM Sans', sans-serif", border: '0.5px solid var(--blush)', lineHeight: '1.6' }}>
+                    <p style={{ marginBottom: '12px' }}>It's completely normal to feel fatigued right now. You are in your <strong>Luteal Phase</strong>, where progesterone levels naturally rise and lower your energy.</p>
+                    <p>Since you are also fasting, I recommend incorporating iron-rich staples like <strong>Teff (Injera)</strong> and leafy greens during your eating window to help rebuild your energy reserves. 💛</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="luna-chat-widget">
-              <div className="luna-chat-header">
-                <div className="luna-avatar">✦</div>
-                <div><div className="luna-chat-name">Luna</div><div className="luna-chat-sub">Asmeret's AI Assistant</div></div>
-                <div className="luna-online-dot"></div>
-              </div>
-              <div className="luna-messages-wrap">
-                <div className="luna-messages" id="lunaMessages"></div>
-              </div>
-              <div className="luna-typing" id="lunaTyping" style={{ display: 'none' }}><span></span><span></span><span></span></div>
-              <div className="luna-input-bar">
-                <input type="text" id="lunaInput" placeholder="Ask Luna anything..." autoComplete="off" />
-                <button id="lunaSend" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                  </svg>
-                </button>
-              </div>
-            </div>
+
           </div>
         </motion.div>
       </div>
