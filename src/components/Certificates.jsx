@@ -8,7 +8,7 @@ const certificates = [
     issuer: 'Harvard / edX',
     year: '2022',
     icon: '🏆',
-    accent: 'gold', // gold accent for Harvard
+    accent: 'gold',
     link: '/cs50.pdf'
   },
   {
@@ -17,7 +17,7 @@ const certificates = [
     issuer: 'Language School, Mekelle',
     year: '2017',
     icon: '📜',
-    accent: 'lavender', // lavender accent
+    accent: 'lavender',
     note: 'Distinction — Full professional English fluency',
     link: null
   },
@@ -48,6 +48,33 @@ const certificates = [
     accent: 'default',
     link: null
   },
+  {
+    id: 6,
+    title: 'Digital Marketing Fundamentals',
+    issuer: 'Google Digital Garage',
+    year: '2023',
+    icon: '📈',
+    accent: 'gold',
+    link: null
+  },
+  {
+    id: 7,
+    title: 'Social Media Marketing',
+    issuer: 'HubSpot Academy',
+    year: '2023',
+    icon: '📱',
+    accent: 'default',
+    link: null
+  },
+  {
+    id: 8,
+    title: 'Content Marketing',
+    issuer: 'HubSpot Academy',
+    year: '2023',
+    icon: '✍️',
+    accent: 'default',
+    link: null
+  }
 ];
 
 const Certificates = () => {
@@ -148,7 +175,7 @@ const Certificates = () => {
     switch (accent) {
       case 'gold': return '1px solid #C9A96E';
       case 'lavender': return '1px solid #9b89c4';
-      default: return '0.5px solid #E8D5C4';
+      default: return '0.5px solid var(--card-border)';
     }
   };
 
@@ -172,7 +199,7 @@ const Certificates = () => {
       <p className="cert-hint">✦ scratch each card to reveal</p>
       
       <div className="cert-grid">
-        {certificates.map(cert => (
+        {certificates.filter(c => c.id <= 5).map(cert => (
           <div 
             className="cert-card" 
             key={cert.id}
@@ -206,51 +233,52 @@ const Certificates = () => {
         ))}
       </div>
 
-      {/* Digital & Marketing Credentials grouped card */}
+      {/* Tiny Scratch Cards for Digital Marketing */}
       <div 
-        className="mt-6"
+        className="mt-8"
         style={{
           background: 'var(--card-bg)',
           border: '1px solid #C9A96E',
-          borderRadius: 16,
+          borderRadius: 20,
           padding: '1.5rem 2rem',
-          maxWidth: 480,
+          maxWidth: 600,
+          boxShadow: '0 8px 30px rgba(201,169,110,0.05)'
         }}
       >
         <h4 style={{
           fontFamily: "'Cormorant Garamond', serif",
-          fontSize: '1.1rem',
+          fontSize: '1.25rem',
           fontWeight: 400,
           color: 'var(--text)',
-          marginBottom: 12,
+          marginBottom: 16,
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
+          gap: 10,
         }}>
           <span style={{ color: '#C9A96E' }}>✦</span>
           Digital & Marketing Credentials
         </h4>
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {digitalMarketingCreds.map((cred, i) => (
-            <li key={i} style={{
-              fontFamily: "'DM Mono', 'DM Sans', monospace",
-              fontSize: '0.72rem',
-              color: 'var(--text-muted)',
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: 8,
-              lineHeight: 1.5,
-            }}>
-              <span style={{ color: '#C9A96E', fontSize: '0.5rem' }}>●</span>
-              <span>
-                <span style={{ color: 'var(--text)', fontWeight: 500 }}>{cred.name}</span>
-                {' — '}
-                <span style={{ fontStyle: 'italic' }}>{cred.issuer}</span>
-                {cred.year && <span style={{ color: '#C9A96E', marginLeft: 6 }}>{cred.year}</span>}
-              </span>
-            </li>
+            <div key={i} className="cert-card" style={{ height: 60, borderRadius: 12, border: '0.5px solid var(--card-border)', background: 'var(--bg)' }}>
+              <div className="cert-scratch" data-scratched="false" style={{ borderRadius: 12 }}>
+                <canvas className="scratch-canvas"></canvas>
+                <div className="cert-scratch-label" style={{ fontSize: '10px' }}>scratch ✦</div>
+              </div>
+              <div className="cert-content" style={{ padding: '0 1rem', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ color: '#C9A96E', fontSize: '16px' }}>{i === 0 ? '📈' : i === 1 ? '📱' : '✍️'}</span>
+                  <div>
+                    <h4 style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.75rem', fontWeight: 500, color: 'var(--text)', margin: 0 }}>{cred.name}</h4>
+                    <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.6rem', color: 'var(--text-muted)', margin: 0, fontStyle: 'italic' }}>{cred.issuer}</p>
+                  </div>
+                </div>
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.65rem', color: '#C9A96E' }}>{cred.year}</span>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

@@ -6,7 +6,7 @@ import TypingDots from './TypingDots';
 import StarterChips from './StarterChips';
 import { lunaSystemPrompt } from '../../data/portfolio';
 
-const API_KEY = import.meta.env.VITE_ANTHROPIC_KEY;
+const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 const CrescentMoonSmall = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -72,20 +72,18 @@ const ChatPanel = ({ isOpen, onClose }) => {
 
     try {
       const response = await fetch(
-        'https://api.anthropic.com/v1/messages',
+        'https://api.groq.com/openai/v1/chat/completions',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-api-key': API_KEY,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true',
+            'Authorization': `Bearer ${API_KEY}`,
           },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
+            model: 'llama-3.3-70b-versatile',
             max_tokens: 300,
-            system: lunaSystemPrompt,
             messages: [
+              { role: 'system', content: lunaSystemPrompt },
               ...conversationHistoryRef.current,
               { role: 'user', content: textToSend }
             ],
@@ -98,9 +96,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
       }
 
       const data = await response.json();
-      const reply = data.content
-        ?.map(block => block.text || '')
-        .join('') || "Luna is resting 🌙 Try again in a moment.";
+      const reply = data.choices?.[0]?.message?.content || "Luna is resting 🌙 Try again in a moment.";
 
       setMessages(prev => [...prev, { role: 'assistant', content: reply, typewriter: true }]);
 

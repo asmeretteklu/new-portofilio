@@ -1,58 +1,38 @@
-import { useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { person } from '../data/portfolio';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const { ref, controls, variants } = useScrollReveal();
+  const formRef = useRef(null);
+  const [status, setStatus] = useState({ state: 'idle', message: '' });
 
-  useEffect(() => {
-    const form = document.getElementById("contactForm");
-    if (!form) return;
+  const sendEmail = (e) => {
+    e.preventDefault();
     
-    // remove existing listeners if any
-    const newForm = form.cloneNode(true);
-    form.parentNode.replaceChild(newForm, form);
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    newForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const btn = document.getElementById("submitBtn");
-      const msg = document.getElementById("formMessage");
-      btn.textContent = "Sending... ✦";
-      btn.disabled = true;
-      
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    if (!serviceId || !templateId || !publicKey) {
+      setStatus({ state: 'error', message: "Email service not configured. Please add your EmailJS keys to .env 🌸" });
+      return;
+    }
 
-      if (!serviceId || !templateId || !publicKey) {
-        msg.textContent = "Email service not configured. Please add your EmailJS keys to .env 🌸";
-        msg.style.cssText = "display:block;color:#9B8080;font-size:13px;margin-top:10px";
-        btn.textContent = "Send message ✦"; btn.disabled = false;
-        return;
-      }
+    setStatus({ state: 'sending', message: 'Sending...' });
 
-      // Initialize if not done
-      if (window.emailjs) {
-        window.emailjs.init(publicKey);
-        window.emailjs.sendForm(serviceId, templateId, this)
-          .then(() => {
-            msg.textContent = "Message sent! I'll get back to you soon 🌸";
-            msg.style.cssText = "display:block;color:#ED93B1;font-size:13px;margin-top:10px;animation:msg-in 0.3s ease";
-            this.reset(); btn.textContent = "Send message ✦"; btn.disabled = false;
-          }).catch((err) => {
-            console.error("EmailJS Error:", err);
-            msg.textContent = "Something went wrong — please email me directly ✦";
-            msg.style.cssText = "display:block;color:#9B8080;font-size:13px;margin-top:10px";
-            btn.textContent = "Send message ✦"; btn.disabled = false;
-          });
-      } else {
-        msg.textContent = "Loading email service... please try again in a moment.";
-        msg.style.cssText = "display:block;color:#9B8080;font-size:13px;margin-top:10px";
-        btn.textContent = "Send message ✦"; btn.disabled = false;
-      }
-    });
-  }, []);
+    emailjs.sendForm(serviceId, templateId, formRef.current, publicKey)
+      .then(() => {
+        setStatus({ state: 'success', message: "Message sent! I'll get back to you soon 🌸" });
+        formRef.current.reset();
+      })
+      .catch((err) => {
+        console.error("EmailJS Error:", err);
+        setStatus({ state: 'error', message: "Something went wrong — please email me directly ✦" });
+      });
+  };
 
   const infoCards = [
     { icon: '📍', label: 'Location', value: 'Mekelle, Ethiopia', sub: 'Remote Available' },
@@ -151,7 +131,7 @@ const Contact = () => {
                   <p className="font-body text-sm" style={{ color: 'var(--text-mid)' }}>Have a project in mind? Let's discuss how we can work together.</p>
                 </div>
 
-                <form id="contactForm" className="flex flex-col gap-4">
+                <form ref={formRef} onSubmit={sendEmail} className="flex flex-col gap-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label htmlFor="from_name" className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: 'var(--blush-mid)', fontWeight: 500 }}>Full Name *</label>
@@ -169,14 +149,28 @@ const Contact = () => {
                   </div>
 
                   <button 
-                    id="submitBtn"
                     type="submit" 
+                    disabled={status.state === 'sending'}
                     className="btn-primary-blush w-full justify-center mt-2 py-4 transition-all"
-                    style={{ fontSize: '0.8rem', letterSpacing: '0.08em' }}
+                    style={{ 
+                      fontSize: '0.8rem', 
+                      letterSpacing: '0.08em',
+                      opacity: status.state === 'sending' ? 0.7 : 1,
+                      cursor: status.state === 'sending' ? 'not-allowed' : 'pointer'
+                    }}
                   >
-                    Send message ✦
+                    {status.state === 'sending' ? 'Sending... ✦' : 'Send message ✦'}
                   </button>
-                  <span id="formMessage" style={{ display: 'none' }}></span>
+                  {status.message && (
+                    <span style={{ 
+                      display: 'block', 
+                      color: status.state === 'success' ? '#ED93B1' : '#9B8080', 
+                      fontSize: '13px', 
+                      marginTop: '10px' 
+                    }}>
+                      {status.message}
+                    </span>
+                  )}
                 </form>
               </div>
             </div>

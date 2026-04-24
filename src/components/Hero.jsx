@@ -44,23 +44,26 @@ const getTimeAgo = (dateStr) => {
 
 const Hero = () => {
   const [currentRepo, setCurrentRepo] = useState(null);
+  // Put as many photos as you want here!
   const photoList = [
-    { src: '/photo2.jpg', id: 0 },
-    { src: person.photo, id: 1 },
-    { src: '/photo.jpg', id: 2 },
-    { src: '/photo2.jpg', id: 3 }
+    { src: person.photo, id: 0 },
+    { src: '/photo.jpg', id: 1 },
+    { src: '/photo2.jpg', id: 2 }
   ];
-  const [stackOrder, setStackOrder] = useState([0, 1, 2, 3]);
+  const [stackOrder, setStackOrder] = useState(photoList.map(p => p.id));
 
   const handleFlip = () => {
     setStackOrder(prev => [...prev.slice(1), prev[0]]);
   };
 
   useEffect(() => {
-    // Flip every 6 seconds to be less intrusive, and use a ref for manual reset if needed
-    const flipInterval = setInterval(handleFlip, 6000);
-    return () => clearInterval(flipInterval);
-  }, [stackOrder]); // Re-running on stackOrder change effectively resets the timer on manual click
+    const timer = setInterval(() => {
+      handleFlip();
+    }, 3600000); // 1 hour auto-flip
+    return () => clearInterval(timer);
+  }, []);
+
+  // Photos only change on manual click — no auto-rotation
 
   /* Fetch latest pushed repo from GitHub */
   useEffect(() => {
@@ -192,24 +195,36 @@ const Hero = () => {
             onClick={handleFlip}
             whileHover="hover"
           >
-            {stackOrder.map((photoIdx, i) => (
-              <motion.div 
-                key={i} 
-                className={`fan-card fan-card-${i + 1}`}
-                variants={{
-                  hover: { 
-                    rotate: (i - 1.5) * 12,
-                    x: (i - 1.5) * 45,
-                    y: Math.abs(i - 1.5) * -10,
-                    scale: 1.05,
-                    zIndex: i === 3 ? 100 : i
-                  }
-                }}
-                transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-              >
-                <img src={photoList[photoIdx].src} alt="Asmeret" />
-              </motion.div>
-            ))}
+            {stackOrder.map((photoIdx, i) => {
+              const n = stackOrder.length;
+              const centerOffset = i - (n - 1) / 2;
+              
+              return (
+                <motion.div 
+                  key={photoList[photoIdx].id} 
+                  className="fan-card"
+                  initial={false}
+                  animate={{
+                    rotate: centerOffset * 12,
+                    x: centerOffset * 40,
+                    y: Math.abs(centerOffset) * 6,
+                    zIndex: i
+                  }}
+                  variants={{
+                    hover: { 
+                      rotate: centerOffset * 15,
+                      x: centerOffset * 55,
+                      y: Math.abs(centerOffset) * -10,
+                      scale: 1.05,
+                      zIndex: i === n - 1 ? 100 : i
+                    }
+                  }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                >
+                  <img src={photoList[photoIdx].src} alt="Asmeret" />
+                </motion.div>
+              );
+            })}
             <span className="fan-star">✦</span>
             <div className="fan-dot-1"></div>
             <div className="fan-dot-2"></div>

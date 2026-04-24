@@ -24,6 +24,17 @@ const Nav = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const toggleTheme = () => {
     setIsDark(!isDark);
     if (!isDark) {
@@ -49,10 +60,9 @@ const Nav = () => {
         scrolled ? 'py-3' : 'py-5'
       }`}
       style={{
-        background: scrolled ? 'rgba(253,246,240,0.85)' : 'transparent',
+        background: scrolled ? 'var(--bg)' : 'transparent',
         backdropFilter: scrolled ? 'blur(12px)' : 'none',
         borderBottom: scrolled ? '0.5px solid var(--blush)' : '0.5px solid transparent',
-        ...(isDark && scrolled ? { background: 'rgba(18,16,26,0.85)' } : {}),
       }}
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-12 flex justify-between items-center">
@@ -119,19 +129,19 @@ const Nav = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 pt-20"
-            style={{ background: isDark ? 'rgba(18,16,26,0.97)' : 'rgba(253,246,240,0.97)', backdropFilter: 'blur(20px)' }}
+            className="fixed inset-0 w-screen h-screen z-40 flex flex-col items-center justify-center gap-6 pb-20 overflow-y-auto"
+            style={{ background: 'var(--bg)', backdropFilter: 'blur(20px)' }}
           >
             {links.map(link => (
               <a 
                 key={link.name} 
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="font-display text-3xl transition-colors"
+                className="font-display text-4xl transition-colors hover:text-[var(--blush-mid)]"
                 style={{ color: 'var(--text)' }}
               >
                 {link.name}
@@ -140,10 +150,10 @@ const Nav = () => {
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="btn-primary-blush mt-4"
-              style={{ padding: '0.85rem 2rem' }}
+              className="btn-primary-blush mt-8"
+              style={{ padding: '1rem 3rem', fontSize: '1.1rem' }}
             >
-              Let's talk
+              Let's talk ✦
             </a>
           </motion.div>
         )}

@@ -5,7 +5,7 @@ const facts = [
   { icon: '☕', text: "I write better code after Ethiopian coffee. Always." },
   { icon: '🌙', text: "I named my app Luna because she works even in the dark" },
   { icon: '📶', text: "I build apps that work on slow internet — because that's real life" },
-  { icon: '🎓', text: "First in my family to study computer science" },
+  { icon: '🎓', text: "First in my family to study software engineering" },
   { icon: '💡', text: "I debug by talking to myself. It works every time." },
   { icon: '🌸', text: "I believe the best tech is built with empathy, not just syntax" },
   { icon: '🏔️', text: "Tigray is home. My code carries it everywhere." }
@@ -51,8 +51,13 @@ const FriendlyTips = () => {
             <motion.div 
               key={idx}
               variants={item}
-              className="flex-shrink-0 md:flex-shrink bg-white border border-[var(--blush)] rounded-[16px] p-4 px-6 min-w-[200px] flex gap-3 items-start"
-              style={{ scrollSnapAlign: 'start' }}
+              className="flex-shrink-0 md:flex-shrink rounded-[16px] p-4 px-6 min-w-[200px] flex gap-3 items-start transition-all hover:-translate-y-1 shadow-sm"
+              style={{ 
+                scrollSnapAlign: 'start', 
+                background: 'var(--card-bg)', 
+                border: '0.5px solid var(--card-border)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+              }}
             >
               <span className="text-xl">{fact.icon}</span>
               <span className="font-body text-sm leading-relaxed text-[var(--text-mid)] font-medium">

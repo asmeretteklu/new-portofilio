@@ -197,20 +197,20 @@ export const testimonials = [
   {
     author: 'Mulu Ftsum MSc',
     role: 'Final Year Project Advisor',
-    text: 'The kind of graduate who will make use of every opportunity she is given.',
-    context: 'Supervised Asmeret\'s final year capstone project and was consistently impressed by her initiative and technical depth.',
+    text: 'The kind of graduate who will make use of every opportunity I am given.',
+    context: 'Supervised my final year capstone project and was consistently impressed by my initiative and technical depth.',
   },
   {
     author: 'Amanuel Kebede MSc',
     role: 'Computer Networks Lecturer',
-    text: 'Technically solid, self-directed, and she ships real work.',
-    context: 'Observed Asmeret\'s ability to independently research and implement complex networking solutions beyond the curriculum.',
+    text: 'Technically solid, self-directed, and I ship real work.',
+    context: 'Observed my ability to independently research and implement complex networking solutions beyond the curriculum.',
   },
   {
     author: 'Gebreslassie Etsay MSc',
     role: 'Database Lecturer',
     text: 'Has the analytical depth and intellectual independence that research demands.',
-    context: 'Recommended Asmeret for graduate study based on her exceptional database design work and research aptitude.',
+    context: 'Recommended me for graduate study based on my exceptional database design work and research aptitude.',
   }
 ];
 

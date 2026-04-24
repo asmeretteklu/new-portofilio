@@ -105,7 +105,7 @@ const About = () => {
           <div className="mt-4 pt-10" style={{ borderTop: '0.5px solid var(--taupe)' }}>
             <div className="section-label mb-3">Academic Progression</div>
             <p className="font-body text-sm mb-10" style={{ color: 'var(--muted)' }}>
-              She got stronger every year — through conflict.
+              I got stronger every year — through conflict.
             </p>
             <div className="relative flex flex-col md:flex-row justify-between items-end gap-4 md:gap-0 w-full px-2">
               <div className="hidden md:block absolute top-[52px] left-0 w-full h-[0.5px] z-0" style={{ background: 'var(--taupe)' }} />

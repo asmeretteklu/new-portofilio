@@ -10,7 +10,7 @@ const LunaFeature = () => {
   useEffect(() => {
     (function() {
       // ── API KEY CONFIGURATION ──
-      const API_KEY = import.meta.env.VITE_ANTHROPIC_KEY;
+      const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
       // ─────────────────────────────────────
 
       let conversationHistory = [];
@@ -69,20 +69,18 @@ const LunaFeature = () => {
 
         try {
           const response = await fetch(
-            'https://api.anthropic.com/v1/messages',
+            'https://api.groq.com/openai/v1/chat/completions',
             {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': API_KEY,
-                'anthropic-version': '2023-06-01',
-                'anthropic-dangerous-direct-browser-access': 'true',
+                'Authorization': `Bearer ${API_KEY}`,
               },
               body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
+                model: 'llama-3.3-70b-versatile',
                 max_tokens: 300,
-                system: lunaSystemPrompt,
                 messages: [
+                  { role: 'system', content: lunaSystemPrompt },
                   ...conversationHistory,
                   { role: 'user', content: userText }
                 ],
@@ -93,9 +91,7 @@ const LunaFeature = () => {
           if (!response.ok) throw new Error("API error " + response.status);
 
           const data = await response.json();
-          const reply = data.content
-            ?.map(block => block.text || '')
-            .join('') || "Luna is resting 🌙 Try again in a moment.";
+          const reply = data.choices?.[0]?.message?.content || "Luna is resting 🌙 Try again in a moment.";
 
           conversationHistory.push(
             { role: 'user', content: userText },

@@ -80,12 +80,32 @@ const Skills = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-4">
             <div>
               <div className="section-label mb-6">Certifications & Programs</div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 {certifications.map((cert, i) => (
-                  <div key={i} className="group cursor-default">
-                    <h4 className="font-body transition-colors duration-300" style={{ fontSize: '1rem', color: 'var(--text)', fontWeight: 500 }}>{cert.name}</h4>
-                    <p className="font-display mt-0.5" style={{ color: 'var(--text-mid)', opacity: 0.8 }}>{cert.detail}</p>
-                  </div>
+                  <motion.div 
+                    key={i} 
+                    className="p-4 rounded-xl transition-all duration-300 relative overflow-hidden group cursor-default"
+                    style={{ background: 'var(--card-bg)', border: '0.5px solid var(--card-border)' }}
+                    whileHover={{ x: 4 }}
+                    onMouseEnter={(e) => { 
+                      e.currentTarget.style.border = cert.type === 'language' ? '0.5px solid var(--lavender)' : '0.5px solid var(--blush-mid)'; 
+                      e.currentTarget.style.background = 'var(--blush-light)';
+                    }}
+                    onMouseLeave={(e) => { 
+                      e.currentTarget.style.border = '0.5px solid var(--card-border)'; 
+                      e.currentTarget.style.background = 'var(--card-bg)';
+                    }}
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 transition-colors duration-300 group-hover:bg-[var(--blush-mid)]" style={{ background: cert.type === 'language' ? 'var(--lavender)' : 'var(--card-border)' }}></div>
+                    <div className="pl-2">
+                      <h4 className="font-body transition-colors duration-300 text-[0.95rem] font-medium" style={{ color: 'var(--text)' }}>
+                        {cert.name}
+                      </h4>
+                      <p className="font-display mt-1 text-[0.85rem]" style={{ color: 'var(--text-mid)', opacity: 0.85 }}>
+                        {cert.detail}
+                      </p>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
