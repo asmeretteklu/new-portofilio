@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatPanel from './ChatPanel';
 
-const CrescentMoonIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+const CrescentMoonIcon = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -21,17 +21,26 @@ const LunaChat = () => {
     <div className="fixed bottom-6 right-6 sm:right-12 z-[999]">
       <ChatPanel isOpen={isOpen} onClose={() => setIsOpen(false)} />
       
+      {/* Floating trigger button */}
       <motion.button
-        drag
-        dragConstraints={{ left: -window.innerWidth + 100, right: 0, top: -window.innerHeight + 100, bottom: 0 }}
-        whileHover={{ scale: 1.1, shadow: '0 0 25px rgba(237,147,177,0.5)' }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.92 }}
         onClick={toggleOpen}
-        className="w-16 h-16 rounded-full flex items-center justify-center text-white shadow-2xl transition-all relative z-[1000] cursor-grab active:cursor-grabbing"
+        className="luna-float-btn"
         style={{
-          background: 'var(--blush-mid)',
-          border: '2px solid rgba(255,255,255,0.2)',
-          boxShadow: '0 10px 30px rgba(237,147,177,0.4)',
+          width: 52,
+          height: 52,
+          borderRadius: '50%',
+          background: '#c4856a',
+          color: '#fff',
+          border: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 24px rgba(196,133,106,0.35)',
+          position: 'relative',
+          zIndex: 1000,
         }}
       >
         <AnimatePresence mode="wait">
@@ -42,9 +51,9 @@ const LunaChat = () => {
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              <CrescentMoonIcon />
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 font-display text-[8px] uppercase tracking-tighter opacity-80">Luna</span>
+              <CrescentMoonIcon size={22} />
             </motion.div>
           ) : (
             <motion.div
@@ -53,26 +62,30 @@ const LunaChat = () => {
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="text-2xl"
+              style={{ fontSize: '1.4rem', lineHeight: 1 }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
+              ×
             </motion.div>
           )}
         </AnimatePresence>
 
+        {/* Unread badge — gold dot */}
         {!hasOpened && !isOpen && (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 2, duration: 0.5 }}
-            className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px]"
-            style={{ background: '#4ade80', border: '2px solid var(--bg)', color: 'white' }}
-          >
-            1
-          </motion.div>
+            transition={{ delay: 2, duration: 0.4 }}
+            style={{
+              position: 'absolute',
+              top: -2,
+              right: -2,
+              width: 12,
+              height: 12,
+              borderRadius: '50%',
+              background: '#c4913a',
+              border: '2px solid rgba(14,18,28,0.9)',
+            }}
+          />
         )}
       </motion.button>
     </div>

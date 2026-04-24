@@ -1,35 +1,18 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Trash2, Minus } from 'lucide-react';
+import { Send, Minus, X, Trash2 } from 'lucide-react';
 import Message from './Message';
 import TypingDots from './TypingDots';
 import StarterChips from './StarterChips';
 import { lunaSystemPrompt } from '../../data/portfolio';
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ 
-  model: "gemini-1.5-flash",
-  systemInstruction: lunaSystemPrompt
-});
+const API_KEY = import.meta.env.VITE_ANTHROPIC_KEY;
 
-const GREETINGS = [
-  "Hey! I'm Luna 🌙 Ask me anything about Asmeret — her work, her story, or how to reach her.",
-  "Hi there ✦ I'm Luna, Asmeret's AI assistant. What would you like to know?",
-  "Welcome! 🌙 I'm Luna — I know everything about Asmeret. Ask away!",
-  "Hey friend! ✦ I'm Luna. Let me tell you about Asmeret's incredible journey.",
-];
-
-const getErrorMessage = (err) => {
-  const msg = err.message || err.toString();
-  if (msg.includes('429') || msg.toLowerCase().includes('rate')) {
-    return "Luna is resting for a moment ✦ Try again in a few seconds.";
-  }
-  if (msg.includes('API Key') || msg.includes('key') || msg.includes('missing')) {
-    return "Luna needs her API key to chat — check the README 🌙";
-  }
-  return "Something went wrong 🌙 Try again in a moment.";
-};
+const CrescentMoonSmall = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="currentColor" strokeWidth="1" />
+  </svg>
+);
 
 const ChatPanel = ({ isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -37,29 +20,17 @@ const ChatPanel = ({ isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasShownOpening, setHasShownOpening] = useState(false);
   const [isMini, setIsMini] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
+  const conversationHistoryRef = useRef([]);
 
-  // Maintain chat session in a ref to persist across renders but allow resets
-  const chatRef = useRef(null);
-
-  const initChat = useCallback(() => {
-    chatRef.current = model.startChat({
-      history: [
-        {
-          role: "user",
-          parts: [{ text: "You are Luna, a warm and empathetic digital assistant for Asmeret's portfolio. Your tone is blush-aesthetic, kind, and focused on wellness and growth. Keep responses concise." }],
-        },
-        {
-          role: "model",
-          parts: [{ text: "Hello! I'm Luna. I'm here to help you explore Asmeret's work with a focus on balance and positivity. ✦" }],
-        },
-      ],
-    });
-  }, []);
-
+  // Detect mobile
   useEffect(() => {
-    if (!chatRef.current) initChat();
-  }, [initChat]);
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -74,9 +45,12 @@ const ChatPanel = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen && !hasShownOpening && messages.length === 0) {
       setHasShownOpening(true);
-      const greeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
       const timer = setTimeout(() => {
-        setMessages([{ role: 'assistant', content: greeting, isOpening: true }]);
+        setMessages([{ 
+          role: 'assistant', 
+          content: "Hey, I'm Luna 🌙\nI know everything about Asmeret — her work, her story, and how to reach her. What would you like to know?", 
+          isOpening: true 
+        }]);
       }, 700);
       return () => clearTimeout(timer);
     }
@@ -85,7 +59,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
   const clearChat = () => {
     setMessages([]);
     setHasShownOpening(false);
-    initChat();
+    conversationHistoryRef.current = [];
   };
 
   const sendMessage = async (textToSend = input) => {
@@ -97,19 +71,57 @@ const ChatPanel = ({ isOpen, onClose }) => {
     setIsLoading(true);
 
     try {
-      if (!chatRef.current) initChat();
-      
-      const result = await chatRef.current.sendMessage(textToSend);
-      const aiText = result.response.text();
+      const response = await fetch(
+        'https://api.anthropic.com/v1/messages',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true',
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 300,
+            system: lunaSystemPrompt,
+            messages: [
+              ...conversationHistoryRef.current,
+              { role: 'user', content: textToSend }
+            ],
+          }),
+        }
+      );
 
-      setMessages(prev => [...prev, { role: 'assistant', content: aiText, typewriter: true }]);
-    } catch (err) {
-      console.error("Luna AI error:", err);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: getErrorMessage(err),
-        typewriter: true
-      }]);
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const reply = data.content
+        ?.map(block => block.text || '')
+        .join('') || "Luna is resting 🌙 Try again in a moment.";
+
+      setMessages(prev => [...prev, { role: 'assistant', content: reply, typewriter: true }]);
+
+      // Update conversation history
+      conversationHistoryRef.current = [
+        ...conversationHistoryRef.current,
+        { role: 'user', content: textToSend },
+        { role: 'assistant', content: reply }
+      ];
+    } catch (error) {
+      console.error("Luna AI error:", error);
+      const errorMsg = 
+        error.message.includes('401') 
+          ? "Luna needs her API key set up — check Netlify environment variables."
+        : error.message.includes('429') 
+          ? "Luna is resting for a moment ✦ Try again shortly."
+        : error.message.includes('network')
+          ? "Luna lost her connection 🌙 Check your internet and try again."
+        : "Luna had a moment — try again! 🌙";
+
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMsg, typewriter: true }]);
     } finally {
       setIsLoading(false);
     }
@@ -125,7 +137,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="sm:hidden fixed inset-0 z-[49]"
-            style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }}
+            style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)' }}
             onClick={onClose}
           />
 
@@ -135,69 +147,156 @@ const ChatPanel = ({ isOpen, onClose }) => {
               opacity: 1, 
               y: 0, 
               scale: 1,
-              height: isMini ? '72px' : '480px'
+              height: isMini ? '64px' : (isMobile ? '100%' : '480px')
             }}
             exit={{ opacity: 0, y: 20, scale: 0.95, transition: { duration: 0.2 } }}
             transition={{ duration: 0.3, type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed z-50 flex flex-col overflow-hidden shadow-2xl origin-bottom-right
-              sm:bottom-24 sm:right-12 sm:w-[360px] sm:rounded-2xl
-              max-sm:inset-0 max-sm:rounded-none"
+            className="luna-chat-panel fixed z-50 flex flex-col overflow-hidden origin-bottom-right"
             style={{
-              background: 'var(--card-bg)',
-              border: '0.5px solid var(--border-color)',
-              color: 'var(--text)',
+              ...(isMobile ? {
+                inset: 0,
+                width: '100%',
+                borderRadius: 0,
+              } : {
+                bottom: 80,
+                right: 48,
+                width: 380,
+                borderRadius: 16,
+              }),
+              background: 'rgba(14,18,28,0.97)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(196,133,106,0.25)',
+              backgroundImage: 'radial-gradient(circle, rgba(196,133,106,0.04) 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+              boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4" style={{ borderBottom: '0.5px solid var(--border-color)', background: 'var(--bg)' }}>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#4ade80' }}></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#4ade80' }}></span>
-                  </span>
-                  <span className="font-display italic text-2xl leading-none" style={{ color: 'var(--blush-mid)' }}>luna</span>
-                </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '14px 16px',
+              borderBottom: '1px solid rgba(196,133,106,0.15)',
+              flexShrink: 0,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                {/* Animated crescent moon */}
+                <motion.div
+                  animate={{ 
+                    opacity: [0.7, 1, 0.7],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  style={{ color: '#c4856a', display: 'flex', alignItems: 'center' }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#c4856a" stroke="#c4856a" strokeWidth="0.5" />
+                  </svg>
+                </motion.div>
+                <span style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: 'italic',
+                  fontSize: '1.4rem',
+                  color: '#c4856a',
+                  lineHeight: 1,
+                }}>
+                  luna
+                </span>
               </div>
-              <div className="flex items-center gap-3">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 {messages.length > 0 && !isMini && (
                   <button 
-                    onClick={clearChat} 
-                    className="p-1.5 rounded-full transition-colors hover:text-blush-mid"
-                    style={{ color: 'var(--text-muted)' }}
+                    onClick={clearChat}
+                    style={{
+                      background: 'none', border: 'none', cursor: 'pointer',
+                      color: '#f5efe2', opacity: 0.5, padding: 4,
+                      display: 'flex', alignItems: 'center',
+                    }}
                     title="Clear chat"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} />
                   </button>
                 )}
                 <button 
-                  onClick={() => setIsMini(!isMini)} 
-                  className="p-1.5 rounded-full transition-colors hover:text-blush-mid"
-                  style={{ color: 'var(--text-muted)' }}
+                  onClick={() => setIsMini(!isMini)}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: '#f5efe2', opacity: 0.5, padding: 4,
+                    display: 'flex', alignItems: 'center',
+                  }}
                   title={isMini ? "Expand" : "Minimize"}
                 >
-                  <Minus size={18} />
+                  <Minus size={16} />
                 </button>
                 <button 
-                  onClick={onClose} 
-                  className="p-1.5 rounded-full transition-colors hover:text-blush-mid"
-                  style={{ color: 'var(--text-muted)' }}
+                  onClick={onClose}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: '#f5efe2', opacity: 0.5, padding: 4,
+                    display: 'flex', alignItems: 'center',
+                  }}
                 >
-                  <X size={20} />
+                  <X size={16} />
                 </button>
               </div>
             </div>
 
+            {/* Mobile close button */}
+            {isMobile && (
+              <button
+                onClick={onClose}
+                style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  width: 44,
+                  height: 44,
+                  borderRadius: '50%',
+                  background: 'rgba(196,133,106,0.15)',
+                  border: '1px solid rgba(196,133,106,0.3)',
+                  color: '#c4856a',
+                  fontSize: '1.2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  zIndex: 10,
+                }}
+              >
+                ×
+              </button>
+            )}
+
             {/* Messages */}
             {!isMini && (
-              <div className="luna-chat-dots flex-1 overflow-y-auto p-5 flex flex-col">
+              <div 
+                className="flex-1 overflow-y-auto p-5 flex flex-col"
+                style={{
+                  backgroundImage: 'radial-gradient(circle, rgba(196,133,106,0.04) 1px, transparent 1px)',
+                  backgroundSize: '24px 24px',
+                }}
+              >
                 {messages.length === 0 && (
                   <div className="flex-1 flex flex-col justify-end pb-4">
-                    <p className="font-display text-xl mb-1" style={{ color: 'var(--text)' }}>
-                      Hi, I'm Luna 🌙
+                    <p style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: '1.3rem',
+                      color: '#f5efe2',
+                      marginBottom: 4,
+                      lineHeight: 1.3,
+                    }}>
+                      Hey, I'm Luna 🌙
                     </p>
-                    <p className="font-body text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
-                      I'm trained on Asmeret's portfolio and journey. Ask me anything!
+                    <p style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: '0.82rem',
+                      color: 'rgba(245,239,226,0.55)',
+                      marginBottom: 16,
+                      lineHeight: 1.6,
+                    }}>
+                      I know everything about Asmeret — her work, her story,<br />
+                      and how to reach her. What would you like to know?
                     </p>
                     <StarterChips onSelect={sendMessage} />
                   </div>
@@ -215,25 +314,55 @@ const ChatPanel = ({ isOpen, onClose }) => {
 
             {/* Input */}
             {!isMini && (
-              <div className="p-4" style={{ borderTop: '0.5px solid var(--border-color)', background: 'var(--bg)' }}>
-                <div className="relative flex items-center">
+              <div style={{
+                padding: '12px 16px',
+                borderTop: '1px solid rgba(196,133,106,0.15)',
+                flexShrink: 0,
+              }}>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                   <input
                     type="text"
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                    placeholder="Ask something..."
+                    placeholder="Ask Luna anything..."
                     disabled={isLoading}
-                    className="w-full rounded-full py-3 pl-4 pr-12 font-body text-sm outline-none transition-colors disabled:opacity-50"
-                    style={{ background: 'var(--card-bg)', border: '0.5px solid var(--border-color)', color: 'var(--text)' }}
+                    style={{
+                      width: '100%',
+                      borderRadius: 100,
+                      padding: '12px 48px 12px 18px',
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: '0.82rem',
+                      outline: 'none',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(196,133,106,0.2)',
+                      color: '#f5efe2',
+                      transition: 'border-color 0.2s',
+                    }}
+                    onFocus={e => e.target.style.borderColor = 'rgba(196,133,106,0.5)'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(196,133,106,0.2)'}
                   />
                   <button 
                     onClick={() => sendMessage()}
                     disabled={!input.trim() || isLoading}
-                    className="absolute right-1.5 p-2 rounded-full hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 transition-all text-white"
-                    style={{ background: 'var(--blush-mid)' }}
+                    style={{
+                      position: 'absolute',
+                      right: 4,
+                      width: 36,
+                      height: 36,
+                      borderRadius: '50%',
+                      background: '#c4856a',
+                      border: 'none',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.2s',
+                      opacity: (!input.trim() || isLoading) ? 0.4 : 1,
+                    }}
                   >
-                    <Send size={14} className="ml-0.5" />
+                    <CrescentMoonSmall />
                   </button>
                 </div>
               </div>

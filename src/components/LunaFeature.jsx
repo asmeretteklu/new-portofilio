@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { projects } from '../data/portfolio';
+import { projects, lunaSystemPrompt } from '../data/portfolio';
 
 const LunaFeature = () => {
   const { ref, controls, variants } = useScrollReveal();
@@ -10,14 +10,10 @@ const LunaFeature = () => {
   useEffect(() => {
     (function() {
       // ── API KEY CONFIGURATION ──
-      const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+      const API_KEY = import.meta.env.VITE_ANTHROPIC_KEY;
       // ─────────────────────────────────────
 
-      const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY;
-
-      const LUNA_SYSTEM = "You are Luna, a warm friendly knowledgeable AI assistant for women's health built for Ethiopian and African women by Asmeret Teklu. Answer health questions with empathy warmth and accuracy. You are not a doctor but give clear helpful culturally sensitive information. Be encouraging and kind. Keep responses 2-4 sentences max. End with 🌸";
-
-      let lunaHistory = [];
+      let conversationHistory = [];
       let isWaiting = false;
 
       const messagesEl = document.getElementById("lunaMessages");
@@ -29,7 +25,7 @@ const LunaFeature = () => {
       
       // Clear messages on mount to prevent double init in strict mode
       messagesEl.innerHTML = "";
-      lunaHistory = [];
+      conversationHistory = [];
 
       function addMsg(text, sender) {
         const div = document.createElement("div");
@@ -44,10 +40,10 @@ const LunaFeature = () => {
         chipsDiv.className = "luna-chips";
         chipsDiv.id = "lunaChips";
         chipsDiv.innerHTML = `
-          <button class="luna-chip" onclick="chipClick('Period pain 🌸')">Period pain 🌸</button>
-          <button class="luna-chip" onclick="chipClick('Irregular cycles')">Irregular cycles</button>
-          <button class="luna-chip" onclick="chipClick('Ethiopian diet & health')">Ethiopian diet & health</button>
-          <button class="luna-chip" onclick="chipClick('Cycle tracking tips')">Cycle tracking tips</button>
+          <button class="luna-chip" onclick="chipClick('What has Asmeret built?')">What has she built? ✦</button>
+          <button class="luna-chip" onclick="chipClick('Tell me about Luna AI')">Luna AI 🌙</button>
+          <button class="luna-chip" onclick="chipClick('What makes Asmeret different?')">What makes her different? 💛</button>
+          <button class="luna-chip" onclick="chipClick('How do I work with Asmeret?')">Work with her 📩</button>
         `;
         messagesEl.appendChild(chipsDiv);
         messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -60,7 +56,7 @@ const LunaFeature = () => {
         sendToLuna(text);
       };
 
-      addMsg("Hi! I'm Luna 🌸 I'm here to answer your women's health questions safely and privately. What's on your mind?", "luna");
+      addMsg("Hey, I'm Luna 🌙 I know everything about Asmeret — her work, her story, and how to reach her. What would you like to know?", "luna");
       addQuickReplies();
 
       async function sendToLuna(userText) {
@@ -68,36 +64,56 @@ const LunaFeature = () => {
         isWaiting = true;
         sendBtn.disabled = true;
 
-        lunaHistory.push({ role: "user", parts: [{ text: userText }] });
-
         typingEl.style.display = "flex";
         messagesEl.scrollTop = messagesEl.scrollHeight;
 
         try {
-          const response = await fetch(GEMINI_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              system_instruction: { parts: [{ text: LUNA_SYSTEM }] },
-              contents: lunaHistory,
-              generationConfig: { maxOutputTokens: 300, temperature: 0.75 }
-            })
-          });
+          const response = await fetch(
+            'https://api.anthropic.com/v1/messages',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': API_KEY,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true',
+              },
+              body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 300,
+                system: lunaSystemPrompt,
+                messages: [
+                  ...conversationHistory,
+                  { role: 'user', content: userText }
+                ],
+              }),
+            }
+          );
 
           if (!response.ok) throw new Error("API error " + response.status);
 
           const data = await response.json();
-          const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text
-            || "I'm having a little trouble right now 🌸 Please try again in a moment.";
+          const reply = data.content
+            ?.map(block => block.text || '')
+            .join('') || "Luna is resting 🌙 Try again in a moment.";
 
-          lunaHistory.push({ role: "model", parts: [{ text: reply }] });
+          conversationHistory.push(
+            { role: 'user', content: userText },
+            { role: 'assistant', content: reply }
+          );
           typingEl.style.display = "none";
           addMsg(reply, "luna");
 
         } catch (err) {
           console.error("Luna error:", err);
           typingEl.style.display = "none";
-          addMsg("I'm having a little trouble connecting right now 🌸 Please try again in a moment.", "luna");
+          const errorMsg = 
+            err.message.includes('401') 
+              ? "Luna needs her API key set up — check Netlify environment variables."
+            : err.message.includes('429') 
+              ? "Luna is resting for a moment ✦ Try again shortly."
+            : "Luna had a moment — try again! 🌙";
+          addMsg(errorMsg, "luna");
         }
 
         isWaiting = false;
@@ -147,9 +163,9 @@ const LunaFeature = () => {
                 Phase-based AI recommendations. Adjusted nutritional AI models for Ethiopian dietary staples like Teff and regional fasting cycles.
               </p>
               <div className="luna-tags flex flex-wrap gap-2 mb-8">
-                <span className="pill pill-blush font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--blush-light)] text-[var(--blush-mid)]">Flutter</span>
+                <span className="pill pill-blush font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--blush-light)] text-[var(--blush-mid)]">React Native</span>
                 <span className="pill pill-lavender font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--lavender-light)] text-[var(--lavender)]">Gemini AI</span>
-                <span className="pill pill-gold font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--gold-light)] text-[var(--gold)]">Firebase</span>
+                <span className="pill pill-gold font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[var(--gold-light)] text-[var(--gold)]">Supabase</span>
                 <span className="pill pill-taupe font-body uppercase rounded-full px-4 py-1.5 text-[0.7rem] font-semibold bg-[#f5e6e8] text-[var(--taupe)]">Amharic NLP</span>
               </div>
               <div className="luna-try-hint">
@@ -163,7 +179,7 @@ const LunaFeature = () => {
             <div className="luna-chat-widget">
               <div className="luna-chat-header">
                 <div className="luna-avatar">✦</div>
-                <div><div className="luna-chat-name">Luna</div><div className="luna-chat-sub">Women's Health AI</div></div>
+                <div><div className="luna-chat-name">Luna</div><div className="luna-chat-sub">Asmeret's AI Assistant</div></div>
                 <div className="luna-online-dot"></div>
               </div>
               <div className="luna-messages-wrap">
@@ -188,4 +204,3 @@ const LunaFeature = () => {
 };
 
 export default LunaFeature;
-

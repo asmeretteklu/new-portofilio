@@ -1,21 +1,30 @@
 const TypingDots = () => {
   return (
-    <div className="flex gap-1.5 p-3 w-fit rounded-2xl rounded-tl-sm mt-2" style={{ background: 'rgba(237,147,177,0.08)' }}>
+    <div style={{
+      display: 'flex',
+      gap: 6,
+      padding: '12px 16px',
+      width: 'fit-content',
+      background: 'rgba(196,133,106,0.08)',
+      borderLeft: '2px solid #c4856a',
+      borderRadius: '12px 12px 12px 2px',
+      marginTop: 8,
+    }}>
       <style>{`
-        @keyframes typing-bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
+        @keyframes luna-typing-bounce {
+          0%, 100% { transform: translateY(0); opacity: 0.4; }
+          50% { transform: translateY(-6px); opacity: 1; }
         }
-        .dot {
-          animation: typing-bounce 1s infinite;
+        .luna-dot {
+          animation: luna-typing-bounce 1.2s infinite;
         }
-        .dot-1 { animation-delay: 0s; }
-        .dot-2 { animation-delay: 0.15s; }
-        .dot-3 { animation-delay: 0.3s; }
+        .luna-dot-1 { animation-delay: 0s; }
+        .luna-dot-2 { animation-delay: 0.15s; }
+        .luna-dot-3 { animation-delay: 0.3s; }
       `}</style>
-      <div className="w-1.5 h-1.5 rounded-full dot dot-1" style={{ background: 'var(--blush-mid)', opacity: 0.5 }}></div>
-      <div className="w-1.5 h-1.5 rounded-full dot dot-2" style={{ background: 'var(--blush-mid)', opacity: 0.5 }}></div>
-      <div className="w-1.5 h-1.5 rounded-full dot dot-3" style={{ background: 'var(--blush-mid)', opacity: 0.5 }}></div>
+      <div className="luna-dot luna-dot-1" style={{ width: 6, height: 6, borderRadius: '50%', background: '#c4856a' }}></div>
+      <div className="luna-dot luna-dot-2" style={{ width: 6, height: 6, borderRadius: '50%', background: '#c4856a' }}></div>
+      <div className="luna-dot luna-dot-3" style={{ width: 6, height: 6, borderRadius: '50%', background: '#c4856a' }}></div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { starterQuestions } from '../../data/portfolio';
 
 const StarterChips = ({ onSelect }) => {
   return (
-    <div className="flex flex-wrap gap-2 mt-4">
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
       {starterQuestions.map((q, idx) => (
         <motion.button
           key={q}
@@ -11,17 +11,33 @@ const StarterChips = ({ onSelect }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1 + 0.3 }}
           onClick={() => onSelect(q)}
-          className="px-3 py-1.5 rounded-full font-body text-left transition-all"
           style={{ 
-            fontSize: '0.65rem', 
-            textTransform: 'uppercase', 
+            padding: '6px 14px',
+            borderRadius: 100,
+            fontFamily: "'DM Mono', 'DM Sans', monospace",
+            fontSize: '0.62rem',
+            textTransform: 'uppercase',
             letterSpacing: '0.06em',
-            border: '0.5px solid var(--border-color)', 
-            background: 'var(--card-bg)', 
-            color: 'var(--text-muted)',
+            border: '1px solid rgba(196,133,106,0.28)',
+            background: 'rgba(196,133,106,0.1)',
+            color: '#d4a088',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            textAlign: 'left',
+            whiteSpace: 'nowrap',
           }}
-          onMouseEnter={(e) => { e.target.style.background = 'var(--blush-light)'; e.target.style.borderColor = 'var(--blush-mid)'; e.target.style.color = 'var(--blush-mid)'; }}
-          onMouseLeave={(e) => { e.target.style.background = 'var(--card-bg)'; e.target.style.borderColor = 'var(--border-color)'; e.target.style.color = 'var(--text-muted)'; }}
+          onMouseEnter={(e) => { 
+            e.target.style.background = 'rgba(196,133,106,0.2)'; 
+            e.target.style.borderColor = 'rgba(196,133,106,0.5)'; 
+            e.target.style.color = '#c4856a';
+            e.target.style.transform = 'translateY(-1px)'; 
+          }}
+          onMouseLeave={(e) => { 
+            e.target.style.background = 'rgba(196,133,106,0.1)'; 
+            e.target.style.borderColor = 'rgba(196,133,106,0.28)'; 
+            e.target.style.color = '#d4a088';
+            e.target.style.transform = 'translateY(0)'; 
+          }}
         >
           {q}
         </motion.button>

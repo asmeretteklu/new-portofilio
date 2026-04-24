@@ -701,3 +701,148 @@ img {
 .fact-card { background:white; border:0.5px solid #F5C4D3; border-radius:16px; padding:1rem 1.5rem; font-size:13px; color:#5C4545; line-height:1.6; min-width:200px; max-width:260px; text-align:left; transition:transform 0.2s, box-shadow 0.2s; cursor:default; opacity:0; transform:translateY(20px); }
 .fact-card.visible { opacity:1; transform:translateY(0); transition:opacity 0.5s ease, transform 0.5s ease; }
 .fact-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(237,147,177,0.18); }
+
+/* ══════════════════════════════════════════
+   DM MONO FONT
+   ══════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+
+/* ══════════════════════════════════════════
+   LUNA CHAT PANEL — DARK ROSE-GOLD
+   ══════════════════════════════════════════ */
+.luna-chat-panel ::-webkit-scrollbar { width: 3px; }
+.luna-chat-panel ::-webkit-scrollbar-track { background: transparent; }
+.luna-chat-panel ::-webkit-scrollbar-thumb { background: rgba(196,133,106,0.3); border-radius: 2px; }
+
+.luna-chat-panel input::placeholder {
+  color: rgba(196,133,106,0.4);
+}
+
+/* ══════════════════════════════════════════
+   MOBILE PERFECTION — FIX 05
+   ══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Luna chat — full screen on mobile */
+  .luna-chat-panel {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    z-index: 999 !important;
+  }
+
+  /* Nav — hide links, show hamburger */
+  .nav-links { display: none !important; }
+  .hamburger { display: flex !important; }
+
+  /* Hero — single column */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Photo — centered on mobile */
+  .hero-photo-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 2rem auto;
+  }
+
+  /* Projects — horizontal scroll */
+  .projects-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 16px !important;
+    padding-bottom: 1rem !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .projects-grid > * {
+    min-width: 85vw !important;
+    scroll-snap-align: start !important;
+    grid-column: span 1 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Scratch cards — 2 cols on mobile */
+  .cert-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Professor quotes — single column */
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Skills — 2 cols on mobile */
+  .skills-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Community — single column */
+  .community-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ticker — smaller text */
+  .ticker-track span {
+    font-size: 0.55rem !important;
+    letter-spacing: 0.15em !important;
+  }
+
+  /* Section padding — tighter */
+  section {
+    padding: 4rem 1.25rem !important;
+  }
+
+  /* Luna floating button — stays bottom right on mobile */
+  .luna-float-btn {
+    bottom: 1.5rem !important;
+    right: 1.25rem !important;
+  }
+
+  /* Now playing — hide on mobile */
+  .now-playing {
+    display: none !important;
+  }
+
+  /* Footer — stack vertically */
+  footer {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 0.5rem !important;
+    padding: 1.5rem !important;
+  }
+
+  /* Luna featured card — single column */
+  .luna-featured-card {
+    grid-template-columns: 1fr !important;
+    padding: 1.5rem !important;
+  }
+  .luna-chat-widget {
+    height: 340px !important;
+  }
+
+  /* Fun facts — wrap properly */
+  .facts-strip {
+    padding: 2rem 1rem !important;
+  }
+  .facts-row {
+    gap: 8px !important;
+  }
+  .fact-card {
+    min-width: 160px !important;
+    max-width: none !important;
+    flex: 1 1 45% !important;
+  }
+}
+
+/* Touch targets — minimum 44px */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

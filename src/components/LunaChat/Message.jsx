@@ -34,33 +34,37 @@ const Message = ({ role, content, typewriter = false }) => {
       animate={{ opacity: 1, y: 0 }}
       className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 w-full`}
     >
-      {!isUser && (
-        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mr-2 mt-auto mb-1" style={{ background: 'rgba(237,147,177,0.15)' }}>
-          <span className="font-display italic text-xs" style={{ color: 'var(--blush-mid)' }}>L</span>
-        </div>
-      )}
-      
       <div 
-        className={`max-w-[85%] px-4 py-3 rounded-2xl ${
-          isUser 
-            ? 'font-body text-sm rounded-br-sm text-white' 
-            : 'font-display text-lg leading-snug rounded-tl-sm'
-        }`}
         style={isUser ? {
-          background: 'var(--blush-mid)',
+          maxWidth: '85%',
+          padding: '10px 16px',
+          background: '#c4913a',
+          color: '#090b10',
+          borderRadius: '12px 12px 2px 12px',
+          fontFamily: "'DM Mono', 'DM Sans', monospace",
+          fontSize: '0.78rem',
+          lineHeight: 1.6,
         } : {
-          background: 'var(--blush-light)',
-          borderLeft: '4px solid var(--blush-mid)',
-          color: 'var(--text)',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+          maxWidth: '85%',
+          padding: '12px 16px',
+          background: 'rgba(196,133,106,0.08)',
+          borderLeft: '2px solid #c4856a',
+          color: '#f5efe2',
+          borderRadius: '12px 12px 12px 2px',
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: '1rem',
+          lineHeight: 1.6,
         }}
       >
         {isUser ? (
           content
         ) : (
-          <div dangerouslySetInnerHTML={{ 
-            __html: displayedContent.replace(/Asmeret/g, '<span class="italic" style="color:var(--blush-mid)">Asmeret</span>') 
-          }} />
+          <div 
+            style={{ whiteSpace: 'pre-wrap' }}
+            dangerouslySetInnerHTML={{ 
+              __html: displayedContent.replace(/Asmeret/g, '<span style="color:#c4856a;font-style:italic">Asmeret</span>') 
+            }} 
+          />
         )}
       </div>
     </motion.div>

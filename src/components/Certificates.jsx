@@ -1,46 +1,53 @@
 import { useEffect } from 'react';
+import { digitalMarketingCreds } from '../data/portfolio';
 
 const certificates = [
   {
     id: 1,
-    title: 'ALX Software Engineering',
-    issuer: 'ALX Africa',
-    year: '2023',
-    icon: '🏆',
-    link: '/alx.pdf'
-  },
-  {
-    id: 2,
-    title: 'Google Developer Student Club Lead',
-    issuer: 'GDSC',
-    year: '2023',
-    icon: '⭐',
-    link: '/gdsc.pdf'
-  },
-  {
-    id: 3,
     title: 'CS50x — Intro to Computer Science',
     issuer: 'Harvard / edX',
     year: '2022',
-    icon: '📜',
+    icon: '🏆',
+    accent: 'gold', // gold accent for Harvard
     link: '/cs50.pdf'
   },
   {
+    id: 2,
+    title: 'Diploma in English Language',
+    issuer: 'Language School, Mekelle',
+    year: '2017',
+    icon: '📜',
+    accent: 'lavender', // lavender accent
+    note: 'Distinction — Full professional English fluency',
+    link: null
+  },
+  {
+    id: 3,
+    title: '5 Million Ethiopian Coders',
+    issuer: 'AI & Fundamental Programming',
+    year: '2023',
+    icon: '⭐',
+    accent: 'default',
+    link: null
+  },
+  {
     id: 4,
-    title: 'Flutter Development Bootcamp',
-    issuer: 'Udemy',
-    year: '2022',
-    icon: '📱',
-    link: '/flutter.pdf'
+    title: 'UAE 5 Million Coders',
+    issuer: 'Advanced Programming Track',
+    year: 'In Progress',
+    icon: '🚀',
+    accent: 'default',
+    link: null
   },
   {
     id: 5,
-    title: 'Machine Learning Fundamentals',
-    issuer: 'Coursera',
-    year: '2023',
-    icon: '🤖',
-    link: '/ml.pdf'
-  }
+    title: 'FreeCodeCamp Certificates',
+    issuer: 'Web Design · JS · Python · Front End Libraries',
+    year: '2022–2023',
+    icon: '💻',
+    accent: 'default',
+    link: null
+  },
 ];
 
 const Certificates = () => {
@@ -137,6 +144,22 @@ const Certificates = () => {
     });
   }, []);
 
+  const getAccentBorder = (accent) => {
+    switch (accent) {
+      case 'gold': return '1px solid #C9A96E';
+      case 'lavender': return '1px solid #9b89c4';
+      default: return '0.5px solid #E8D5C4';
+    }
+  };
+
+  const getYearColor = (accent) => {
+    switch (accent) {
+      case 'gold': return '#C9A96E';
+      case 'lavender': return '#9b89c4';
+      default: return '#C9A96E';
+    }
+  };
+
   return (
     <section id="certificates" className="py-20 px-4 sm:px-6 lg:px-12 max-w-6xl mx-auto">
       <div className="section-label">Credentials ✦</div>
@@ -147,9 +170,14 @@ const Certificates = () => {
         Every certificate is a late night, an early morning, and a reason to keep going.
       </p>
       <p className="cert-hint">✦ scratch each card to reveal</p>
+      
       <div className="cert-grid">
         {certificates.map(cert => (
-          <div className="cert-card" key={cert.id}>
+          <div 
+            className="cert-card" 
+            key={cert.id}
+            style={{ border: getAccentBorder(cert.accent) }}
+          >
             <div className="cert-scratch" data-scratched="false">
               <canvas className="scratch-canvas"></canvas>
               <div className="cert-scratch-label">scratch to reveal ✦</div>
@@ -158,11 +186,71 @@ const Certificates = () => {
               <span className="cert-icon">{cert.icon}</span>
               <h4 className="cert-name">{cert.title}</h4>
               <p className="cert-issuer">{cert.issuer}</p>
-              <p className="cert-year">{cert.year}</p>
-              <a href={cert.link} download className="cert-btn">Download Certificate ✦</a>
+              <p className="cert-year" style={{ color: getYearColor(cert.accent) }}>{cert.year}</p>
+              {cert.note && (
+                <p style={{ 
+                  fontSize: '0.68rem', 
+                  color: cert.accent === 'lavender' ? '#9b89c4' : 'var(--muted)',
+                  fontStyle: 'italic',
+                  lineHeight: 1.4,
+                  marginTop: 2,
+                }}>
+                  {cert.note}
+                </p>
+              )}
+              {cert.link && (
+                <a href={cert.link} download className="cert-btn">Download Certificate ✦</a>
+              )}
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Digital & Marketing Credentials grouped card */}
+      <div 
+        className="mt-6"
+        style={{
+          background: 'var(--card-bg)',
+          border: '1px solid #C9A96E',
+          borderRadius: 16,
+          padding: '1.5rem 2rem',
+          maxWidth: 480,
+        }}
+      >
+        <h4 style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: '1.1rem',
+          fontWeight: 400,
+          color: 'var(--text)',
+          marginBottom: 12,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+        }}>
+          <span style={{ color: '#C9A96E' }}>✦</span>
+          Digital & Marketing Credentials
+        </h4>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {digitalMarketingCreds.map((cred, i) => (
+            <li key={i} style={{
+              fontFamily: "'DM Mono', 'DM Sans', monospace",
+              fontSize: '0.72rem',
+              color: 'var(--text-muted)',
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: 8,
+              lineHeight: 1.5,
+            }}>
+              <span style={{ color: '#C9A96E', fontSize: '0.5rem' }}>●</span>
+              <span>
+                <span style={{ color: 'var(--text)', fontWeight: 500 }}>{cred.name}</span>
+                {' — '}
+                <span style={{ fontStyle: 'italic' }}>{cred.issuer}</span>
+                {cred.year && <span style={{ color: '#C9A96E', marginLeft: 6 }}>{cred.year}</span>}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
