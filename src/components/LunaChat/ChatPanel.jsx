@@ -128,14 +128,16 @@ const ChatPanel = ({ isOpen, onClose }) => {
       {isOpen && (
         <>
           {/* Mobile overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="sm:hidden fixed inset-0 z-[49]"
-            style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)' }}
-            onClick={onClose}
-          />
+          {!isMini && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="sm:hidden fixed inset-0 z-[49]"
+              style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)' }}
+              onClick={onClose}
+            />
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -241,31 +243,6 @@ const ChatPanel = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Mobile close button */}
-            {isMobile && (
-              <button
-                onClick={onClose}
-                style={{
-                  position: 'absolute',
-                  top: '1rem',
-                  right: '1rem',
-                  width: 44,
-                  height: 44,
-                  borderRadius: '50%',
-                  background: 'rgba(196,133,106,0.15)',
-                  border: '1px solid rgba(196,133,106,0.3)',
-                  color: '#c4856a',
-                  fontSize: '1.2rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  zIndex: 10,
-                }}
-              >
-                ×
-              </button>
-            )}
 
             {/* Messages */}
             {!isMini && (
