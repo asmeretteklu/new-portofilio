@@ -8,13 +8,15 @@ export const person = {
   github: 'https://github.com/asmeretteklu',
   linkedin: 'https://linkedin.com/in/asmeretteklu',
   site: 'https://asmeret.netlify.app',
-  bio: "I build AI for the girls who look like me, and I've shipped real products through blackouts and curfews. Tigray made me resilient. Software is how I show it.",
+  bio: "I build software, craft stories, and create digital experiences for the girls who look like me. I have shipped production apps, written campaigns that moved audiences, and designed systems from scratch — all from Mekelle, Tigray.",
+  interests: "Creative writing and digital storytelling — bridging the gap between technology and human experience",
   photo: '/photo.jpg',
 }
 
 export const stats = [
   { id: 'apps', value: '4', label: 'Production Apps', sub: 'Deployed' },
   { id: 'users', value: '500+', label: 'Real people using it', sub: 'Served' },
+  { id: 'writer', value: 'Writer ✦', label: 'Digital Storyteller', sub: 'Tech & Brand', badge: true },
 ]
 
 export const projects = [
@@ -98,10 +100,14 @@ export const projects = [
 ]
 
 export const skills = [
-  { group: 'Frontend', items: ['React.js', 'React Native / Expo', 'TypeScript (ES6+)', 'HTML5 / CSS3', 'Tailwind CSS', 'Framer Motion'] },
-  { group: 'Backend & Database', items: ['Node.js / Express', 'RESTful APIs', 'MongoDB / Mongoose', 'MySQL', 'Supabase', 'Firebase'] },
-  { group: 'AI & Systems', items: ['TensorFlow.js', 'Python', 'Grok AI', 'Anomaly Detection', 'Socket.io / WebRTC', 'Linux · Git · GitHub'] },
-  { group: 'Smart Tools', items: ['Cursor', 'VS Code', 'Postman', 'Vercel', 'Figma', 'Netlify'] },
+  { group: 'Architecture & Systems 🏗️', type: 'system', items: ['System architecture design', 'Microservices architecture', 'RESTful API design', 'Database schema design', 'Entity-relationship modelling', 'Normalisation & optimisation', 'Role-based access control (RBAC)', 'Authentication & authorisation', 'Security best practices', 'Technical documentation', 'Software requirements specification', 'UML & system diagrams'] },
+  { group: 'Frontend & Mobile 💻', type: 'tech', items: ['React.js', 'React Native', 'Expo', 'TypeScript', 'JavaScript ES6+', 'HTML5 & CSS3', 'Tailwind CSS', 'Framer Motion', 'Responsive design', 'Accessibility (a11y)', 'User-centred design', 'UI/UX principles', 'Cross-platform development', 'Performance optimisation'] },
+  { group: 'Backend & Database 🛠️', type: 'tech', items: ['Node.js', 'Express.js', 'RESTful APIs', 'MongoDB & Mongoose', 'MySQL', 'Supabase', 'Firebase', 'Data modelling', 'Query optimisation', 'Row level security', 'Real-time systems', 'Socket.io', 'WebRTC', 'Microservices'] },
+  { group: 'AI & Emerging Tech 🤖', type: 'tech', items: ['TensorFlow.js', 'Grok AI API', 'Gemini API', 'Machine learning (applied)', 'Anomaly detection', 'AI prompt engineering', 'Natural language processing', 'In-browser ML', 'Computer vision (introductory)', 'Predictive modelling'] },
+  { group: 'Project Leadership 👑', type: 'lead', items: ['End-to-end project ownership', 'Agile & Scrum methodology', 'Sprint planning & iteration', 'Requirements gathering', 'Stakeholder communication', 'Technical presentations', 'Team leadership & mentorship', 'Risk assessment', 'Deadline management', 'Cross-functional collaboration', 'Client relationship management'] },
+  { group: 'Writing & Marketing ✍️', type: 'writing', items: ['Technical writing', 'Blog & article writing', 'Copywriting', 'Content strategy', 'Brand voice development', 'Social media storytelling', 'SEO writing & optimisation', 'Google Analytics', 'Campaign strategy', 'Audience engagement', 'Digital marketing fundamentals', 'Narrative design'] },
+  { group: 'Tools & Practices 🔧', type: 'tool', items: ['Git & GitHub', 'Linux command line', 'VS Code & Cursor', 'Postman', 'Figma (basic)', 'Google Analytics', 'Agile boards (Trello/Notion)', 'CI/CD basics', 'Environment management', 'Testing fundamentals', 'Code review', 'Open source contribution'] },
+  { group: 'Soft Skills 🌸', type: 'soft', items: ['Independent problem solving', 'Resilience under pressure', 'Self-directed learning', 'Creative thinking', 'Empathetic communication', 'Community leadership', 'Multilingual communication', 'Cultural adaptability', 'Attention to detail', 'Growth mindset'] },
 ]
 
 export const certifications = [
@@ -114,9 +120,10 @@ export const certifications = [
 ]
 
 export const digitalMarketingCreds = [
-  { name: 'Digital Marketing Fundamentals', issuer: 'Google Digital Garage', year: '2023' },
-  { name: 'Social Media Marketing', issuer: 'HubSpot Academy', year: '2023' },
-  { name: 'Content Marketing', issuer: 'HubSpot Academy', year: '2023' },
+  { name: 'Fundamentals of Digital Marketing', issuer: 'Google', year: '2023', icon: '📈' },
+  { name: 'Content Marketing Certified', issuer: 'HubSpot Academy · Free', year: '2023', icon: '✍️' },
+  { name: 'Meta Social Media Marketing', issuer: 'Meta · Free', year: '2023', icon: '📱' },
+  { name: 'Google Analytics Certification', issuer: 'Google', year: '2023', icon: '📊' },
 ]
 
 export const community = [
@@ -270,9 +277,7 @@ export const starterQuestions = [
 ]
 
 export const tickerItems = [
-  'React', 'Node.js', 'React Native', 'TypeScript', 'Python',
-  'Grok AI', 'TensorFlow.js', 'Supabase', 'Socket.io', 'WebRTC',
-  'MySQL', 'MongoDB', 'Tailwind CSS', 'Framer Motion', 'Linux', 'Express',
+  'Currently ✦', 'Building Luna AI ✦', 'Writing for tech brands ✦', 'Based in Mekelle ✦', 'Open to opportunities ✦'
 ]
 
 export const testimonials = [

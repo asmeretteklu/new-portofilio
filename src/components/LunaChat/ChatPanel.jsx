@@ -147,7 +147,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
               opacity: 1, 
               y: 0, 
               scale: 1,
-              height: isMini ? '64px' : (isMobile ? '55svh' : '480px')
+              height: isMini ? '64px' : (isMobile ? '50svh' : '480px')
             }}
             exit={{ opacity: 0, y: 20, scale: 0.95, transition: { duration: 0.2 } }}
             transition={{ duration: 0.3, type: 'spring', damping: 25, stiffness: 200 }}
@@ -158,7 +158,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
                 left: 16,
                 right: 16,
                 width: 'auto',
-                height: isMini ? '64px' : '55svh',
+                height: isMini ? '64px' : '50svh',
                 borderRadius: 20,
               } : {
                 bottom: 80,

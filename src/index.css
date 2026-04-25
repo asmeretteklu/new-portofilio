@@ -975,3 +975,57 @@ img {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ── SKILL ITEMS COMMAND 04 ── */
+.skill-group {
+  border-top: 1px solid var(--card-border);
+  padding-top: 1.25rem;
+}
+
+.skill-group-icon {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.skill-group-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.85rem;
+}
+
+.skill-item {
+  font-size: 0.8rem;
+  color: var(--paper2);
+  padding: 0.38rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.skill-item:hover {
+  color: var(--gold-light);
+  font-style: italic;
+  transform: skewX(-2deg);
+  padding-left: 4px;
+}
+
+.skill-group.soft .skill-group-name {
+  color: var(--rose);
+}
+.skill-group.soft .skill-item:hover {
+  color: var(--rose-light);
+}
+
+.skill-group.writing .skill-group-name {
+  color: var(--lavender);
+}
+.skill-group.writing .skill-item:hover {
+  color: var(--lavender);
+}

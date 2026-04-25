@@ -6,10 +6,12 @@ import FriendlyTips from './components/FriendlyTips';
 import Ticker from './components/Ticker';
 import LunaFeature from './components/LunaFeature';
 import Projects from './components/Projects';
+import Certificates from './components/Certificates';
 import Testimonials from './components/Testimonials';
 import About from './components/About';
 import Skills from './components/Skills';
 import Community from './components/Community';
+import BeyondCode from './components/BeyondCode';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import LunaChat from './components/LunaChat';
@@ -40,6 +42,8 @@ function App() {
           <SectionDivider />
           <Projects />
           <SectionDivider />
+          <Certificates />
+          <SectionDivider />
           <Testimonials />
           <SectionDivider />
           <About />
@@ -47,6 +51,8 @@ function App() {
           <Skills />
           <SectionDivider />
           <Community />
+          <SectionDivider />
+          <BeyondCode />
           <SectionDivider />
           <Contact />
         </main>

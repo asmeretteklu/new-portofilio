@@ -14,9 +14,30 @@ const LinkedinIcon = ({ size }) => (
 );
 
 const StatCard = ({ stat }) => {
+  if (stat.badge) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <span 
+          className="font-display px-5 py-2 rounded-full" 
+          style={{ 
+            background: 'var(--rose)', 
+            color: 'var(--paper)', 
+            fontSize: '1.2rem',
+            fontWeight: 600
+          }}
+        >
+          {stat.value}
+        </span>
+        <span className="font-body uppercase tracking-wider mt-2" style={{ color: 'rgba(245,196,211,0.6)', fontSize: '9px' }}>
+          {stat.label}
+        </span>
+      </div>
+    );
+  }
+
   const { ref, display } = useCountUp(stat.value, 1500);
   return (
-    <div ref={ref} className="flex flex-col items-center">
+    <div ref={ref} className="flex flex-col items-center justify-center">
       <span className="font-display text-3xl sm:text-4xl" style={{ fontWeight: 300, color: 'var(--blush-light)' }}>{display}</span>
       <span className="font-body uppercase tracking-wider" style={{ color: 'rgba(245,196,211,0.6)', fontSize: '9px' }}>{stat.label}</span>
     </div>
@@ -205,7 +226,7 @@ const Hero = () => {
             className="font-display italic text-base sm:text-lg leading-relaxed pl-5"
             style={{ borderLeft: '3px solid var(--blush)', color: 'var(--text-mid)', maxWidth: '38ch' }}
           >
-            "I don't build for the resume. I build because someone out there needs it and isn't being seen."
+            "{person.bio}"
           </motion.blockquote>
 
           <motion.div variants={item}>
