@@ -6,6 +6,12 @@ import { skills, certifications, businessImpact, digitalMarketingCreds } from '.
 const Skills = () => {
   const { ref, controls, variants } = useScrollReveal();
   const [showAllSkills, setShowAllSkills] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState({});
+  const [showAllMarketingCreds, setShowAllMarketingCreds] = useState(false);
+
+  const toggleGroup = (groupName) => {
+    setExpandedGroups(prev => ({ ...prev, [groupName]: !prev[groupName] }));
+  };
 
   const displayedSkills = showAllSkills ? skills : skills.slice(0, 4);
 
@@ -89,12 +95,62 @@ const Skills = () => {
                       <h3 className="skill-group-name">
                         {skillGroup.group}
                       </h3>
-                      <div className="flex flex-col">
-                        {skillGroup.items.map((item, i) => (
-                          <div key={i} className="skill-item">
-                            {item}{i < skillGroup.items.length - 1 ? ',' : ''}
-                          </div>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {(expandedGroups[skillGroup.group] ? skillGroup.items : skillGroup.items.slice(0, 4)).map((item, i) => (
+                          <motion.span 
+                            key={i} 
+                            whileHover={{ y: -2, scale: 1.05 }}
+                            className="font-body text-[0.72rem] px-3 py-1.5 rounded-lg cursor-default transition-colors"
+                            style={{
+                              background: 'var(--bg)',
+                              border: '0.5px solid var(--card-border)',
+                              color: 'var(--text-muted)',
+                              boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
+                            }}
+                            onMouseEnter={(e) => {
+                              if (skillGroup.type === 'soft') {
+                                e.currentTarget.style.borderColor = 'var(--rose)';
+                                e.currentTarget.style.color = 'var(--rose)';
+                              } else if (skillGroup.type === 'writing') {
+                                e.currentTarget.style.borderColor = 'var(--lavender)';
+                                e.currentTarget.style.color = 'var(--lavender)';
+                              } else if (skillGroup.type === 'system') {
+                                e.currentTarget.style.borderColor = 'var(--gold)';
+                                e.currentTarget.style.color = 'var(--text)';
+                              } else {
+                                e.currentTarget.style.borderColor = 'var(--blush-mid)';
+                                e.currentTarget.style.color = 'var(--text)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.borderColor = 'var(--card-border)';
+                              e.currentTarget.style.color = 'var(--text-muted)';
+                            }}
+                          >
+                            {item}
+                          </motion.span>
                         ))}
+                        {skillGroup.items.length > 4 && (
+                          <button
+                            onClick={() => toggleGroup(skillGroup.group)}
+                            className="font-body text-[0.68rem] px-3 py-1.5 rounded-lg cursor-pointer transition-colors"
+                            style={{ 
+                              background: 'var(--bg)', 
+                              border: '0.5px dashed var(--card-border)',
+                              color: 'var(--text-muted)',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.borderColor = 'var(--blush-mid)';
+                              e.currentTarget.style.color = 'var(--text)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.borderColor = 'var(--card-border)';
+                              e.currentTarget.style.color = 'var(--text-muted)';
+                            }}
+                          >
+                            {expandedGroups[skillGroup.group] ? 'Show less' : `+${skillGroup.items.length - 4} more`}
+                          </button>
+                        )}
                       </div>
                     </motion.div>
                   );
@@ -183,49 +239,76 @@ const Skills = () => {
                   </div>
                 </div>
                 
-                {digitalMarketingCreds.map((cred, i) => (
-                  <motion.div 
-                    key={`dm-${i}`}
-                    className="rounded-[10px] transition-all duration-200 relative overflow-hidden group cursor-default"
-                    style={{ 
-                      background: 'rgba(80,200,180,0.04)', 
-                      border: '1px solid rgba(80,200,180,0.12)',
-                      borderLeft: '3px solid var(--teal)',
-                      padding: '1.25rem 1.5rem',
+                <AnimatePresence>
+                  {(showAllMarketingCreds ? digitalMarketingCreds : []).map((cred, i) => (
+                    <motion.div 
+                      key={`dm-${cred.name}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="rounded-[10px] transition-all duration-200 relative overflow-hidden group cursor-default"
+                      style={{ 
+                        background: 'rgba(80,200,180,0.04)', 
+                        border: '1px solid rgba(80,200,180,0.12)',
+                        borderLeft: '3px solid var(--teal)',
+                        padding: '1.25rem 1.5rem',
+                      }}
+                      whileHover={{ 
+                        y: -2,
+                        background: 'rgba(80,200,180,0.08)',
+                        borderColor: 'rgba(80,200,180,0.28)',
+                      }}
+                    >
+                      <div className="absolute top-4 right-4 font-body uppercase" style={{
+                        background: 'rgba(80,200,180,0.12)',
+                        color: 'var(--teal)',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.55rem',
+                        fontFamily: "'DM Mono', monospace",
+                        letterSpacing: '0.06em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
+                        MARKETING ✦
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{cred.icon}</span>
+                        <div>
+                          <h4 className="font-display font-bold text-[0.9rem] mb-1" style={{ color: 'var(--paper)', fontFamily: "'Syne', sans-serif" }}>
+                            {cred.name}
+                          </h4>
+                          <p className="font-body mt-1" style={{ color: 'var(--paper3)', fontFamily: "'DM Mono', monospace", fontSize: '0.62rem', letterSpacing: '0.06em' }}>
+                            {cred.issuer} · {cred.year}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+
+                {digitalMarketingCreds.length > 2 && (
+                  <button
+                    onClick={() => setShowAllMarketingCreds(!showAllMarketingCreds)}
+                    className="font-body text-xs uppercase text-center w-full py-3 rounded-[10px] transition-all"
+                    style={{
+                      background: 'rgba(80,200,180,0.02)',
+                      border: '1px dashed rgba(80,200,180,0.3)',
+                      color: 'var(--teal)',
+                      letterSpacing: '0.1em'
                     }}
-                    whileHover={{ 
-                      y: -2,
-                      background: 'rgba(80,200,180,0.08)',
-                      borderColor: 'rgba(80,200,180,0.28)',
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(80,200,180,0.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(80,200,180,0.02)';
                     }}
                   >
-                    <div className="absolute top-4 right-4 font-body uppercase" style={{
-                      background: 'rgba(80,200,180,0.12)',
-                      color: 'var(--teal)',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '0.55rem',
-                      fontFamily: "'DM Mono', monospace",
-                      letterSpacing: '0.06em',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}>
-                      MARKETING ✦
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl">{cred.icon}</span>
-                      <div>
-                        <h4 className="font-display font-bold text-[0.9rem] mb-1" style={{ color: 'var(--paper)', fontFamily: "'Syne', sans-serif" }}>
-                          {cred.name}
-                        </h4>
-                        <p className="font-body mt-1" style={{ color: 'var(--paper3)', fontFamily: "'DM Mono', monospace", fontSize: '0.62rem', letterSpacing: '0.06em' }}>
-                          {cred.issuer} · {cred.year}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    {showAllMarketingCreds ? "Show less ✦" : "Show more ✦"}
+                  </button>
+                )}
               </div>
             </div>
 
