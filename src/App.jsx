@@ -6,7 +6,6 @@ import FriendlyTips from './components/FriendlyTips';
 import Ticker from './components/Ticker';
 import LunaFeature from './components/LunaFeature';
 import Projects from './components/Projects';
-import Certificates from './components/Certificates';
 import Testimonials from './components/Testimonials';
 import About from './components/About';
 import Skills from './components/Skills';
@@ -19,12 +18,14 @@ import SectionDivider from './components/SectionDivider';
 import ScrollProgress from './components/ScrollProgress';
 import CurrentlyPlaying from './components/CurrentlyPlaying';
 import ScrollIndicator from './components/ScrollIndicator';
+import CursorTrail from './components/CursorTrail';
 
 function App() {
   return (
     <>
       <SplashScreen />
       <ScrollProgress />
+      <CursorTrail />
 
       <div className="relative z-10 font-body" style={{ color: 'var(--text)' }}>
         <Nav />
@@ -38,8 +39,6 @@ function App() {
           <LunaFeature />
           <SectionDivider />
           <Projects />
-          <SectionDivider />
-          <Certificates />
           <SectionDivider />
           <Testimonials />
           <SectionDivider />

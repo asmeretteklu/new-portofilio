@@ -25,7 +25,7 @@ const StarField = () => {
         r: Math.random() * 1.5 + 0.5, // 0.5 - 2
         speed: Math.random() * 0.3 + 0.1, // 0.1 - 0.4
         opacity: Math.random() * 0.6 + 0.2, // 0.2 - 0.8
-        gold: Math.random() < 0.08, // 8% chance to be gold
+        gold: Math.random() < 0.12, // 12% chance to be gold
       }));
     };
 

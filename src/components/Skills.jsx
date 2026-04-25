@@ -6,6 +6,7 @@ const GROUP_COLORS = {
   'Frontend': { bg: 'rgba(245,196,211,0.15)', border: 'rgba(237,147,177,0.3)', text: 'var(--blush-mid)' },
   'Backend & Database': { bg: 'rgba(201,169,110,0.12)', border: 'rgba(201,169,110,0.3)', text: 'var(--gold)' },
   'AI & Systems': { bg: 'rgba(159,139,189,0.12)', border: 'rgba(159,139,189,0.3)', text: 'var(--lavender)' },
+  'Smart Tools': { bg: 'rgba(80,200,180,0.12)', border: 'rgba(80,200,180,0.3)', text: 'var(--teal)' },
 };
 
 const Skills = () => {
@@ -39,11 +40,11 @@ const Skills = () => {
                 <div className="flex-1 h-[0.5px]" style={{ background: 'var(--blush)', opacity: 0.3 }} />
               </div>
               <h2 className="font-display text-4xl md:text-5xl" style={{ color: 'var(--text)' }}>
-                The <span className="italic" style={{ color: 'var(--blush-mid)' }}>stack</span> ✦
+                How I <span className="italic" style={{ color: 'var(--blush-mid)' }}>build</span> ✦
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 relative z-10">
               {skills.map((skillGroup, idx) => {
                 const colors = GROUP_COLORS[skillGroup.group] || GROUP_COLORS['Frontend'];
                 return (
@@ -84,27 +85,45 @@ const Skills = () => {
                 {certifications.map((cert, i) => (
                   <motion.div 
                     key={i} 
-                    className="p-4 rounded-xl transition-all duration-300 relative overflow-hidden group cursor-default"
-                    style={{ background: 'var(--card-bg)', border: '0.5px solid var(--card-border)' }}
-                    whileHover={{ x: 4 }}
-                    onMouseEnter={(e) => { 
-                      e.currentTarget.style.border = cert.type === 'language' ? '0.5px solid var(--lavender)' : '0.5px solid var(--blush-mid)'; 
-                      e.currentTarget.style.background = 'var(--blush-light)';
+                    className="rounded-[10px] transition-all duration-200 relative overflow-hidden group cursor-default"
+                    style={{ 
+                      background: cert.cardBg || '#1a1626', 
+                      border: '1px solid rgba(196,145,58,0.12)',
+                      borderLeft: `3px solid ${cert.borderColor || 'rgba(196,145,58,0.12)'}`,
+                      padding: '1.25rem 1.5rem',
                     }}
-                    onMouseLeave={(e) => { 
-                      e.currentTarget.style.border = '0.5px solid var(--card-border)'; 
-                      e.currentTarget.style.background = 'var(--card-bg)';
+                    whileHover={{ 
+                      y: -2,
+                      background: 'rgba(196,145,58,0.05)',
+                      borderColor: 'rgba(196,145,58,0.28)',
+                      borderLeftColor: cert.borderColor || 'rgba(196,145,58,0.28)'
                     }}
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 transition-colors duration-300 group-hover:bg-[var(--blush-mid)]" style={{ background: cert.type === 'language' ? 'var(--lavender)' : 'var(--card-border)' }}></div>
-                    <div className="pl-2">
-                      <h4 className="font-body transition-colors duration-300 text-[0.95rem] font-medium" style={{ color: 'var(--text)' }}>
-                        {cert.name}
-                      </h4>
-                      <p className="font-display mt-1 text-[0.85rem]" style={{ color: 'var(--text-mid)', opacity: 0.85 }}>
-                        {cert.detail}
-                      </p>
-                    </div>
+                    {cert.badge && (
+                      <div className="absolute top-4 right-4 font-body uppercase" style={{
+                        background: cert.badgeBg,
+                        color: cert.badgeColor,
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.55rem',
+                        fontFamily: "'DM Mono', monospace",
+                        letterSpacing: '0.06em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}>
+                        {cert.pulse && (
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: cert.badgeColor, animation: 'pulse 2s infinite' }} />
+                        )}
+                        {cert.badge}
+                      </div>
+                    )}
+                    <h4 className="font-display font-bold text-[0.9rem] mb-1" style={{ color: 'var(--paper)', fontFamily: "'Syne', sans-serif" }}>
+                      {cert.name}
+                    </h4>
+                    <p className="font-body mt-1" style={{ color: 'var(--paper3)', fontFamily: "'DM Mono', monospace", fontSize: '0.62rem', letterSpacing: '0.06em' }}>
+                      {cert.detail}
+                    </p>
                   </motion.div>
                 ))}
               </div>

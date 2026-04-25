@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail } from 'lucide-react';
 import { person, stats } from '../data/portfolio';
@@ -42,28 +42,72 @@ const getTimeAgo = (dateStr) => {
   return `${Math.floor(days / 7)}w ago`;
 };
 
+/* ── Photo card data with unique treatments ── */
+const PHOTOS = [
+  { 
+    src: '/photo.jpg',
+    label: 'Builder ✦',
+    location: 'TIGRAY',
+    filter: 'none',
+  },
+  { 
+    src: '/photo2.jpg', 
+    label: 'Developer ✦',
+    location: 'MEKELLE',
+    filter: 'grayscale(100%)',
+  },
+  { 
+    src: '/photo.jpg',
+    label: 'Creator ✦',
+    location: 'ETHIOPIA',
+    filter: 'sepia(60%) brightness(0.95)',
+  },
+];
+
+/* ── Heartbeat ECG SVG ── */
+const HeartbeatECG = ({ visible }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: visible ? 1 : 0 }}
+    transition={{ duration: 0.3 }}
+    style={{ 
+      position: 'absolute', 
+      bottom: -20, 
+      left: '50%', 
+      transform: 'translateX(-50%)',
+      pointerEvents: 'none',
+      zIndex: 20,
+    }}
+  >
+    <svg width="100" height="24" viewBox="0 0 100 24" fill="none">
+      <path
+        d="M0,12 L25,12 L35,2 L45,22 L55,12 L100,12"
+        stroke="#C9A96E"
+        strokeWidth="1.5"
+        fill="none"
+        strokeDasharray="150"
+        strokeDashoffset="150"
+        style={{
+          animation: visible ? 'ecg-draw 1s ease forwards' : 'none',
+        }}
+      />
+    </svg>
+  </motion.div>
+);
+
 const Hero = () => {
   const [currentRepo, setCurrentRepo] = useState(null);
-  // Put as many photos as you want here!
-  const photoList = [
-    { src: person.photo, id: 0 },
-    { src: '/photo.jpg', id: 1 },
-    { src: '/photo2.jpg', id: 2 }
-  ];
-  const [stackOrder, setStackOrder] = useState(photoList.map(p => p.id));
+  const [frontIndex, setFrontIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
 
-  const handleFlip = () => {
-    setStackOrder(prev => [...prev.slice(1), prev[0]]);
+  const handleCardClick = (clickedIdx) => {
+    if (clickedIdx !== frontIndex) {
+      setFrontIndex(clickedIdx);
+    } else {
+      // Cycle to next
+      setFrontIndex((clickedIdx + 1) % PHOTOS.length);
+    }
   };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      handleFlip();
-    }, 3600000); // 1 hour auto-flip
-    return () => clearInterval(timer);
-  }, []);
-
-  // Photos only change on manual click — no auto-rotation
 
   /* Fetch latest pushed repo from GitHub */
   useEffect(() => {
@@ -84,7 +128,6 @@ const Hero = () => {
         }
       })
       .catch(() => {
-        // Fallback if offline
         setCurrentRepo({ name: 'Luna AI', rawName: 'luna', language: 'JavaScript', description: "Women's health intelligence app", updatedAt: new Date().toISOString(), stars: 0, url: person.github });
       });
   }, []);
@@ -106,6 +149,41 @@ const Hero = () => {
     { label: 'Node.js', bg: 'var(--blush-light)', color: 'var(--blush-mid)' },
     { label: 'Python', bg: 'var(--lavender-light)', color: 'var(--lavender)' },
   ];
+
+  /* Card positions: front (0deg), left (-6deg), right (6deg) */
+  const getCardProps = (cardIdx) => {
+    const isFront = cardIdx === frontIndex;
+    const diff = ((cardIdx - frontIndex) + PHOTOS.length) % PHOTOS.length;
+    
+    if (isFront) {
+      return {
+        rotate: 0,
+        x: 0,
+        y: 0,
+        scale: 1,
+        zIndex: 3,
+        opacity: 1,
+      };
+    } else if (diff === 1) {
+      return {
+        rotate: -6,
+        x: -30,
+        y: 8,
+        scale: 0.95,
+        zIndex: 2,
+        opacity: 1,
+      };
+    } else {
+      return {
+        rotate: 6,
+        x: 30,
+        y: 8,
+        scale: 0.9,
+        zIndex: 1,
+        opacity: 1,
+      };
+    }
+  };
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-28 sm:pt-24 pb-12 overflow-hidden z-10 px-4 sm:px-6 lg:px-12 max-w-6xl mx-auto">
@@ -188,48 +266,112 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* Right Col — Photo */}
+        {/* Right Col — Photo Stack */}
         <motion.div variants={item} className="relative z-10 flex flex-col items-center lg:items-end w-full lg:pr-8">
-          <motion.div 
-            className="fan-stack" 
-            onClick={handleFlip}
-            whileHover="hover"
+          <div 
+            className="photo-stack-wrapper"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            style={{ position: 'relative', width: 280, height: 380, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            {stackOrder.map((photoIdx, i) => {
-              const n = stackOrder.length;
-              const centerOffset = i - (n - 1) / 2;
-              
+            {PHOTOS.map((photo, idx) => {
+              const props = getCardProps(idx);
+              const isFront = idx === frontIndex;
               return (
                 <motion.div 
-                  key={photoList[photoIdx].id} 
-                  className="fan-card"
-                  initial={false}
+                  key={idx}
+                  onClick={() => handleCardClick(idx)}
                   animate={{
-                    rotate: centerOffset * 12,
-                    x: centerOffset * 40,
-                    y: Math.abs(centerOffset) * 6,
-                    zIndex: i
+                    rotate: props.rotate,
+                    x: props.x,
+                    y: props.y,
+                    scale: props.scale,
+                    zIndex: props.zIndex,
+                    opacity: props.opacity,
                   }}
-                  variants={{
-                    hover: { 
-                      rotate: centerOffset * 15,
-                      x: centerOffset * 55,
-                      y: Math.abs(centerOffset) * -10,
-                      scale: 1.05,
-                      zIndex: i === n - 1 ? 100 : i
-                    }
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  style={{
+                    position: 'absolute',
+                    width: 200,
+                    height: 280,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    border: '5px solid white',
+                    boxShadow: isFront 
+                      ? '0 20px 50px rgba(237,147,177,0.35)' 
+                      : '0 12px 30px rgba(237,147,177,0.2)',
+                    cursor: 'pointer',
                   }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                  whileHover={isFront ? { y: -8, scale: 1.03 } : { scale: 0.98 }}
                 >
-                  <img src={photoList[photoIdx].src} alt="Asmeret" />
+                  <img 
+                    src={photo.src} 
+                    alt="Asmeret" 
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover', 
+                      objectPosition: 'center top', 
+                      display: 'block',
+                      pointerEvents: 'none',
+                      filter: photo.filter,
+                    }} 
+                  />
+                  {/* Label overlay */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '16px 14px 12px',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                  }}>
+                    <span style={{
+                      fontFamily: "'DM Mono', 'DM Sans', monospace",
+                      fontSize: '0.55rem',
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(196,145,58,0.8)',
+                    }}>
+                      {photo.location}
+                    </span>
+                    <span style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: '1.1rem',
+                      fontWeight: 400,
+                      color: 'white',
+                      marginTop: 2,
+                    }}>
+                      {photo.label}
+                    </span>
+                  </div>
                 </motion.div>
               );
             })}
+            
+            {/* Decorations */}
             <span className="fan-star">✦</span>
             <div className="fan-dot-1"></div>
             <div className="fan-dot-2"></div>
-            <div className="fan-badge"><span>Tigray</span><strong>Builder ✦</strong></div>
-          </motion.div>
+            
+            {/* Heartbeat on hover */}
+            <HeartbeatECG visible={isHovering} />
+          </div>
+          
+          {/* Tap hint */}
+          <p style={{
+            fontFamily: "'DM Mono', 'DM Sans', monospace",
+            fontSize: '0.58rem',
+            letterSpacing: '0.12em',
+            color: 'rgba(196,145,58,0.45)',
+            marginTop: '1rem',
+            textAlign: 'center',
+          }}>
+            tap to explore →
+          </p>
         </motion.div>
       </motion.div>
 

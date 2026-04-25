@@ -51,7 +51,7 @@
     --dark-mid:       #c8b8b0;
     --muted:          #9B8888;
 
-    --bg:             #12101a;
+    --bg:             #09080f;
     --text:           #f0e8e0;
     --text-mid:       #c8b8b0;
     --text-muted:     #9B8888;
@@ -60,6 +60,7 @@
     --border-color:   #3d2a35;
     --card-bg:        rgba(30,24,36,0.8);
     --card-border:    rgba(80,60,60,0.4);
+    --rose:           #c4856a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -71,17 +72,31 @@
     overflow-x: hidden;
     cursor: auto;
     -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(196,133,106,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(196,145,58,0.03) 0%, transparent 60%);
   }
 
-  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar { width: 2px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--blush-mid); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(var(--blush-mid), var(--gold)); border-radius: 2px; }
 }
 
 /* ── Selection ── */
 ::selection {
-  background: rgba(237,147,177,0.25);
-  color: var(--dark);
+  background: rgba(196,145,58,0.25);
+  color: #f5efe2;
+}
+
+/* ── Smooth everything ── */
+a {
+  transition: all 0.2s ease;
+}
+
+/* ── ECG Heartbeat Draw ── */
+@keyframes ecg-draw {
+  0% { stroke-dashoffset: 150; }
+  100% { stroke-dashoffset: 0; }
 }
 
 /* ── Focus rings ── */
@@ -720,112 +735,210 @@ img {
 }
 
 /* ══════════════════════════════════════════
-   MOBILE PERFECTION — FIX 05
+   MOBILE PERFECTION — COMMAND 05
    ══════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Luna chat — full screen on mobile */
-  .luna-chat-panel {
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 0 !important;
-    z-index: 999 !important;
+
+  /* ── HERO ── */
+  .hero-section {
+    padding: 6rem 1.25rem 3rem;
+    min-height: auto;
   }
-
-  /* Nav — hide links, show hamburger */
-  .nav-links { display: none !important; }
-  .hamburger { display: flex !important; }
-
-  /* Hero — single column */
   .hero-grid {
     grid-template-columns: 1fr !important;
+    gap: 2rem !important;
   }
-
-  /* Photo — centered on mobile */
-  .hero-photo-wrap {
-    display: flex;
-    justify-content: center;
-    margin: 2rem auto;
+  h1.hero-name {
+    font-size: clamp(3rem, 15vw, 5rem) !important;
+    line-height: 0.9 !important;
   }
-
-  /* Projects — horizontal scroll */
-  .projects-grid {
-    display: flex !important;
-    overflow-x: auto !important;
-    scroll-snap-type: x mandatory !important;
-    gap: 16px !important;
-    padding-bottom: 1rem !important;
-    -webkit-overflow-scrolling: touch;
+  .hero-bio {
+    font-size: 1rem !important;
+    max-width: 100% !important;
   }
-  .projects-grid > * {
-    min-width: 85vw !important;
-    scroll-snap-align: start !important;
-    grid-column: span 1 !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* Scratch cards — 2 cols on mobile */
-  .cert-grid {
-    grid-template-columns: 1fr 1fr !important;
+  .hero-ctas {
+    flex-direction: column !important;
     gap: 0.75rem !important;
   }
-
-  /* Professor quotes — single column */
-  .testimonials-grid {
-    grid-template-columns: 1fr !important;
+  .hero-ctas a {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 52px !important;
   }
-
-  /* Skills — 2 cols on mobile */
-  .skills-grid {
+  .photo-stack-wrapper {
+    width: 220px !important;
+    height: 300px !important;
+    transform: scale(0.85);
+    margin: 0 auto 1rem !important;
+  }
+  .stats-grid {
     grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
-  /* Community — single column */
-  .community-grid {
-    grid-template-columns: 1fr !important;
+  /* ── NAV ── */
+  nav {
+    padding: 1rem 1.25rem !important;
   }
-
-  /* Ticker — smaller text */
-  .ticker-track span {
-    font-size: 0.55rem !important;
-    letter-spacing: 0.15em !important;
-  }
-
-  /* Section padding — tighter */
-  section {
-    padding: 4rem 1.25rem !important;
-  }
-
-  /* Luna floating button — stays bottom right on mobile */
-  .luna-float-btn {
-    bottom: 1.5rem !important;
-    right: 1.25rem !important;
-  }
-
-  /* Now playing — hide on mobile */
-  .now-playing {
+  .nav-links {
     display: none !important;
   }
-
-  /* Footer — stack vertically */
-  footer {
-    flex-direction: column !important;
-    text-align: center !important;
-    gap: 0.5rem !important;
-    padding: 1.5rem !important;
+  .hamburger {
+    display: flex !important;
+  }
+  .mobile-menu {
+    padding: 1.5rem 1.25rem !important;
+  }
+  .mobile-menu a {
+    font-size: 0.8rem !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
-  /* Luna featured card — single column */
+  /* ── TICKER ── */
+  .ticker-track span {
+    font-size: 0.55rem !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  /* ── LUNA FEATURE ── */
   .luna-featured-card {
     grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
     padding: 1.5rem !important;
+  }
+  .phone-mockup {
+    display: flex !important;
+    justify-content: center !important;
   }
   .luna-chat-widget {
     height: 340px !important;
   }
 
-  /* Fun facts — wrap properly */
+  /* ── PROJECTS ── */
+  .projects-grid,
+  .projects-mobile-scroll {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 1rem !important;
+    padding: 0 1.25rem 1rem !important;
+    margin: 0 -1.25rem !important;
+  }
+  .projects-grid > *,
+  .projects-mobile-scroll > * {
+    min-width: 82vw !important;
+    scroll-snap-align: start !important;
+    grid-column: span 1 !important;
+    flex-shrink: 0 !important;
+  }
+  .swipe-hint {
+    display: block !important;
+    text-align: center !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.55rem !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+    color: rgba(196,145,58,0.45) !important;
+    margin-top: 0.75rem !important;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1.25rem !important;
+  }
+  .certs-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* ── SCRATCH CARDS ── */
+  .cert-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+  .cert-card {
+    height: 140px !important;
+  }
+
+  /* ── COMMUNITY ── */
+  .community-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* ── CONTACT ── */
+  .contact-links {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .contact-links a {
+    justify-content: center !important;
+    min-height: 52px !important;
+  }
+
+  /* ── LUNA CHAT ── */
+  .luna-chat-panel {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    z-index: 999 !important;
+  }
+  .luna-mobile-close {
+    display: flex !important;
+    position: absolute !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: rgba(196,133,106,0.15) !important;
+    border: 1px solid rgba(196,133,106,0.3) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--rose, #c4856a) !important;
+    font-size: 1.2rem !important;
+  }
+
+  /* ── NOW PLAYING ── */
+  .now-playing {
+    display: none !important;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 0.75rem !important;
+    padding: 2rem 1.25rem !important;
+  }
+
+  /* ── LUNA FLOAT BUTTON ── */
+  .luna-float-btn {
+    bottom: 1.5rem !important;
+    right: 1.25rem !important;
+  }
+
+  /* ── FUN FACTS ── */
   .facts-strip {
     padding: 2rem 1rem !important;
   }
@@ -837,13 +950,28 @@ img {
     max-width: none !important;
     flex: 1 1 45% !important;
   }
+
+  /* ── GENERAL ── */
+  section {
+    padding: 4rem 1.25rem !important;
+  }
+  .ornament {
+    padding: 0.5rem 1.25rem !important;
+  }
+  button, a {
+    min-height: 44px !important;
+  }
 }
 
-/* Touch targets — minimum 44px */
-@media (max-width: 768px) {
-  button, a {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
+/* ── Very small phones ── */
+@media (max-width: 375px) {
+  h1.hero-name {
+    font-size: 2.8rem !important;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .cert-grid {
+    grid-template-columns: 1fr !important;
   }
 }

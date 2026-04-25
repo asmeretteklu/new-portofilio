@@ -41,8 +41,13 @@ const Footer = () => {
           </p>
         </div>
 
+        {/* Luna AI teaser — Cormorant italic, rose, centered */}
         <div className="mt-8 text-center">
-          <p className="font-display italic" style={{ fontSize: '0.75rem', color: 'var(--blush-mid)' }}>
+          <p className="font-display italic" style={{ 
+            fontSize: '0.85rem', 
+            color: 'var(--blush-mid)',
+            letterSpacing: '0.02em',
+          }}>
             Luna AI is coming. Stay close. 🌙
           </p>
         </div>

@@ -19,6 +19,9 @@ const Community = () => {
             <h2 className="font-display text-4xl md:text-5xl" style={{ color: 'var(--text)' }}>
               Giving <span className="italic" style={{ color: 'var(--blush-mid)' }}>back</span> ✦
             </h2>
+            <p className="font-display italic text-lg mt-3" style={{ color: 'var(--text-mid)' }}>
+              Because someone gave to me first.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

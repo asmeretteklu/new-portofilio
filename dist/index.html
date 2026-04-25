@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Asmeret Teklu Gebremedhin — Full-Stack Developer, AI Enthusiast, and Builder from Tigray. Explore her portfolio of production apps, AI projects, and community impact." />
     <title>Asmeret Teklu · Full-Stack Developer & AI Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
     <!-- Google Analytics (Optional: replace G-XXXXXXXXXX with your Measurement ID for tracking) -->
     <!-- 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
@@ -16,12 +19,67 @@
       gtag('config', 'G-XXXXXXXXXX');
     </script>
     -->
-    <script type="module" crossorigin src="/assets/index-BLDNHtcF.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-B8HINTYZ.js">
-    <link rel="modulepreload" crossorigin href="/assets/preload-helper-DSXbuxSR.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-JXm3OOVJ.css">
+    <script type="module" crossorigin src="/assets/index-D4JW7prg.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-xdu_WLm-.css">
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- EMAIL JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+      const pubKey = "HEFQreUM4wmzjXLRc";
+      emailjs.init(pubKey.startsWith("%") ? "YOUR_PUBLIC_KEY" : pubKey);
+    </script>
+
+    </div>
+    <!-- Removed custom music HTML to use CurrentlyPlaying component -->
+
+
+    <audio id="bgAudio" loop></audio>
+
+    <script>
+      // ── GLOBAL ANIMATIONS ──
+      // Fade up on scroll
+      const fadeObserver = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add("visible"), i * 80);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      // Delay observation until React renders
+      setTimeout(() => {
+        const fadeEls = document.querySelectorAll(".fade-up, .fact-card");
+        fadeEls.forEach(el => fadeObserver.observe(el));
+      }, 1000);
+
+      // Count-up stats
+      const statObserver = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            document.querySelectorAll("[data-target]").forEach(el => {
+              const target = parseInt(el.dataset.target);
+              let count = 0;
+              const step = target / 60;
+              const timer = setInterval(() => {
+                count += step;
+                if (count >= target) { el.textContent = target; clearInterval(timer); return; }
+                el.textContent = Math.floor(count);
+              }, 20);
+            });
+            statObserver.disconnect();
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      setTimeout(() => {
+        const statsSection = document.querySelector(".stats-bar, [class*='stat']");
+        if (statsSection) statObserver.observe(statsSection);
+      }, 1000);
+
+      // Removed custom cursor
+    </script>
   </body>
 </html>

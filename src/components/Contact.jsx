@@ -4,6 +4,34 @@ import { useScrollReveal } from '../hooks/useScrollReveal';
 import { person } from '../data/portfolio';
 import emailjs from '@emailjs/browser';
 
+/* ── Animated Envelope ── */
+const AnimatedEnvelope = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <span 
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ display: 'inline-flex', alignItems: 'center', width: 20, height: 16 }}
+    >
+      <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
+        {/* Body */}
+        <rect x="1" y="3" width="18" height="12" rx="2" stroke="var(--blush-mid)" strokeWidth="1.2" fill="none" />
+        {/* Flap */}
+        <motion.path
+          d="M1,3 L10,9 L19,3"
+          stroke="var(--blush-mid)"
+          strokeWidth="1.2"
+          fill="none"
+          animate={{ 
+            d: isHovered ? 'M1,3 L10,1 L19,3' : 'M1,3 L10,9 L19,3'
+          }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+        />
+      </svg>
+    </span>
+  );
+};
+
 const Contact = () => {
   const { ref, controls, variants } = useScrollReveal();
   const formRef = useRef(null);
@@ -62,10 +90,10 @@ const Contact = () => {
           <div className="text-center md:text-left">
             <div className="section-label mb-4">Say Hello ✦</div>
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl leading-none" style={{ color: 'var(--text)' }}>
-              Let's build something <span className="italic" style={{ color: 'var(--blush-mid)' }}>extraordinary.</span>
+              Let's build <span className="italic" style={{ color: 'var(--blush-mid)' }}>something</span> ✦
             </h2>
-            <p className="font-body max-w-2xl mt-4 text-sm sm:text-base" style={{ color: 'var(--text-mid)' }}>
-              I'm passionate about turning ideas into reality. Whether you have a project in mind, need technical expertise, or just want to connect.
+            <p className="font-display italic max-w-2xl mt-4 text-base sm:text-lg" style={{ color: 'var(--text-mid)' }}>
+              I respond. I deliver. I care.
             </p>
           </div>
 
@@ -127,7 +155,9 @@ const Contact = () => {
                 style={{ background: 'var(--card-bg)', border: '0.5px solid var(--card-border)', boxShadow: '0 20px 60px rgba(0,0,0,0.04)' }}
               >
                 <div className="mb-6">
-                  <h3 className="font-display text-xl sm:text-2xl mb-1" style={{ color: 'var(--text)' }}>Send me a message</h3>
+                  <h3 className="font-display text-xl sm:text-2xl mb-1 flex items-center gap-2" style={{ color: 'var(--text)' }}>
+                    Send me a message <AnimatedEnvelope />
+                  </h3>
                   <p className="font-body text-sm" style={{ color: 'var(--text-mid)' }}>Have a project in mind? Let's discuss how we can work together.</p>
                 </div>
 

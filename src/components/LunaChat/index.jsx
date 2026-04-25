@@ -28,6 +28,7 @@ const LunaChat = () => {
           whileTap={{ scale: 0.92 }}
           onClick={toggleOpen}
           className="luna-float-btn"
+          title="Ask me about Asmeret ✦"
           style={{
             width: 52,
             height: 52,

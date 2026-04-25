@@ -17,9 +17,12 @@ const About = () => {
         >
           <div>
             <div className="section-label mb-4">My Story</div>
-            <h2 className="font-display text-4xl md:text-5xl mb-8" style={{ color: 'var(--text)' }}>
-              A builder from <span className="italic" style={{ color: 'var(--blush-mid)' }}>Tigray</span>
+            <h2 className="font-display text-4xl md:text-5xl" style={{ color: 'var(--text)' }}>
+              Where I'm <span className="italic" style={{ color: 'var(--blush-mid)' }}>from</span> ✦
             </h2>
+            <p className="font-display italic text-lg mt-3 mb-8" style={{ color: 'var(--text-mid)' }}>
+              Mekelle raised me. Software is how I give back.
+            </p>
             
             <div className="space-y-5 font-display text-xl md:text-2xl leading-relaxed" style={{ color: 'var(--text-mid)' }}>
               <div className="relative">

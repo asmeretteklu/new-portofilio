@@ -102,7 +102,7 @@ const Projects = () => {
             Things I've <span className="italic" style={{ color: 'var(--blush-mid)' }}>actually built</span> ✦
           </h2>
           <p className="font-display text-lg mt-3 max-w-2xl leading-relaxed" style={{ color: 'var(--text-mid)' }}>
-            Every project here is deployed, used by real people, solving a real problem.
+            Real software. Real users. Real impact.
           </p>
         </motion.div>
 

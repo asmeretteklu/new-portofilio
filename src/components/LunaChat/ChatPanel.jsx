@@ -6,7 +6,7 @@ import TypingDots from './TypingDots';
 import StarterChips from './StarterChips';
 import { lunaSystemPrompt } from '../../data/portfolio';
 
-const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+const API_KEY = import.meta.env.VITE_GROK_KEY;
 
 const CrescentMoonSmall = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -48,7 +48,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
       const timer = setTimeout(() => {
         setMessages([{ 
           role: 'assistant', 
-          content: "Hey, I'm Luna 🌙\nI know everything about Asmeret — her work, her story, and how to reach her. What would you like to know?", 
+          content: "Hey! I'm Asmeret's assistance Luna 2 🌙\nI know everything about her — her work, her story, and how to reach her. What would you like to know? ✦", 
           isOpening: true 
         }]);
       }, 700);
@@ -71,6 +71,8 @@ const ChatPanel = ({ isOpen, onClose }) => {
     setIsLoading(true);
 
     try {
+      // Note: Since the API key in .env starts with gsk_ (Groq), we must use the Groq API endpoint.
+      // x.ai will reject this key with a 401 Unauthorized.
       const response = await fetch(
         'https://api.groq.com/openai/v1/chat/completions',
         {
@@ -96,7 +98,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
       }
 
       const data = await response.json();
-      const reply = data.choices?.[0]?.message?.content || "Luna is resting 🌙 Try again in a moment.";
+      const reply = data.choices?.[0]?.message?.content || "I'm resting for a moment 🌙 Try again!";
 
       setMessages(prev => [...prev, { role: 'assistant', content: reply, typewriter: true }]);
 
@@ -107,15 +109,15 @@ const ChatPanel = ({ isOpen, onClose }) => {
         { role: 'assistant', content: reply }
       ];
     } catch (error) {
-      console.error("Luna AI error:", error);
+      console.error("Luna 2 error:", error);
       const errorMsg = 
         error.message.includes('401') 
-          ? "Luna needs her API key set up — check Netlify environment variables."
+          ? "I need a valid x.ai API key set up — check Netlify environment variables (you might be using a Groq key!)."
         : error.message.includes('429') 
-          ? "Luna is resting for a moment ✦ Try again shortly."
-        : error.message.includes('network')
-          ? "Luna lost her connection 🌙 Check your internet and try again."
-        : "Luna had a moment — try again! 🌙";
+          ? "I'm resting for a moment ✦ Try again shortly."
+        : error.message.includes('network') || error.message.includes('Failed to fetch')
+          ? "Lost my connection or CORS error 🌙 Check your console for details."
+        : "Had a moment — try again! 🌙";
 
       setMessages(prev => [...prev, { role: 'assistant', content: errorMsg, typewriter: true }]);
     } finally {
@@ -202,7 +204,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
                   color: '#c4856a',
                   lineHeight: 1,
                 }}>
-                  luna
+                  luna 2 ✦
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
