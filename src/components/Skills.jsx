@@ -1,341 +1,143 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { skills, certifications, businessImpact, digitalMarketingCreds } from '../data/portfolio';
+import { motion } from 'framer-motion';
+import { skills, certifications, businessImpact } from '../data/portfolio';
+import { Code2, Layout, Database, Sparkles, Trophy, Zap } from 'lucide-react';
+
+const SKILL_ICONS = {
+  'Languages & Core': Code2,
+  'Frontend & Mobile': Layout,
+  'Backend & Database': Database,
+  'AI & Tools': Sparkles
+};
+
+const SkillGroup = ({ group, index }) => {
+  const Icon = SKILL_ICONS[group.group] || Code2;
+  
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="space-y-6 group/group"
+    >
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-full bg-[var(--accent-light)] flex items-center justify-center transition-transform group-hover/group:rotate-12">
+          <Icon className="w-5 h-5 text-[var(--accent)]" />
+        </div>
+        <h3 className="font-display text-2xl font-light whitespace-nowrap">{group.group}</h3>
+        <div className="h-px w-full bg-[var(--border)] origin-left scale-x-0 group-hover/group:scale-x-100 transition-transform duration-700" />
+      </div>
+      <div className="flex flex-wrap gap-3">
+        {group.items.map((item) => (
+          <motion.div 
+            key={item}
+            whileHover={{ scale: 1.05, y: -2 }}
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-[14px] bg-[var(--card-bg)] border border-[var(--border)] hover:border-[var(--accent)] hover:bg-[var(--accent-light)] transition-all duration-300 shadow-sm hover:shadow-[0_4px_20px_rgba(224,163,135,0.15)] cursor-default group/pill overflow-hidden relative"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--accent)]/5 to-transparent -translate-x-full group-hover/pill:translate-x-full transition-transform duration-1000" />
+            
+            <div className="relative w-1.5 h-1.5 rounded-full bg-[var(--text-muted)] group-hover/pill:bg-[var(--accent)] group-hover/pill:shadow-[0_0_8px_var(--accent)] transition-all duration-300" />
+            
+            <span className="relative z-10 text-[11px] font-body uppercase tracking-[0.15em] text-[var(--text-mid)] group-hover/pill:text-[var(--accent)] font-medium transition-colors duration-300">
+              {item}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
 
 const Skills = () => {
-  const { ref, controls, variants } = useScrollReveal();
-  const [showAllSkills, setShowAllSkills] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState({});
-  const [showAllMarketingCreds, setShowAllMarketingCreds] = useState(false);
-
-  const toggleGroup = (groupName) => {
-    setExpandedGroups(prev => ({ ...prev, [groupName]: !prev[groupName] }));
-  };
-
-  const displayedSkills = showAllSkills ? skills : skills.slice(0, 4);
-
   return (
-    <section id="skills" className="py-24 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 lg:px-12 relative z-10">
-        <motion.div 
-          ref={ref}
-          initial="hidden"
-          animate={controls}
-          variants={variants}
-          className="flex flex-col gap-12"
-        >
-          {/* Certificate 2: Floating Credential Badge positioned here per Command 02 */}
-          <div className="flex justify-start mb-[-2rem] relative z-20">
+    <section id="skills" className="py-32 px-6 lg:px-12 max-w-7xl mx-auto">
+      <div className="grid lg:grid-cols-[1fr_1.8fr] gap-20 lg:gap-32">
+        {/* Left Column: Contextual Data */}
+        <div className="space-y-16">
+          <div className="space-y-8">
             <motion.div 
-              whileHover={{ boxShadow: '0 0 20px rgba(196,145,58,0.15)' }}
-              className="inline-flex items-center"
-              style={{
-                background: 'rgba(196,145,58,0.08)',
-                border: '1px solid rgba(196,145,58,0.3)',
-                borderRadius: '100px',
-                padding: '0.75rem 1.25rem',
-                gap: '12px',
-                transition: 'all 0.3s ease',
-                cursor: 'default'
-              }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-4"
             >
-              <div style={{ fontSize: '1.2rem' }}>🏆</div>
-              <div className="flex flex-col">
-                <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '0.82rem', color: 'var(--paper)', lineHeight: 1.2 }}>
-                  5 Million Ethiopian Coders
-                </span>
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.6rem', color: 'var(--muted)', marginTop: '2px' }}>
-                  AI & Fundamental Programming · 2023
-                </span>
-              </div>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: '0.58rem', color: 'var(--gold)', marginLeft: '8px' }}>
-                Verified ✦
-              </div>
+              <div className="h-px w-8 bg-[var(--accent)]" />
+              <span className="text-[10px] uppercase tracking-[0.4em] text-[var(--accent)] font-bold">The Ecosystem</span>
             </motion.div>
-          </div>
-
-          {/* Theme-responsive section card */}
-          <div 
-            className="rounded-3xl p-8 md:p-12 relative overflow-hidden transition-colors duration-300" 
-            style={{ 
-              background: 'var(--card-bg)', 
-              boxShadow: '0 20px 60px rgba(0,0,0,0.05)', 
-              border: '1px solid var(--card-border)' 
-            }}
-          >
-            <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] rounded-full filter blur-[80px] opacity-20 pointer-events-none" style={{ background: 'var(--blush-mid)' }}></div>
-            <div className="absolute bottom-[-20%] left-[-10%] w-[300px] h-[300px] rounded-full filter blur-[80px] opacity-10 pointer-events-none" style={{ background: 'var(--gold)' }}></div>
             
-            <div className="mb-10 relative z-10">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="font-body uppercase" style={{ fontSize: '10px', letterSpacing: '0.18em', color: 'var(--blush-mid)', fontWeight: 500 }}>Capabilities</span>
-                <div className="flex-1 h-[0.5px]" style={{ background: 'var(--blush)', opacity: 0.3 }} />
-              </div>
-              <h2 className="font-display text-4xl md:text-5xl mb-2" style={{ color: 'var(--text)' }}>
-                How I <span className="italic" style={{ color: 'var(--blush-mid)' }}>build</span> ✦
-              </h2>
-              <p className="font-body text-sm" style={{ color: 'var(--muted)' }}>
-                A software engineer who writes, leads, designs, and ships.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 relative z-10">
-              <AnimatePresence>
-                {displayedSkills.map((skillGroup, idx) => {
-                  return (
-                    <motion.div 
-                      key={skillGroup.group}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3, delay: idx * 0.05 }}
-                      className={`skill-group ${skillGroup.type || ''}`}
-                    >
-                      <h3 className="skill-group-name">
-                        {skillGroup.group}
-                      </h3>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {(expandedGroups[skillGroup.group] ? skillGroup.items : skillGroup.items.slice(0, 4)).map((item, i) => (
-                          <motion.span 
-                            key={i} 
-                            whileHover={{ y: -2, scale: 1.05 }}
-                            className="font-body text-[0.72rem] px-3 py-1.5 rounded-lg cursor-default transition-colors"
-                            style={{
-                              background: 'var(--bg)',
-                              border: '0.5px solid var(--card-border)',
-                              color: 'var(--text-muted)',
-                              boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
-                            }}
-                            onMouseEnter={(e) => {
-                              if (skillGroup.type === 'soft') {
-                                e.currentTarget.style.borderColor = 'var(--rose)';
-                                e.currentTarget.style.color = 'var(--rose)';
-                              } else if (skillGroup.type === 'writing') {
-                                e.currentTarget.style.borderColor = 'var(--lavender)';
-                                e.currentTarget.style.color = 'var(--lavender)';
-                              } else if (skillGroup.type === 'system') {
-                                e.currentTarget.style.borderColor = 'var(--gold)';
-                                e.currentTarget.style.color = 'var(--text)';
-                              } else {
-                                e.currentTarget.style.borderColor = 'var(--blush-mid)';
-                                e.currentTarget.style.color = 'var(--text)';
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.borderColor = 'var(--card-border)';
-                              e.currentTarget.style.color = 'var(--text-muted)';
-                            }}
-                          >
-                            {item}
-                          </motion.span>
-                        ))}
-                        {skillGroup.items.length > 4 && (
-                          <button
-                            onClick={() => toggleGroup(skillGroup.group)}
-                            className="font-body text-[0.68rem] px-3 py-1.5 rounded-lg cursor-pointer transition-colors"
-                            style={{ 
-                              background: 'var(--bg)', 
-                              border: '0.5px dashed var(--card-border)',
-                              color: 'var(--text-muted)',
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.borderColor = 'var(--blush-mid)';
-                              e.currentTarget.style.color = 'var(--text)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.borderColor = 'var(--card-border)';
-                              e.currentTarget.style.color = 'var(--text-muted)';
-                            }}
-                          >
-                            {expandedGroups[skillGroup.group] ? 'Show less' : `+${skillGroup.items.length - 4} more`}
-                          </button>
-                        )}
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </div>
-
-            <div className="mt-10 flex justify-center relative z-10">
-              <button 
-                onClick={() => setShowAllSkills(!showAllSkills)}
-                className="font-body uppercase px-6 py-3 rounded-full transition-all duration-300"
-                style={{ 
-                  fontSize: '0.7rem', 
-                  letterSpacing: '0.1em',
-                  color: 'var(--paper)',
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                }}
-              >
-                {showAllSkills ? "Show less ✦" : "Show all skills ✦"}
-              </button>
-            </div>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-display text-6xl md:text-8xl leading-[0.9] font-light"
+            >
+              My Stack <br />
+              <span className="italic font-normal text-[var(--accent)] ml-8 md:ml-16">& Tools</span>
+            </motion.h2>
           </div>
 
-          {/* Certifications & Business Impact — outside dark card */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-4">
-            <div>
-              <div className="section-label mb-6">Certifications & Programs</div>
-              <div className="flex flex-col gap-3">
-                {certifications.map((cert, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="rounded-[10px] transition-all duration-200 relative overflow-hidden group cursor-default"
-                    style={{ 
-                      background: cert.cardBg || '#1a1626', 
-                      border: '1px solid rgba(196,145,58,0.12)',
-                      borderLeft: `3px solid ${cert.borderColor || 'rgba(196,145,58,0.12)'}`,
-                      padding: '1.25rem 1.5rem',
-                    }}
-                    whileHover={{ 
-                      y: -2,
-                      background: 'rgba(196,145,58,0.05)',
-                      borderColor: 'rgba(196,145,58,0.28)',
-                      borderLeftColor: cert.borderColor || 'rgba(196,145,58,0.28)'
-                    }}
-                  >
-                    {cert.badge && (
-                      <div className="absolute top-4 right-4 font-body uppercase" style={{
-                        background: cert.badgeBg,
-                        color: cert.badgeColor,
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '0.55rem',
-                        fontFamily: "'DM Mono', monospace",
-                        letterSpacing: '0.06em',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px'
-                      }}>
-                        {cert.pulse && (
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: cert.badgeColor, animation: 'pulse 2s infinite' }} />
-                        )}
-                        {cert.badge}
-                      </div>
-                    )}
-                    <h4 className="font-display font-bold text-[0.9rem] mb-1" style={{ color: 'var(--paper)', fontFamily: "'Syne', sans-serif" }}>
-                      {cert.name}
-                    </h4>
-                    <p className="font-body mt-1" style={{ color: 'var(--paper3)', fontFamily: "'DM Mono', monospace", fontSize: '0.62rem', letterSpacing: '0.06em' }}>
-                      {cert.detail}
-                    </p>
-                  </motion.div>
-                ))}
-
-                {/* Digital & Marketing Credentials Sub-section */}
-                <div className="mt-4 mb-2">
-                  <div className="font-body uppercase text-xs" style={{ color: 'var(--teal)', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span className="w-4 h-px bg-[var(--teal)] opacity-50"></span>
-                    Digital & Marketing Credentials
+          <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-12 pt-4">
+            {/* Project Leadership */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <Zap className="w-4 h-4 text-[var(--accent)]" />
+                <h3 className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-bold">Impact</h3>
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                {businessImpact.map((item) => (
+                  <div key={item.label} className="group flex flex-col">
+                    <div className="flex items-end gap-2">
+                      <span className="font-display text-4xl text-[var(--accent)] group-hover:italic transition-all leading-none">{item.metric}</span>
+                      <div className="h-px flex-1 bg-[var(--border)] mb-1" />
+                    </div>
+                    <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] mt-2 font-medium">{item.label}</p>
                   </div>
-                </div>
-                
-                <AnimatePresence>
-                  {(showAllMarketingCreds ? digitalMarketingCreds : []).map((cred, i) => (
-                    <motion.div 
-                      key={`dm-${cred.name}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="rounded-[10px] transition-all duration-200 relative overflow-hidden group cursor-default"
-                      style={{ 
-                        background: 'rgba(80,200,180,0.04)', 
-                        border: '1px solid rgba(80,200,180,0.12)',
-                        borderLeft: '3px solid var(--teal)',
-                        padding: '1.25rem 1.5rem',
-                      }}
-                      whileHover={{ 
-                        y: -2,
-                        background: 'rgba(80,200,180,0.08)',
-                        borderColor: 'rgba(80,200,180,0.28)',
-                      }}
-                    >
-                      <div className="absolute top-4 right-4 font-body uppercase" style={{
-                        background: 'rgba(80,200,180,0.12)',
-                        color: 'var(--teal)',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '0.55rem',
-                        fontFamily: "'DM Mono', monospace",
-                        letterSpacing: '0.06em',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px'
-                      }}>
-                        MARKETING ✦
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xl">{cred.icon}</span>
-                        <div>
-                          <h4 className="font-display font-bold text-[0.9rem] mb-1" style={{ color: 'var(--paper)', fontFamily: "'Syne', sans-serif" }}>
-                            {cred.name}
-                          </h4>
-                          <p className="font-body mt-1" style={{ color: 'var(--paper3)', fontFamily: "'DM Mono', monospace", fontSize: '0.62rem', letterSpacing: '0.06em' }}>
-                            {cred.issuer} · {cred.year}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-
-                {digitalMarketingCreds.length > 2 && (
-                  <button
-                    onClick={() => setShowAllMarketingCreds(!showAllMarketingCreds)}
-                    className="font-body text-xs uppercase text-center w-full py-3 rounded-[10px] transition-all"
-                    style={{
-                      background: 'rgba(80,200,180,0.02)',
-                      border: '1px dashed rgba(80,200,180,0.3)',
-                      color: 'var(--teal)',
-                      letterSpacing: '0.1em'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(80,200,180,0.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(80,200,180,0.02)';
-                    }}
-                  >
-                    {showAllMarketingCreds ? "Show less ✦" : "Show more ✦"}
-                  </button>
-                )}
+                ))}
               </div>
             </div>
 
-            <div>
-              <div className="section-label mb-6">Business Impact</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {businessImpact.map((item, i) => (
-                  <div 
-                    key={i} 
-                    className="p-5 rounded-2xl transition-all duration-300"
-                    style={{ background: 'var(--card-bg)', border: '0.5px solid var(--card-border)' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.border = '0.5px solid var(--blush-mid)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.border = '0.5px solid var(--card-border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-                  >
-                    <span className="font-display text-3xl block mb-1" style={{ color: 'var(--blush-mid)' }}>{item.metric}</span>
-                    <h4 className="font-body text-sm mb-0.5" style={{ color: 'var(--text)', fontWeight: 500 }}>{item.label}</h4>
-                    <p className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.08em', color: 'var(--blush-mid)' }}>{item.sub}</p>
+            {/* Selected Credentials */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <Trophy className="w-4 h-4 text-[var(--accent)]" />
+                <h3 className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-bold">Validation</h3>
+              </div>
+              <div className="space-y-6">
+                {certifications.slice(0, 3).map((cert) => (
+                  <div key={cert.name} className="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-[var(--accent)] before:to-transparent">
+                    <p className="font-display text-lg leading-tight font-medium">{cert.name}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] mt-1">{cert.detail}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
+        </div>
 
-        </motion.div>
+        {/* Right Column: Dynamic Skills Map */}
+        <div className="space-y-16 lg:pt-12">
+          {skills.map((group, idx) => (
+            <SkillGroup key={group.group} group={group} index={idx} />
+          ))}
+          
+          {/* Smart Status Note */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="p-8 rounded-3xl bg-[var(--accent-light)] border border-[var(--border)] relative overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
+              <Zap className="w-12 h-12 text-[var(--accent)]" />
+            </div>
+            <p className="font-body text-sm text-[var(--accent)] leading-relaxed font-light italic">
+              "Currently specializing in bilingual AI architectures (Tigrinya/English) and offline-first mobile synchronization systems for resilient deployments."
+            </p>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
 };
 
 export default Skills;
+

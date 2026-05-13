@@ -16,6 +16,15 @@ export default {
         dark: { DEFAULT: 'var(--dark)', mid: 'var(--dark-mid)' },
         muted: 'var(--muted)',
       },
+      keyframes: {
+        scan: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(1000%)' },
+        }
+      },
+      animation: {
+        scan: 'scan 2s linear infinite',
+      }
     },
   },
   plugins: [],

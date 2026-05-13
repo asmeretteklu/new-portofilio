@@ -1,122 +1,123 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Music, ExternalLink, ChevronUp, ChevronDown } from 'lucide-react';
 
 const CurrentlyPlaying = () => {
-  const [expanded, setExpanded] = useState(false);
-  const [playlistUrl, setPlaylistUrl] = useState("https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0");
-  const [inputUrl, setInputUrl] = useState("");
-  const [showInput, setShowInput] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [playlistId, setPlaylistId] = useState('37i9dQZEVXbMDoHDwVN2tF'); 
+  const [input, setInput] = useState('');
 
-  const [isMini, setIsMini] = useState(false);
-
-  const handleUrlSubmit = (e) => {
-    if (e.key === 'Enter') {
-      let finalUrl = inputUrl;
-      if (inputUrl.includes('open.spotify.com/playlist/')) {
-        const id = inputUrl.split('playlist/')[1].split('?')[0];
-        finalUrl = `https://open.spotify.com/embed/playlist/${id}?utm_source=generator&theme=0`;
-      }
-      setPlaylistUrl(finalUrl);
-      setShowInput(false);
-      setInputUrl("");
+  const handleUpdatePlaylist = (e) => {
+    e.preventDefault();
+    const match = input.match(/playlist\/([a-zA-Z0-9]+)/);
+    const newId = match ? match[1] : input;
+    if (newId) {
+      setPlaylistId(newId);
+      setInput('');
+      setShowSearch(false);
     }
   };
 
   return (
-    <div style={{ position: 'fixed', bottom: '24px', left: '24px', zIndex: 600, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
-      <AnimatePresence>
-        {expanded && (
-          <motion.div 
-            initial={{ opacity: 0, y: 15, scale: 0.9, rotate: -2 }}
-            animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
-            exit={{ opacity: 0, y: 15, scale: 0.9, rotate: -2 }}
-            style={{
-              background: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(12px)',
-              borderRadius: '24px',
-              padding: '12px',
-              boxShadow: '0 20px 50px rgba(237,147,177,0.3)',
-              width: '350px',
-              border: '1.5px solid rgba(245,196,211,0.5)',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-          >
-            <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '80px', height: '80px', background: 'var(--blush-light)', borderRadius: '50%', filter: 'blur(30px)', opacity: 0.6 }}></div>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', padding: '4px 8px', position: 'relative', zIndex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: 'var(--blush-mid)' }}>Vibes ✦</span>
-                <div className="w-1 h-1 rounded-full bg-[#4ade80] animate-pulse"></div>
-              </div>
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <button 
-                  onClick={() => setShowInput(!showInput)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--blush-mid)', fontSize: '10px', fontWeight: 600 }}
-                >
-                  {showInput ? "CANCEL" : "CHANGE"}
-                </button>
-                <button 
-                  onClick={() => setIsMini(!isMini)} 
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '18px', padding: 0 }}
-                  title={isMini ? "Expand" : "Minimize"}
-                >
-                  {isMini ? "□" : "—"}
-                </button>
-                <button onClick={() => setExpanded(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '20px', padding: 0 }}>&times;</button>
-              </div>
+    <div className="fixed bottom-4 left-4 md:bottom-8 md:left-8 z-[100] max-w-[calc(100vw-32px)]">
+      <motion.div 
+        layout
+        className="bg-[var(--card-bg)] backdrop-blur-2xl border border-[var(--border)] rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col transition-all duration-500"
+        style={{ width: isExpanded ? (window.innerWidth < 640 ? '300px' : '340px') : '180px' }}
+      >
+        {/* Header / Mini View */}
+        <div 
+          className="p-4 flex items-center gap-4 cursor-pointer group select-none"
+          onClick={() => {
+            setIsExpanded(!isExpanded);
+            if (isExpanded) setShowSearch(false);
+          }}
+        >
+          <div className="relative">
+            <div className="w-10 h-10 rounded-full bg-[#1DB954]/10 flex items-center justify-center text-[#1DB954] transition-transform group-hover:scale-110">
+              <Music className="w-5 h-5" />
+            </div>
+            {isExpanded && (
+              <motion.div 
+                layoutId="pulse"
+                className="absolute inset-0 rounded-full bg-[#1DB954]/20 animate-ping"
+              />
+            )}
+          </div>
+          
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <span className="text-[8px] uppercase tracking-[0.25em] text-[#1DB954] font-bold mb-1 opacity-80">
+              {isExpanded ? 'Now Curating' : 'Pulse Radio'}
+            </span>
+            <span className="text-[11px] text-[var(--text)] font-semibold leading-none truncate">
+              {isExpanded ? 'Personal Session' : 'Discovery Mix'}
+            </span>
+          </div>
+
+          <div className="text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors">
+            {isExpanded ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+          </div>
+        </div>
+
+        {/* Expanded View - Keep mounted so music doesn't stop */}
+        <motion.div 
+          initial={false}
+          animate={{ 
+            height: isExpanded ? 'auto' : 0,
+            opacity: isExpanded ? 1 : 0
+          }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="px-4 overflow-hidden"
+        >
+          <div className="pb-4 space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-bold">Source Control</span>
+              <button 
+                onClick={(e) => { e.stopPropagation(); setShowSearch(!showSearch); }}
+                className="text-[10px] text-[var(--accent)] hover:underline font-bold"
+              >
+                {showSearch ? 'Cancel' : 'Change Stream'}
+              </button>
             </div>
 
-            {showInput ? (
-              <div style={{ padding: '0 8px 10px 8px', position: 'relative', zIndex: 1 }}>
+            {showSearch && (
+              <motion.form 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                onSubmit={handleUpdatePlaylist} 
+                className="flex gap-2"
+              >
                 <input 
                   type="text" 
-                  placeholder="Paste Spotify Link & Press Enter..."
-                  value={inputUrl}
-                  onChange={(e) => setInputUrl(e.target.value)}
-                  onKeyDown={handleUrlSubmit}
-                  style={{ width: '100%', padding: '8px 12px', borderRadius: '10px', border: '1px solid var(--blush)', fontSize: '12px', outline: 'none' }}
+                  placeholder="Spotify URL or ID..." 
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  autoFocus
+                  className="flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-xl px-4 py-2 text-[10px] outline-none focus:border-[var(--accent)] transition-all text-[var(--text)] placeholder:opacity-30"
                 />
-              </div>
-            ) : (
+                <button type="submit" className="px-4 py-2 rounded-xl bg-[var(--accent)] text-[var(--onyx)] text-[10px] font-bold shadow-lg shadow-[var(--accent-light)]">Update</button>
+              </motion.form>
+            )}
+
+            <div className="bg-[var(--bg)] border border-[var(--border)] rounded-2xl overflow-hidden h-[380px] shadow-inner relative">
               <iframe 
-                style={{ borderRadius: '16px', position: 'relative', zIndex: 1, boxShadow: '0 4px 15px rgba(0,0,0,0.05)', transition: 'height 0.3s ease' }} 
-                src={playlistUrl}
+                title="Spotify Embed"
+                src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
                 width="100%" 
-                height={isMini ? "80" : "380"}
+                height="380" 
                 frameBorder="0" 
                 allowFullScreen="" 
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                 loading="lazy"
+                className="w-full h-full"
               />
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <motion.button 
-        onClick={() => setExpanded(!expanded)}
-        whileHover={{ scale: 1.1, rotate: 12 }}
-        whileTap={{ scale: 0.9 }}
-        style={{
-          background: 'linear-gradient(135deg, #ED93B1, #D4437C)',
-          color: 'white', width: '54px', height: '54px',
-          borderRadius: '27px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          border: '2px solid white', cursor: 'pointer', 
-          boxShadow: '0 8px 20px rgba(237,147,177,0.4)',
-          fontSize: '22px', position: 'relative'
-        }}
-      >
-        <span className="relative z-10">♪</span>
-        {/* Ring animation */}
-        <motion.div 
-          animate={{ scale: [1, 1.4], opacity: [0.3, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          style={{ position: 'absolute', inset: -2, border: '2px solid #ED93B1', borderRadius: '50%' }}
-        />
-      </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
 
 export default CurrentlyPlaying;
-

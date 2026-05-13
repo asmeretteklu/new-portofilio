@@ -1,80 +1,74 @@
 import { motion } from 'framer-motion';
-import { useScrollReveal } from '../hooks/useScrollReveal';
+import { ExternalLink, ArrowUpRight } from 'lucide-react';
+import { GithubIcon as Github } from './SocialIcons';
 import { projects } from '../data/portfolio';
 
 const PROJECT_ICONS = {
   luna: '🌙',
   keno: '🎰',
-  ethiomarket: '🛍️',
   registration: '🎓',
-  moodnotes: '🎵',
-  codecollab: '💻',
-  unfooler: '🔍',
-};
-
-const PROJECT_WHY = {
-  luna: "Because the women I love deserved better health access.",
-  keno: "Because real-time systems should just work — for every role.",
-  ethiomarket: "Because Ethiopian artisans deserve a global storefront.",
-  registration: "Because no student should wait 7 days to enroll.",
-  moodnotes: "Because your playlist should match how you actually feel.",
-  codecollab: "Because Mekelle's blackouts shouldn't stop collaboration.",
-  unfooler: "Because authenticity online shouldn't be this hard to find.",
-};
-
-const ICON_COLORS = {
-  luna: 'var(--blush-light)',
-  keno: 'var(--lavender-light)',
-  ethiomarket: 'var(--gold-light)',
-  registration: 'var(--blush-light)',
-  moodnotes: 'var(--lavender-light)',
-  codecollab: 'var(--gold-light)',
-  unfooler: 'var(--blush-light)',
 };
 
 const ProjectCard = ({ project, index }) => {
-  const descParts = project.name.split(project.accent);
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay: (index % 3) * 0.1 }}
-      className="flip-card"
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="group relative bg-[var(--card-bg)] border border-[var(--border)] rounded-2xl overflow-hidden hover:border-[var(--accent)] transition-all duration-500 flex flex-col shadow-sm"
     >
-      <div className="flip-inner">
-        {/* FRONT — what shows normally */}
-        <div className="flip-front">
-          <div className="project-icon">{PROJECT_ICONS[project.id] || '✦'}</div>
-          <h4 className="project-name">
-            {descParts[0]}
-            {project.accent && <span className="italic" style={{ color: 'var(--blush-mid)' }}>{project.accent}</span>}
-            {descParts[1]}
-          </h4>
-          <p className="project-tech flex flex-wrap gap-1.5 mt-2">
+      <div className="p-8 h-full flex flex-col space-y-6">
+        <div className="flex justify-between items-start">
+          <div className="w-12 h-12 rounded-xl bg-[var(--accent-light)] flex items-center justify-center text-2xl">
+            {PROJECT_ICONS[project.id] || '✦'}
+          </div>
+          <div className="flex gap-2">
+            <a href={project.github || '#'} target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-[var(--accent-light)] text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors" title="View Source">
+              <Github className="w-4 h-4" />
+            </a>
+            <a href={project.demo || '#'} target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-[var(--accent-light)] text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors" title="Live Demo">
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+
+        <div className="space-y-4 flex-1">
+          <div className="space-y-1">
+            <div className="flex items-center gap-3">
+              <h3 className="font-display text-2xl font-light tracking-tight">{project.name}</h3>
+              {project.status === 'live' && (
+                <span className="text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-[var(--accent)] text-[var(--onyx)] font-bold">Live</span>
+              )}
+            </div>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold opacity-80">{project.statusLabel}</p>
+          </div>
+          
+          <p className="font-body text-sm text-[var(--text-muted)] leading-relaxed line-clamp-4 font-light">
+            {project.description}
+          </p>
+
+          <div className="grid grid-cols-2 gap-6 py-6 border-y border-[var(--border)]">
+            {project.metrics?.map((metric, i) => (
+              <div key={i} className="flex flex-col space-y-1">
+                <span className="text-xl font-display text-[var(--accent)] leading-none">{metric.value}</span>
+                <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] font-medium">{metric.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="pt-2 space-y-6">
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
             {project.tags.map(tag => (
-              <span key={tag} className="font-body uppercase rounded-md px-2 py-1" style={{ fontSize: '0.6rem', letterSpacing: '0.04em', background: 'var(--blush-light)', color: 'var(--muted)', border: '0.5px solid var(--blush)' }}>
-                {tag}
+              <span key={tag} className="text-[10px] font-mono text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors">
+                #{tag.replace(/\s+/g, '').toLowerCase()}
               </span>
             ))}
-          </p>
-          <span className="flip-hint">hover to explore ✦</span>
-        </div>
-        {/* BACK — shows on hover */}
-        <div className="flip-back">
-          <h4 className="flip-back-name">
-            {descParts[0]}{project.accent}{descParts[1]}
-          </h4>
-          <p className="flip-back-desc">{project.description}</p>
-          <p className="flip-back-why">{PROJECT_WHY[project.id] || ''}</p>
-          <a 
-            href={project.link || "https://github.com/asmeretteklu"} 
-            target="_blank" 
-            rel="noreferrer" 
-            className="flip-back-btn"
-          >
-            View project ✦
+          </div>
+          
+          <a href={project.demo || '#'} className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
+            Project Details <ArrowUpRight className="w-3 h-3" />
           </a>
         </div>
       </div>
@@ -83,42 +77,50 @@ const ProjectCard = ({ project, index }) => {
 };
 
 const Projects = () => {
-  const { ref, controls, variants } = useScrollReveal();
-  const nonLunaProjects = projects.filter(p => p.id !== 'luna');
-
   return (
-    <section id="work" className="py-24">
-      <div className="max-w-6xl mx-auto px-6 lg:px-12">
-        
-        <motion.div 
-          ref={ref}
-          initial="hidden"
-          animate={controls}
-          variants={variants}
-          className="mb-12"
-        >
-          <div className="section-label mb-4">Selected Work</div>
-          <h2 className="font-display text-4xl md:text-5xl" style={{ color: 'var(--text)' }}>
-            Things I've <span className="italic" style={{ color: 'var(--blush-mid)' }}>actually built</span> ✦
-          </h2>
-          <p className="font-display text-lg mt-3 max-w-2xl leading-relaxed" style={{ color: 'var(--text-mid)' }}>
-            Real software. Real users. Real impact.
-          </p>
-        </motion.div>
-
-        <div className="projects-mobile-scroll grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {nonLunaProjects.map((project, idx) => (
-            <ProjectCard key={project.id} project={project} index={idx} />
-          ))}
+    <section id="work" className="py-24 px-6 lg:px-12 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+        <div className="max-w-2xl space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-4"
+          >
+            <div className="h-px w-8 bg-[var(--accent)]" />
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[var(--accent)] font-bold">The Portfolio</span>
+          </motion.div>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-display text-5xl md:text-7xl leading-none font-light"
+          >
+            Engineering <br />
+            <span className="italic font-normal text-[var(--accent)]">with Intent</span>
+          </motion.h2>
         </div>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="font-body text-[var(--text-muted)] max-w-xs leading-relaxed font-light text-sm"
+        >
+          A selection of production-grade systems, automated college infrastructures, and AI health solutions.
+        </motion.p>
+      </div>
 
-        <p className="block md:hidden text-center font-body mt-3" style={{ fontSize: '0.6rem', color: 'var(--muted)', opacity: 0.5 }}>
-          ← swipe →
-        </p>
-
+      <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8 snap-x snap-mandatory scrollbar-hide">
+        {projects.map((project, idx) => (
+          <div key={project.id} className="min-w-[85vw] md:min-w-0 snap-center">
+            <ProjectCard project={project} index={idx} />
+          </div>
+        ))}
       </div>
     </section>
   );
 };
 
 export default Projects;
+
+

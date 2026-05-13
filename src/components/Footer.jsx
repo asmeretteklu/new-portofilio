@@ -1,20 +1,6 @@
-import { ArrowUp } from 'lucide-react';
-
-const HeartbeatLine = () => (
-  <svg width="80" height="24" viewBox="0 0 80 24" fill="none" className="my-3">
-    <path
-      d="M0,12 L20,12 L28,2 L36,22 L44,12 L80,12"
-      stroke="var(--blush-mid)"
-      strokeWidth="1.5"
-      fill="none"
-      strokeDasharray="120"
-      strokeDashoffset="0"
-      style={{
-        animation: 'heartbeat-pulse 2s linear infinite',
-      }}
-    />
-  </svg>
-);
+import { ArrowUp, Mail } from 'lucide-react';
+import { GithubIcon as Github, LinkedinIcon as Linkedin } from './SocialIcons';
+import { person } from '../data/portfolio';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -22,48 +8,67 @@ const Footer = () => {
   };
 
   return (
-    <footer className="py-12" style={{ borderTop: '0.5px solid var(--taupe)' }}>
-      <div className="max-w-6xl mx-auto px-6 lg:px-12">
+    <footer className="py-20 border-t border-[var(--border)] relative overflow-hidden bg-[var(--bg)] text-[var(--text)] transition-colors duration-500">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        <div className="grid md:grid-cols-[2fr_1fr_1fr] gap-12 md:gap-24 mb-16">
+          <div className="space-y-6">
+            <a href="#" className="flex flex-col group">
+              <span className="font-display text-4xl tracking-tight leading-none text-[var(--text)]">Asmeret</span>
+              <span className="font-display text-4xl italic text-[var(--accent)] tracking-tight leading-none ml-4">Teklu</span>
+            </a>
+            <p className="font-body text-[var(--text-muted)] max-w-sm text-sm leading-relaxed font-light">
+              Architecting resilient digital systems from Mekelle, Tigray. Focused on high-impact full-stack engineering and AI integration.
+            </p>
+          </div>
 
-        <div className="flex flex-col items-center gap-4 mb-8">
-          <HeartbeatLine />
-          <p className="font-body" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: 'var(--text)', opacity: 0.9 }}>
-            Designed & built by Asmeret Teklu Gebremedhin
-          </p>
+          <div className="space-y-6">
+            <h4 className="text-[10px] uppercase tracking-[0.3em] text-[var(--accent)] font-bold">Navigation</h4>
+            <div className="flex flex-col gap-3">
+              {['Work', 'Luna AI', 'About', 'Contact'].map(link => (
+                <a key={link} href={`#${link.toLowerCase().replace(' ', '')}`} className="text-sm font-body text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors font-light">
+                  {link}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h4 className="text-[10px] uppercase tracking-[0.3em] text-[var(--accent)] font-bold">Social Architecture</h4>
+            <div className="flex flex-col gap-3">
+              <a href={person.github} target="_blank" className="text-sm font-body text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors font-light">GitHub</a>
+              <a href={person.linkedin} target="_blank" className="text-sm font-body text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors font-light">LinkedIn</a>
+              <a href={`mailto:${person.email}`} className="text-sm font-body text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors font-light">Email</a>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-6" style={{ borderTop: '1px solid var(--taupe)' }}>
-          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--text)', opacity: 0.8 }}>
-            asmeret.netlify.app · {new Date().getFullYear()}
-          </p>
-          <p className="font-body" style={{ fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--text)', opacity: 0.8 }}>
-            Made in Mekelle, Tigray ✦ Powered by curiosity
-          </p>
-        </div>
+        <div className="pt-12 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex flex-col gap-2">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)] font-medium">
+              &copy; {new Date().getFullYear()} Asmeret Teklu · Mekelle, Tigray, Ethiopia
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[9px] uppercase tracking-widest text-[var(--accent)]">Last Active: Recently</span>
+              </div>
+              <div className="h-3 w-px bg-[var(--border)]" />
+              <div className="text-[9px] uppercase tracking-widest text-[var(--text-muted)]">
+                Press <span className="text-[var(--accent)] px-1 rounded bg-[var(--accent-light)] font-mono">`</span> or <span className="text-[var(--accent)] px-1 rounded bg-[var(--accent-light)] font-mono">Ctrl+K</span> to open terminal
+              </div>
+            </div>
+          </div>
 
-        {/* Luna AI teaser — Cormorant italic, rose, centered */}
-        <div className="mt-8 text-center">
-          <p className="font-display italic" style={{ 
-            fontSize: '0.85rem', 
-            color: 'var(--blush-mid)',
-            letterSpacing: '0.02em',
-          }}>
-            Luna AI is coming. Stay close. 🌙
-          </p>
-        </div>
-
-        <div className="flex justify-center mt-6">
           <button
             onClick={scrollToTop}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-all group"
-            style={{ border: '0.5px solid var(--taupe)', color: 'var(--muted)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--blush-mid)'; e.currentTarget.style.color = 'var(--blush-mid)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--taupe)'; e.currentTarget.style.color = 'var(--muted)'; }}
+            className="group flex flex-col items-center gap-2"
           >
-            <ArrowUp size={16} className="group-hover:-translate-y-1 transition-transform" />
+            <div className="w-12 h-12 rounded-full border border-[var(--border)] flex items-center justify-center group-hover:border-[var(--accent)] transition-all">
+              <ArrowUp className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:-translate-y-1 transition-all" />
+            </div>
+            <span className="text-[9px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-bold group-hover:text-[var(--accent)]">Back to Top</span>
           </button>
         </div>
-
       </div>
     </footer>
   );

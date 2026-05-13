@@ -1,140 +1,118 @@
 import { motion } from 'framer-motion';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import { academicTimeline } from '../data/portfolio';
+import { academicTimeline, community } from '../data/portfolio';
 
 const About = () => {
-  const { ref, controls, variants } = useScrollReveal();
-
   return (
-    <section id="about" className="py-24 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto px-6 lg:px-12">
-        <motion.div 
-          ref={ref}
-          initial="hidden"
-          animate={controls}
-          variants={variants}
-          className="flex flex-col gap-10"
-        >
-          <div>
-            <div className="section-label mb-4">My Story</div>
-            <h2 className="font-display text-4xl md:text-5xl" style={{ color: 'var(--text)' }}>
-              Where I'm <span className="italic" style={{ color: 'var(--blush-mid)' }}>from</span> ✦
-            </h2>
-            <p className="font-display italic text-lg mt-3 mb-8" style={{ color: 'var(--text-mid)' }}>
-              Mekelle raised me. Software is how I give back.
+    <section id="about" className="py-24 px-6 lg:px-12 max-w-7xl mx-auto overflow-hidden">
+      <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-16 lg:gap-24">
+        {/* Left Column: Story Header */}
+        <div className="space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-4"
+          >
+            <div className="h-px w-8 bg-[var(--accent)]" />
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[var(--accent)] font-bold">The Narrative</span>
+          </motion.div>
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-display text-5xl md:text-7xl leading-tight font-light"
+          >
+            Building software <br />
+            <span className="italic font-normal text-[var(--accent)]">that makes life easier</span>
+          </motion.h2>
+
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="font-body text-lg text-[var(--text-mid)] leading-relaxed font-light italic border-l-2 border-[var(--accent-light)] pl-6"
+          >
+            "Growing up in Mekelle, I learned that technology isn't a luxury—it's a lifeline. I didn't start with a computer; I started with a pen and a conviction."
+          </motion.p>
+        </div>
+
+        {/* Right Column: Detailed Story & Data */}
+        <div className="space-y-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-body text-[17px] text-[var(--text-mid)] leading-relaxed font-light space-y-6"
+          >
+            <p>
+              I grew up in Mekelle, Tigray, before I owned a phone or a computer. I chose Software Engineering anyway — not because it was practical, but because I couldn't imagine choosing anything else.
             </p>
-            
-            <div className="space-y-5 font-display text-xl md:text-2xl leading-relaxed" style={{ color: 'var(--text-mid)' }}>
-              <div className="relative">
-                <span
-                  className="absolute -top-4 -left-2 font-display pointer-events-none select-none"
-                  style={{ fontSize: '7rem', opacity: 0.08, lineHeight: 1, color: 'var(--blush-mid)' }}
-                >
-                  "
-                </span>
-                <p className="relative z-10">
-                  I don't just write code; I build systems that survive. Growing up in Mekelle, I learned that technology isn't a luxury—it's a lifeline. When the power went out, I wrote logic on paper. When the internet cut, I focused on local-first architectures.
-                </p>
+            <p>
+              I studied through internet blackouts and power cuts. I took handwritten notes when there was nothing else. When war came to Tigray in 2020, I kept studying. By candlelight sometimes. From printed pages when there was no electricity. I graduated in August 2025 with a 3.74 GPA — Great Distinction, top of my cohort.
+            </p>
+            <p>
+              Since then I have built real systems for real people: a lottery platform running live in production, a student registration system that turned a 7-day process into 5 minutes, and Luna AI — a women's health app built specifically for Ethiopian and African women, powered by Gemini, because the global health tech industry largely forgot we exist.
+            </p>
+            <p>
+              I build software that works under difficult conditions because that is the only kind of software that matters where I come from. Slow internet. Power cuts. Users who speak Amharic and Tigrinya. Those are not edge cases to me. They are the main case.
+            </p>
+            <p>
+              Right now I am applying for a Master's degree in Computer Science in Italy — because I want to go deeper, build smarter, and come back with more tools to solve harder problems.
+            </p>
+          </motion.div>
+
+          {/* Community Impact */}
+          <div className="grid md:grid-cols-3 gap-8 py-8 border-y border-[var(--border)]">
+            {community.map((item, i) => (
+              <div key={i} className="space-y-2">
+                <span className="text-[10px] uppercase tracking-widest text-[var(--accent)] font-bold">{item.title}</span>
+                <p className="font-display text-lg leading-tight">{item.org}</p>
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
               </div>
-              <p>
-                Today, I use those lessons to build AI and full-stack platforms that are as resilient as the people using them. 
-              </p>
-              <p>
-                Whether it's optimizing a registration system at Microlink or architecting Luna AI, my work is driven by the conviction that the best software is deeply contextual and built to last.
-              </p>
-            </div>
+            ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10" style={{ borderTop: '0.5px solid var(--taupe)' }}>
-            <div>
-              <div className="section-label mb-5">Education</div>
-              <div className="flex flex-col gap-2">
-                <h4 className="font-body text-lg" style={{ color: 'var(--text)', fontWeight: 500 }}>BSc, Software Engineering</h4>
-                <p className="font-display flex items-center gap-1" style={{ color: 'var(--text-mid)' }}>
-                  Microlink IT College, Mekelle
-                  <span style={{ color: 'var(--blush-mid)', fontSize: '0.75rem' }}>↗</span>
-                </p>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="font-display italic" style={{ fontSize: '0.9rem', color: 'var(--blush-mid)' }}>Great Distinction</span>
+          {/* Academic Progression */}
+          <div className="space-y-8">
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <h3 className="font-display text-2xl font-light">Academic Progression</h3>
+              <span className="text-[10px] uppercase tracking-widest text-[var(--accent)]">Top of Cohort</span>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {academicTimeline.map((item, i) => (
+                <div key={i} className="flex flex-col space-y-2">
+                  <span className="text-[10px] uppercase tracking-widest text-[var(--text-muted)]">{item.year}</span>
+                  <span className="font-display text-3xl font-light leading-none">{item.gpa}</span>
+                  <span className="text-[9px] uppercase tracking-tighter text-[var(--accent)]">{item.semester}</span>
                 </div>
-              </div>
-              <p className="font-display italic mt-5" style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
-                est. August 2025 · Mekelle, Ethiopia ✦
-              </p>
-            </div>
-            
-            <div>
-              <div className="section-label mb-5">Languages</div>
-              <ul className="flex flex-col gap-3 font-body" style={{ color: 'var(--text-mid)' }}>
-                <li className="flex justify-between items-center group">
-                  <span className="group-hover:text-blush-mid transition-colors"  style={{ color: 'var(--text)' }}>Tigrigna</span>
-                  <span className="font-body uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>Native</span>
-                </li>
-                <li className="flex justify-between items-center group">
-                  <span className="group-hover:text-blush-mid transition-colors" style={{ color: 'var(--text)' }}>English</span>
-                  <span className="font-body uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>Fluent</span>
-                </li>
-                <li className="flex justify-between items-center group">
-                  <span className="group-hover:text-blush-mid transition-colors" style={{ color: 'var(--text)' }}>Amharic</span>
-                  <span className="font-body uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>Conversational</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Research Interests */}
-          <div className="pt-6" style={{ borderTop: '0.5px solid var(--taupe)' }}>
-            <div className="section-label mb-5">Research Interests</div>
-            <div className="flex flex-wrap gap-2">
-              {['AI for Social Good', 'Women\'s Health Tech', 'HCI', 'Culturally-Adaptive Systems'].map(interest => (
-                <span
-                  key={interest}
-                  className="px-4 py-2 rounded-full font-body"
-                  style={{
-                    fontSize: '0.78rem',
-                    background: 'var(--lavender-light)',
-                    border: '0.5px solid rgba(159,139,189,0.3)',
-                    color: 'var(--lavender)',
-                    fontWeight: 500,
-                  }}
-                >
-                  {interest}
-                </span>
               ))}
             </div>
           </div>
 
-          {/* Academic Timeline */}
-          <div className="mt-4 pt-10" style={{ borderTop: '0.5px solid var(--taupe)' }}>
-            <div className="section-label mb-3">Academic Progression</div>
-            <p className="font-body text-sm mb-10" style={{ color: 'var(--muted)' }}>
-              I got stronger every year — through conflict.
-            </p>
-            <div className="relative flex flex-col md:flex-row justify-between items-end gap-4 md:gap-0 w-full px-2">
-              <div className="hidden md:block absolute top-[52px] left-0 w-full h-[0.5px] z-0" style={{ background: 'var(--taupe)' }} />
-              
-              {academicTimeline.map((item, i) => {
-                const isFinal = i === academicTimeline.length - 1;
-                return (
-                  <div key={i} className="flex md:flex-col items-center md:items-start gap-6 relative z-10 w-full md:w-auto pb-6 md:pb-0 last:border-0 group" style={{ borderBottom: 'none' }}>
-                    <div className="flex flex-col md:mb-4 w-24 md:w-auto">
-                      <span className="font-body" style={{ color: 'var(--text)', fontWeight: 500 }}>{item.year}</span>
-                      <span className="font-body uppercase" style={{ fontSize: '0.6rem', letterSpacing: '0.08em', color: 'var(--muted)' }}>{item.semester}</span>
-                    </div>
-                    <div className="hidden md:flex w-3 h-3 rounded-full outline outline-4 transition-colors relative z-10" style={{ background: isFinal ? 'var(--blush-mid)' : 'var(--taupe)', outlineColor: 'var(--bg)' }} />
-                    <div className="ml-auto md:ml-0 flex flex-col items-end md:items-start md:mt-4">
-                      <span className={`font-display text-3xl md:text-4xl ${isFinal ? '' : 'group-hover:text-blush-mid transition-colors'}`} style={{ color: isFinal ? 'var(--blush-mid)' : 'var(--text)' }}>{item.gpa}</span>
-                      {item.distinction && <span className="font-display italic text-sm mt-1 max-w-[100px] leading-tight" style={{ color: 'var(--blush-mid)' }}>{item.distinction}</span>}
-                    </div>
-                  </div>
-                );
-              })}
+          {/* Languages Grid */}
+          <div className="space-y-6">
+            <h3 className="text-[10px] uppercase tracking-[0.3em] text-[var(--accent)] font-bold">Linguistic Capability</h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { name: 'Tigrigna', level: 'Native / Mother Tongue' },
+                { name: 'English', level: 'Full Fluency (Diploma w/ Distinction)' },
+                { name: 'Amharic', level: 'Full Professional Proficiency' }
+              ].map((lang) => (
+                <div key={lang.name} className="space-y-1">
+                  <p className="font-display text-xl font-light">{lang.name}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)]">{lang.level}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
 
 export default About;
+
+

@@ -1,85 +1,71 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 const CursorTrail = () => {
-  const canvasRef = useRef(null);
-  const particles = useRef([]);
-  const mouse = useRef({ x: 0, y: 0 });
-  const animRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Only on desktop
-    if (window.matchMedia('(max-width: 768px)').matches) return;
-    if ('ontouchstart' in window) return;
+    if (window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window) {
+      setIsMobile(true);
+      return;
+    }
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const updateMousePosition = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
-    resize();
-    window.addEventListener('resize', resize);
 
-    const handleMove = (e) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
-      // Spawn 3 particles on each move
-      for (let i = 0; i < 3; i++) {
-        particles.current.push({
-          x: e.clientX + (Math.random() - 0.5) * 8,
-          y: e.clientY + (Math.random() - 0.5) * 8,
-          life: 1,
-          size: Math.random() * 2.5 + 1,
-        });
-      }
-      // Cap particles
-      if (particles.current.length > 60) {
-        particles.current = particles.current.slice(-60);
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (
+        target.tagName.toLowerCase() === 'a' ||
+        target.tagName.toLowerCase() === 'button' ||
+        target.closest('a') ||
+        target.closest('button') ||
+        target.classList.contains('interactive')
+      ) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
       }
     };
 
-    window.addEventListener('mousemove', handleMove);
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      particles.current = particles.current.filter(p => {
-        p.life -= 0.025; // ~400ms fade
-        if (p.life <= 0) return false;
-        
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(196, 145, 58, ${p.life * 0.6})`;
-        ctx.fill();
-        
-        // Slight upward drift
-        p.y -= 0.3;
-        
-        return true;
-      });
-
-      animRef.current = requestAnimationFrame(draw);
-    };
-    draw();
+    window.addEventListener('mousemove', updateMousePosition);
+    window.addEventListener('mouseover', handleMouseOver);
 
     return () => {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animRef.current);
+      window.removeEventListener('mousemove', updateMousePosition);
+      window.removeEventListener('mouseover', handleMouseOver);
     };
   }, []);
 
+  if (isMobile) return null;
+
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        pointerEvents: 'none',
-      }}
-    />
+    <>
+      <motion.div
+        className="fixed top-0 left-0 w-2 h-2 bg-[var(--accent)] rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        animate={{
+          x: mousePosition.x - 4,
+          y: mousePosition.y - 4,
+          scale: isHovering ? 0 : 1,
+        }}
+        transition={{ type: 'spring', stiffness: 1000, damping: 40, mass: 0.1 }}
+      />
+      <motion.div
+        className="fixed top-0 left-0 w-10 h-10 border border-[var(--accent)] rounded-full pointer-events-none z-[9998] mix-blend-difference flex items-center justify-center"
+        animate={{
+          x: mousePosition.x - 20,
+          y: mousePosition.y - 20,
+          scale: isHovering ? 1.5 : 1,
+          backgroundColor: isHovering ? 'rgba(224, 163, 135, 0.15)' : 'transparent',
+        }}
+        transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 0.5 }}
+      >
+        {isHovering && <span className="text-[5px] font-bold tracking-[0.2em] text-[var(--accent)] uppercase mt-px ml-[1px]">View</span>}
+      </motion.div>
+    </>
   );
 };
 

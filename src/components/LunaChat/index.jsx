@@ -17,6 +17,13 @@ const LunaChat = () => {
     if (!hasOpened) setHasOpened(true);
   };
 
+  useEffect(() => {
+    window.openLunaChat = () => {
+      setIsOpen(true);
+      if (!hasOpened) setHasOpened(true);
+    };
+  }, [hasOpened]);
+
   return (
     <div className="fixed bottom-6 right-6 sm:right-12 z-[999]">
       <ChatPanel isOpen={isOpen} onClose={() => setIsOpen(false)} />
@@ -24,58 +31,36 @@ const LunaChat = () => {
       {/* Floating trigger button */}
       {!isOpen && (
         <motion.button
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.92 }}
           onClick={toggleOpen}
-          className="luna-float-btn"
-          title="Ask me about Asmeret ✦"
-          style={{
-            width: 52,
-            height: 52,
-            borderRadius: '50%',
-            background: '#c4856a',
-            color: '#fff',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 4px 24px rgba(196,133,106,0.35)',
-            position: 'relative',
-            zIndex: 1000,
-          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative group w-16 h-16 rounded-full bg-[var(--midnight)] border border-[var(--accent)] flex items-center justify-center shadow-[0_0_20px_rgba(224,163,135,0.3)] overflow-hidden"
         >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key="moon"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              <CrescentMoonIcon size={22} />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Unread badge — gold dot */}
-          {!hasOpened && (
+          {/* Pulsing Aura */}
+          <motion.div 
+            animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.1, 0.3] }}
+            transition={{ repeat: Infinity, duration: 3 }}
+            className="absolute inset-0 bg-[var(--accent)] rounded-full"
+          />
+          
+          {/* Orb Core */}
+          <div className="relative z-10 w-8 h-8 flex items-center justify-center">
             <motion.div 
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 2, duration: 0.4 }}
-              style={{
-                position: 'absolute',
-                top: -2,
-                right: -2,
-                width: 12,
-                height: 12,
-                borderRadius: '50%',
-                background: '#c4913a',
-                border: '2px solid rgba(14,18,28,0.9)',
+              animate={{ 
+                rotate: [0, 360],
+                borderRadius: ["40% 60% 70% 30% / 40% 50% 60% 50%", "30% 60% 70% 40% / 50% 60% 30% 60%", "40% 60% 70% 30% / 40% 50% 60% 50%"]
               }}
+              transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
+              className="w-full h-full bg-gradient-to-tr from-[var(--accent)] to-[var(--gold)] opacity-80"
             />
-          )}
+          </div>
+
+          {/* Intelligence Signal */}
+          <motion.div 
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--accent)] shadow-[0_0_10px_var(--accent)]"
+          />
         </motion.button>
       )}
     </div>

@@ -1,123 +1,110 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon } from 'lucide-react';
-import { person } from '../data/portfolio';
 
 const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
+    
+    // Check for saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      setIsDark(false);
+      document.documentElement.classList.add('light');
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   const toggleTheme = () => {
-    setIsDark(!isDark);
-    if (!isDark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    const newDark = !isDark;
+    setIsDark(newDark);
+    document.documentElement.classList.toggle('light', !newDark);
+    document.documentElement.setAttribute('data-theme', newDark ? 'dark' : 'light');
+    localStorage.setItem('theme', newDark ? 'dark' : 'light');
   };
 
   const links = [
     { name: 'Work', href: '#work' },
     { name: 'Luna AI', href: '#luna' },
-    { name: 'Certificates', href: '#certificates' },
-    { name: 'Skills', href: '#skills' },
     { name: 'About', href: '#about' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Certificates', href: '#certificates' },
   ];
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'py-3' : 'py-5'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled ? 'py-4' : 'py-8'
       }`}
-      style={{
-        background: scrolled ? 'var(--bg)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '0.5px solid var(--blush)' : '0.5px solid transparent',
-      }}
     >
-      <div className="max-w-6xl mx-auto px-6 lg:px-12 flex justify-between items-center">
+      <div 
+        className={`absolute inset-0 transition-opacity duration-500 ${
+          scrolled ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{
+          background: 'var(--bg)',
+          opacity: 0.9,
+          backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid var(--border)',
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center relative z-10">
         {/* Logo */}
-        <a href="#" className="flex items-baseline gap-1.5 group z-50 relative">
-          <span className="font-display text-2xl" style={{ fontWeight: 400, color: 'var(--text)' }}>Asmeret</span>
-          <span className="font-display italic text-2xl" style={{ color: 'var(--blush-mid)' }}>Teklu</span>
+        <a href="#" className="group flex flex-col">
+          <span className="font-display text-2xl tracking-tight leading-none">Asmeret</span>
+          <span className="font-display text-2xl italic text-[var(--accent)] tracking-tight leading-none ml-2">Teklu</span>
         </a>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-10">
           {links.map(link => (
             <a 
               key={link.name} 
               href={link.href}
-              className="font-body uppercase tracking-wider transition-colors relative group"
-              style={{ fontSize: '12px', letterSpacing: '0.1em', color: 'var(--muted)' }}
-              onMouseEnter={(e) => e.target.style.color = 'var(--blush-mid)'}
-              onMouseLeave={(e) => e.target.style.color = 'var(--muted)'}
+              className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors font-bold"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] transition-all duration-300 group-hover:w-full" style={{ background: 'var(--blush-mid)' }} />
             </a>
           ))}
+          
+          <div className="h-4 w-px bg-[var(--border)]" />
+
+          <button 
+            onClick={toggleTheme}
+            className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors"
+            aria-label="Toggle Theme"
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
           <a
             href="#contact"
-            className="btn-primary-blush"
-            style={{ padding: '0.55rem 1.4rem', fontSize: '11px' }}
+            className="px-6 py-2.5 rounded-full border border-[var(--accent)] text-[var(--accent)] text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[var(--accent)] hover:text-[var(--onyx)] transition-all"
           >
-            Say hello ✦
+            Connect
           </a>
-          <button 
-            onClick={toggleTheme}
-            className="transition-colors ml-2"
-            style={{ color: 'var(--muted)' }}
-            aria-label="Toggle Theme"
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
         </div>
 
-        {/* Mobile Toggle & Theme */}
-        <div className="flex md:hidden items-center gap-4 z-50">
+        {/* Mobile Toggle */}
+        <div className="flex md:hidden items-center gap-6">
           <button 
             onClick={toggleTheme}
-            className="transition-colors"
-            style={{ color: 'var(--muted)' }}
-            aria-label="Toggle Theme"
+            className="text-[var(--text-muted)]"
           >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          
           <button 
-            className="md:hidden transition-colors"
-            style={{ color: 'var(--muted)' }}
+            className="text-[var(--text)]"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -129,31 +116,38 @@ const Nav = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 w-screen h-screen z-40 flex flex-col items-center justify-center gap-6 pb-20 overflow-y-auto"
-            style={{ background: 'var(--bg)', backdropFilter: 'blur(20px)' }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 w-screen h-screen bg-[var(--bg)] z-40 flex flex-col items-center justify-center gap-8"
           >
             {links.map(link => (
               <a 
                 key={link.name} 
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="font-display text-4xl transition-colors hover:text-[var(--blush-mid)]"
-                style={{ color: 'var(--text)' }}
+                className="font-display text-4xl hover:text-[var(--accent)] transition-colors"
               >
                 {link.name}
               </a>
             ))}
+            
+            <button 
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('toggle-terminal'));
+                setIsOpen(false);
+              }}
+              className="font-display text-4xl text-[var(--accent)] hover:opacity-80 transition-colors flex items-center gap-4"
+            >
+              Terminal <span className="text-xs font-mono px-2 py-1 border border-[var(--accent)] rounded tracking-widest">_</span>
+            </button>
+
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="btn-primary-blush mt-8"
-              style={{ padding: '1rem 3rem', fontSize: '1.1rem' }}
+              className="mt-8 px-10 py-4 rounded-full bg-[var(--accent)] text-[var(--onyx)] font-bold uppercase tracking-widest"
             >
-              Let's talk ✦
+              Let's Talk
             </a>
           </motion.div>
         )}
@@ -163,3 +157,4 @@ const Nav = () => {
 };
 
 export default Nav;
+

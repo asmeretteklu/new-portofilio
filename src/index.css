@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,61 +7,62 @@
 
 @layer base {
   :root {
-    /* ── Ivory / Blush Palette ── */
-    --ivory:          #FDF6F0;
-    --blush:          #F5C4D3;
-    --blush-light:    #FBF0F4;
-    --blush-mid:      #ED93B1;
+    /* ── Midnight & Rose Gold Palette ── */
+    --onyx:           #0D0D12;
+    --midnight:       #15151E;
+    --charcoal:       #1E1E2A;
+    --rose-gold:      #E0A387;
+    --rose-gold-dim:  #BC8A76;
+    --champagne:      #F5EBE0;
+    --paper:          #FAF9F6;
     --gold:           #C9A96E;
-    --gold-light:     #F5ECD9;
-    --lavender:       #9F8BBD;
-    --lavender-light: #EEEDFE;
-    --taupe:          #E8D5C4;
-    --dark:           #2E1F1F;
-    --dark-mid:       #5C4545;
-    --muted:          #9B8080;
+    --muted:          #6B6B7B;
+    --border:         rgba(224, 163, 135, 0.15);
 
     /* Semantic aliases */
-    --bg:             var(--ivory);
-    --text:           var(--dark);
-    --text-mid:       var(--dark-mid);
-    --text-muted:     var(--muted);
-    --accent:         var(--blush-mid);
-    --accent-light:   var(--blush-light);
-    --border-color:   var(--blush);
-    --card-bg:        #FFFFFF;
-    --card-border:    var(--taupe);
+    --bg:             var(--onyx);
+    --text:           var(--paper);
+    --text-mid:       #D1D1D1;
+    --text-muted:     #888891;
+    --accent:         var(--rose-gold);
+    --accent-light:   rgba(224, 163, 135, 0.1);
+    --card-bg:        var(--midnight);
+    --card-border:    var(--border);
+
+    /* Terminal Theme - Midnight */
+    --term-bg:        #0A0A0B;
+    --term-text:      #00FF41;
+    --term-header:    #16161E;
+    --term-accent:    var(--accent);
+    --term-prompt:    var(--accent);
+
+    /* Legacy compatibility (Rose Gold mapping) */
+    --blush:          rgba(224, 163, 135, 0.2);
+    --blush-mid:      var(--rose-gold);
+    --blush-light:    rgba(224, 163, 135, 0.05);
 
     /* Typography */
     --font-display: 'Cormorant Garamond', serif;
     --font-body:    'DM Sans', sans-serif;
   }
 
-  /* ── Night Mode ── */
-  .dark {
-    --ivory:          #1a1520;
-    --blush:          #3d2a35;
-    --blush-light:    #2a1f2d;
-    --blush-mid:      #ED93B1;
-    --gold:           #C9A96E;
-    --gold-light:     #3a3020;
-    --lavender:       #9F8BBD;
-    --lavender-light: #2a2640;
-    --taupe:          #3a2e28;
-    --dark:           #f0e8e0;
-    --dark-mid:       #c8b8b0;
-    --muted:          #9B8888;
+  /* ── Light Mode (Optional, keeping it subtle) ── */
+  .light {
+    --bg:             #FDFBF7;
+    --text:           #1A1A1A;
+    --text-mid:       #4A4A4A;
+    --text-muted:     #717171;
+    --accent:         #BC8A76;
+    --accent-light:   #F5EBE0;
+    --card-bg:        #FFFFFF;
+    --card-border:    #E5E5E5;
 
-    --bg:             #09080f;
-    --text:           #f0e8e0;
-    --text-mid:       #c8b8b0;
-    --text-muted:     #9B8888;
-    --accent:         #ED93B1;
-    --accent-light:   #2a1f2d;
-    --border-color:   #3d2a35;
-    --card-bg:        rgba(30,24,36,0.8);
-    --card-border:    rgba(80,60,60,0.4);
-    --rose:           #c4856a;
+    /* Terminal Theme - Day */
+    --term-bg:        #F8F9FA;
+    --term-text:      #2D3436;
+    --term-header:    #E9ECEF;
+    --term-accent:    #0984E3;
+    --term-prompt:    #D63031;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -72,14 +74,23 @@
     overflow-x: hidden;
     cursor: auto;
     -webkit-font-smoothing: antialiased;
-    background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(196,133,106,0.03) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(196,145,58,0.03) 0%, transparent 60%);
+    background-image: 
+      radial-gradient(circle at 0% 0%, rgba(224, 163, 135, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(201, 169, 110, 0.05) 0%, transparent 50%);
   }
 
-  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: linear-gradient(var(--blush-mid), var(--gold)); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+  /* Utility to hide scrollbars */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* ── Selection ── */
@@ -247,6 +258,20 @@ img {
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════
+   3D FLIP UTILITIES
+   ══════════════════════════════════════════ */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
 
 /* ══════════════════════════════════════════
@@ -721,7 +746,6 @@ img {
 /* ══════════════════════════════════════════
    DM MONO FONT
    ══════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
 
 /* ══════════════════════════════════════════
    LUNA CHAT PANEL — DARK ROSE-GOLD

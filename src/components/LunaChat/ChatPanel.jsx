@@ -48,7 +48,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
       const timer = setTimeout(() => {
         setMessages([{ 
           role: 'assistant', 
-          content: "Hey! I'm Asmeret's assistance Luna 2 🌙\nI know everything about her — her work, her story, and how to reach her. What would you like to know? ✦", 
+          content: "Selam! 👋 I'm Asmeret's assistant Luna 🌙\nI know everything about her — her work, her story, and how to reach her. What would you like to know? ✦", 
           isOpening: true 
         }]);
       }, 700);
@@ -62,13 +62,26 @@ const ChatPanel = ({ isOpen, onClose }) => {
     conversationHistoryRef.current = [];
   };
 
+  const [messageCount, setMessageCount] = useState(0);
+  const MESSAGE_LIMIT = 5;
+
   const sendMessage = async (textToSend = input) => {
     if (!textToSend.trim() || isLoading) return;
+    if (messageCount >= MESSAGE_LIMIT) {
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: "I've answered a few questions today and I'm getting a bit sleepy 🌙 Let's continue this conversation on LinkedIn or via Email! I'd love to connect officially. ✦", 
+        typewriter: true 
+      }]);
+      setInput('');
+      return;
+    }
 
     const userMessage = { role: 'user', content: textToSend };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    setMessageCount(prev => prev + 1);
 
     try {
       // Note: Since the API key in .env starts with gsk_ (Groq), we must use the Groq API endpoint.
@@ -147,31 +160,33 @@ const ChatPanel = ({ isOpen, onClose }) => {
               opacity: 1, 
               y: 0, 
               scale: 1,
-              height: isMini ? '64px' : (isMobile ? '50svh' : '480px')
+              height: isMini ? '64px' : (isMobile ? '65svh' : '480px')
             }}
             exit={{ opacity: 0, y: 20, scale: 0.95, transition: { duration: 0.2 } }}
             transition={{ duration: 0.3, type: 'spring', damping: 25, stiffness: 200 }}
             className="luna-chat-panel fixed z-50 flex flex-col overflow-hidden origin-bottom-right"
             style={{
               ...(isMobile ? {
-                bottom: 16,
-                left: 16,
-                right: 16,
-                width: 'auto',
-                height: isMini ? '64px' : '50svh',
-                borderRadius: 20,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                width: '100%',
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
               } : {
                 bottom: 80,
                 right: 48,
                 width: 380,
                 borderRadius: 16,
               }),
-              background: 'rgba(14,18,28,0.97)',
+              background: 'var(--card-bg)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(196,133,106,0.25)',
-              backgroundImage: 'radial-gradient(circle, rgba(196,133,106,0.04) 1px, transparent 1px)',
+              border: '1px solid var(--border)',
+              backgroundImage: 'radial-gradient(circle, var(--accent-light) 1px, transparent 1px)',
               backgroundSize: '24px 24px',
-              boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
+              boxShadow: '0 16px 48px rgba(0,0,0,0.2)',
             }}
           >
             {/* Header */}
@@ -180,7 +195,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '14px 16px',
-              borderBottom: '1px solid rgba(196,133,106,0.15)',
+              borderBottom: '1px solid var(--border)',
               flexShrink: 0,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -191,17 +206,17 @@ const ChatPanel = ({ isOpen, onClose }) => {
                     scale: [1, 1.1, 1],
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ color: '#c4856a', display: 'flex', alignItems: 'center' }}
+                  style={{ color: 'var(--accent)', display: 'flex', alignItems: 'center' }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#c4856a" stroke="#c4856a" strokeWidth="0.5" />
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="var(--accent)" stroke="var(--accent)" strokeWidth="0.5" />
                   </svg>
                 </motion.div>
                 <span style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontStyle: 'italic',
                   fontSize: '1.4rem',
-                  color: '#c4856a',
+                  color: 'var(--accent)',
                   lineHeight: 1,
                 }}>
                   luna 2 ✦
@@ -213,7 +228,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
                     onClick={clearChat}
                     style={{
                       background: 'none', border: 'none', cursor: 'pointer',
-                      color: '#f5efe2', opacity: 0.5, padding: 4,
+                      color: 'var(--text)', opacity: 0.5, padding: 4,
                       display: 'flex', alignItems: 'center',
                     }}
                     title="Clear chat"
@@ -225,18 +240,22 @@ const ChatPanel = ({ isOpen, onClose }) => {
                   onClick={() => setIsMini(!isMini)}
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer',
-                    color: '#f5efe2', opacity: 0.5, padding: 4,
+                    color: 'var(--text)', opacity: 0.5, padding: 4,
                     display: 'flex', alignItems: 'center',
+                    transform: isMini ? 'rotate(180deg)' : 'none',
+                    transition: 'transform 0.3s',
                   }}
                   title={isMini ? "Expand" : "Minimize"}
                 >
-                  <Minus size={16} />
+                  <motion.div animate={{ y: isMini ? [0, -4, 0] : 0 }} transition={{ repeat: isMini ? Infinity : 0, duration: 2 }}>
+                    <Minus size={isMobile ? 20 : 16} />
+                  </motion.div>
                 </button>
                 <button 
                   onClick={onClose}
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer',
-                    color: '#f5efe2', opacity: 0.5, padding: 4,
+                    color: 'var(--text)', opacity: 0.5, padding: 4,
                     display: 'flex', alignItems: 'center',
                   }}
                 >
@@ -251,7 +270,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
               <div 
                 className="flex-1 overflow-y-auto p-5 flex flex-col"
                 style={{
-                  backgroundImage: 'radial-gradient(circle, rgba(196,133,106,0.04) 1px, transparent 1px)',
+                  backgroundImage: 'radial-gradient(circle, var(--accent-light) 1px, transparent 1px)',
                   backgroundSize: '24px 24px',
                 }}
               >
@@ -260,16 +279,16 @@ const ChatPanel = ({ isOpen, onClose }) => {
                     <p style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontSize: '1.3rem',
-                      color: '#f5efe2',
+                      color: 'var(--text)',
                       marginBottom: 4,
                       lineHeight: 1.3,
                     }}>
-                      Hey, I'm Luna 🌙
+                      Selam! 👋 I'm Luna 🌙
                     </p>
                     <p style={{
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: '0.82rem',
-                      color: 'rgba(245,239,226,0.55)',
+                      color: 'var(--text-muted)',
                       marginBottom: 16,
                       lineHeight: 1.6,
                     }}>
@@ -294,7 +313,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
             {!isMini && (
               <div style={{
                 padding: '12px 16px',
-                borderTop: '1px solid rgba(196,133,106,0.15)',
+                borderTop: '1px solid var(--border)',
                 flexShrink: 0,
               }}>
                 <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
@@ -312,13 +331,13 @@ const ChatPanel = ({ isOpen, onClose }) => {
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: '0.82rem',
                       outline: 'none',
-                      background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid rgba(196,133,106,0.2)',
-                      color: '#f5efe2',
+                      background: 'var(--accent-light)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
                       transition: 'border-color 0.2s',
                     }}
-                    onFocus={e => e.target.style.borderColor = 'rgba(196,133,106,0.5)'}
-                    onBlur={e => e.target.style.borderColor = 'rgba(196,133,106,0.2)'}
+                    onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   />
                   <button 
                     onClick={() => sendMessage()}
@@ -329,7 +348,7 @@ const ChatPanel = ({ isOpen, onClose }) => {
                       width: 36,
                       height: 36,
                       borderRadius: '50%',
-                      background: '#c4856a',
+                      background: 'var(--accent)',
                       border: 'none',
                       color: '#fff',
                       cursor: 'pointer',

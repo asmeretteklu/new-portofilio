@@ -38,18 +38,19 @@ const Message = ({ role, content, typewriter = false }) => {
         style={isUser ? {
           maxWidth: '85%',
           padding: '10px 16px',
-          background: '#c4913a',
-          color: '#090b10',
+          background: 'var(--accent)',
+          color: 'var(--onyx)',
           borderRadius: '12px 12px 2px 12px',
           fontFamily: "'DM Mono', 'DM Sans', monospace",
           fontSize: '0.78rem',
           lineHeight: 1.6,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         } : {
           maxWidth: '85%',
           padding: '12px 16px',
-          background: 'rgba(196,133,106,0.08)',
-          borderLeft: '2px solid #c4856a',
-          color: '#f5efe2',
+          background: 'var(--accent-light)',
+          borderLeft: '2px solid var(--accent)',
+          color: 'var(--text)',
           borderRadius: '12px 12px 12px 2px',
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: '1rem',
@@ -62,7 +63,7 @@ const Message = ({ role, content, typewriter = false }) => {
           <div 
             style={{ whiteSpace: 'pre-wrap' }}
             dangerouslySetInnerHTML={{ 
-              __html: displayedContent.replace(/Asmeret/g, '<span style="color:#c4856a;font-style:italic">Asmeret</span>') 
+              __html: displayedContent.replace(/Asmeret/g, '<span style="color:var(--accent);font-style:italic;font-weight:500">Asmeret</span>') 
             }} 
           />
         )}
