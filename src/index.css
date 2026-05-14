@@ -49,20 +49,20 @@
   /* ── Light Mode (Optional, keeping it subtle) ── */
   .light {
     --bg:             #FDFBF7;
-    --text:           #1A1A1A;
-    --text-mid:       #4A4A4A;
-    --text-muted:     #717171;
-    --accent:         #BC8A76;
+    --text:           #0A0A0A; /* Darker for better contrast */
+    --text-mid:       #2A2A2A;
+    --text-muted:     #555555;
+    --accent:         #B47559; /* Slightly deeper rose gold for light mode */
     --accent-light:   #F5EBE0;
     --card-bg:        #FFFFFF;
-    --card-border:    #E5E5E5;
+    --card-border:    #E2E2E2;
 
     /* Terminal Theme - Day */
     --term-bg:        #F8F9FA;
-    --term-text:      #2D3436;
+    --term-text:      #1A1A1A;
     --term-header:    #E9ECEF;
-    --term-accent:    #0984E3;
-    --term-prompt:    #D63031;
+    --term-accent:    #B47559;
+    --term-prompt:    #B47559;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -71,6 +71,7 @@
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-body);
+    font-weight: 400; /* Increased from light/300 */
     overflow-x: hidden;
     cursor: auto;
     -webkit-font-smoothing: antialiased;

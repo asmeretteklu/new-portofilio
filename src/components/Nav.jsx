@@ -58,7 +58,7 @@ const Nav = () => {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center relative z-10">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center relative z-[60]">
         {/* Logo */}
         <a href="#" className="group flex flex-col">
           <span className="font-display text-2xl tracking-tight leading-none">Asmeret</span>
@@ -106,6 +106,7 @@ const Nav = () => {
           <button 
             className="text-[var(--text)]"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

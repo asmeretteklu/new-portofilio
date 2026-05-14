@@ -10,7 +10,7 @@ const TIGRAY_PHOTOS = [
 const Motivation = () => {
   const [currentPhoto, setCurrentPhoto] = useState(0);
   return (
-    <section id="motivation" className="py-32 px-6 lg:px-12 bg-[var(--bg)] text-[var(--text)] relative overflow-hidden transition-colors duration-500">
+    <section id="motivation" className="py-32 px-6 lg:px-12 bg-transparent text-[var(--text)] relative overflow-hidden transition-colors duration-500">
       {/* Subtle warm glow background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(224,163,135,0.08)_0%,transparent_70%)]" />
 
@@ -44,7 +44,7 @@ const Motivation = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="font-body text-lg md:text-xl text-[var(--text-mid)] leading-relaxed font-light space-y-8 max-w-3xl mx-auto"
+          className="font-body text-lg md:text-xl text-[var(--text-mid)] leading-relaxed font-normal space-y-8 max-w-3xl mx-auto"
         >
           <p>
             Students waiting 7 days to register for class. Women whose health data was being analyzed by algorithms trained on data from other continents. A lottery system running on paper when it could run in real time.

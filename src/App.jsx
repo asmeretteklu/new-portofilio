@@ -17,7 +17,7 @@ import LunaChat from './components/LunaChat';
 import FriendlyTips from './components/FriendlyTips';
 import BeyondCode from './components/BeyondCode';
 import { NoiseOverlay } from './components/NoiseOverlay';
-import StarField from './components/StarField';
+import MatrixBackground from './components/MatrixBackground';
 import CurrentlyPlaying from './components/CurrentlyPlaying';
 import TerminalModal from './components/TerminalModal';
 import SecretVideoModal from './components/SecretVideoModal';
@@ -51,13 +51,12 @@ function App() {
       <ScrollProgress />
       <CursorTrail />
       <LunaChat />
-      <StarField />
-      <NoiseOverlay />
       <CurrentlyPlaying />
       <TerminalModal />
       <SecretVideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
 
-      <div className="relative z-10 font-body bg-[var(--bg)] selection:bg-[var(--accent-light)] selection:text-[var(--accent)] transition-colors duration-500">
+      <div className="relative z-10 font-body bg-transparent selection:bg-[var(--accent-light)] selection:text-[var(--accent)] transition-colors duration-500">
+        <MatrixBackground />
         <Nav />
         <main>
           <Hero />

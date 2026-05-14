@@ -265,10 +265,10 @@ That is why.` });
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.2 }}
-          className="fixed bottom-6 right-6 z-[9999] w-[550px] max-w-[calc(100vw-48px)] h-[400px] bg-[var(--term-bg)] border border-[var(--border)] rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden font-mono text-sm transition-colors duration-500"
+          className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-[9999] w-full sm:w-[550px] sm:max-w-[calc(100vw-48px)] h-[60vh] sm:h-[400px] bg-[var(--term-bg)] border-t sm:border border-[var(--border)] rounded-t-2xl sm:rounded-xl shadow-[0_-10px_50px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden font-mono text-xs sm:text-sm transition-colors duration-500"
         >
           {/* Header */}
-          <div className="bg-[var(--term-header)] p-3 flex items-center justify-between border-b border-[var(--border)] select-none cursor-move">
+          <div className="bg-[var(--term-header)] p-4 sm:p-3 flex items-center justify-between border-b border-[var(--border)] select-none cursor-move">
             <div className="flex items-center gap-3 text-[var(--term-accent)]">
               <Terminal size={14} />
               <span className="text-[10px] uppercase tracking-[0.2em] font-bold">Engineer_Terminal</span>
@@ -306,13 +306,15 @@ That is why.` });
             <span className="shrink-0 text-[var(--term-prompt)] font-bold">guest@asmeret:~$</span>
             <input 
               ref={inputRef}
-              autoFocus
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="flex-1 bg-transparent outline-none text-[var(--term-text)] font-mono placeholder:opacity-30"
               placeholder="Type a command..."
               spellCheck={false}
+              autoComplete="off"
+              autoCapitalize="none"
+              inputMode="text"
             />
           </form>
         </motion.div>

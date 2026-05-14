@@ -43,7 +43,7 @@ const About = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-body text-[17px] text-[var(--text-mid)] leading-relaxed font-light space-y-6"
+            className="font-body text-[17px] text-[var(--text-mid)] leading-relaxed font-normal space-y-6"
           >
             <p>
               I grew up in Mekelle, Tigray, before I owned a phone or a computer. I chose Software Engineering anyway — not because it was practical, but because I couldn't imagine choosing anything else.

@@ -103,10 +103,14 @@ const Hero = () => {
                 </div>
               </motion.div>
               
-              <motion.div variants={item} className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--card-bg)] shadow-sm">
-                <Terminal className="w-3 h-3 text-[var(--text-muted)]" />
-                <span className="text-[9px] uppercase tracking-widest text-[var(--text-muted)]">Terminal: <span className="text-[var(--accent)] font-mono">Ctrl</span> + <span className="text-[var(--accent)] font-mono">K</span></span>
-              </motion.div>
+              <motion.button 
+                variants={item} 
+                onClick={() => window.dispatchEvent(new CustomEvent('toggle-terminal'))}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-[var(--border)] bg-[var(--card-bg)] shadow-sm hover:border-[var(--accent)] transition-colors group"
+              >
+                <Terminal className="w-3 h-3 text-[var(--text-muted)] group-hover:text-[var(--accent)]" />
+                <span className="text-[9px] uppercase tracking-widest text-[var(--text-muted)] group-hover:text-[var(--accent)]">Terminal: <span className="hidden sm:inline text-[var(--accent)] font-mono">Ctrl + K</span><span className="sm:hidden text-[var(--accent)] font-mono">Tap</span></span>
+              </motion.button>
             </div>
             
             <motion.h1 variants={item} className="font-display text-7xl md:text-9xl leading-[0.85] tracking-tight relative">
@@ -118,7 +122,7 @@ const Hero = () => {
             </motion.h1>
           </div>
 
-          <motion.p variants={item} className="font-body text-lg md:text-xl text-[var(--text-mid)] max-w-xl leading-relaxed font-light">
+          <motion.p variants={item} className="font-body text-lg md:text-xl text-[var(--text-mid)] max-w-xl leading-relaxed font-normal">
             {person.bio}
           </motion.p>
 

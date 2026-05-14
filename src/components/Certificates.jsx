@@ -96,7 +96,13 @@ const CertCard = ({ cert, index }) => {
           </div>
           
           <div className="relative z-10 flex items-center gap-2 text-[var(--text-muted)] text-[10px] uppercase tracking-widest font-bold">
-            {isFlipped ? 'Inspecting...' : <>Hover to inspect <span className="opacity-50">→</span></>}
+            {isFlipped ? 'Inspecting...' : (
+              <>
+                <span className="hidden sm:inline">Hover to inspect</span>
+                <span className="sm:hidden">Tap to inspect</span>
+                <span className="opacity-50 ml-1">→</span>
+              </>
+            )}
           </div>
         </div>
 
