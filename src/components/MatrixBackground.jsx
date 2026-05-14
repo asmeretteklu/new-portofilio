@@ -39,7 +39,7 @@ const MatrixBackground = () => {
       ctx.clearRect(0, 0, width, height);
       
       const isLightMode = document.documentElement.classList.contains('light');
-      const accentColor = isLightMode ? '#8B4513' : '#E0A387'; // Much darker for day mode
+      const accentColor = isLightMode ? '#BC8A76' : '#E0A387'; // Subtle rose gold for light mode
       
       chars.forEach(c => {
         // Move characters slowly
@@ -51,8 +51,8 @@ const MatrixBackground = () => {
         
         ctx.font = `${c.size}px "Noto Sans Ethiopic"`;
         ctx.fillStyle = accentColor;
-        // Boost opacity significantly for day mode visibility
-        ctx.globalAlpha = isLightMode ? Math.min(currentOpacity * 10, 0.4) : currentOpacity; 
+        // Subtle balance for light mode
+        ctx.globalAlpha = isLightMode ? Math.min(currentOpacity * 3, 0.15) : currentOpacity; 
         ctx.fillText(c.char, c.x, c.y);
       });
 
