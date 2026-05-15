@@ -115,7 +115,7 @@ const Hero = () => {
             
             <motion.h1 variants={item} className="font-display text-7xl md:text-9xl leading-[0.85] tracking-tight relative">
               <span className="block text-xl md:text-2xl font-body text-[var(--accent)]/80 mb-4 tracking-widest uppercase">
-                <span className="font-serif">ሰላም</span> — እንቋዕ ብደሓን መጻእኩም
+                Hello — <span className="font-serif">ሰላም</span> — Welcome — <span className="font-serif">እንቋዕ ብደሓን መጻእኩም</span>
               </span>
               <span className="block text-[var(--text)] font-light">Asmeret</span>
               <span className="block italic text-[var(--accent)] font-normal ml-8 md:ml-16">Teklu</span>

@@ -35,14 +35,16 @@ const Contact = () => {
 
     setStatus({ state: 'sending', message: 'Encrypting message...' });
 
-    emailjs.sendForm(serviceId, templateId, formRef.current, publicKey)
+    emailjs.sendForm(serviceId, templateId, formRef.current, {
+        publicKey: publicKey,
+      })
       .then(() => {
         setStatus({ state: 'success', message: "Transmission complete. I'll reach out soon." });
         formRef.current.reset();
       })
       .catch((err) => {
-        console.error("EmailJS Error:", err);
-        setStatus({ state: 'error', message: "Transmission failed. Please reach out via LinkedIn. ✦" });
+        console.error("EmailJS Error details:", err);
+        setStatus({ state: 'error', message: `Transmission failed: ${err.text || 'Unknown error'}. Please reach out via LinkedIn. ✦` });
       });
   };
 
