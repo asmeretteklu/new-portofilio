@@ -70,9 +70,9 @@ const CurrentlyPlaying = () => {
             Do NOT use AnimatePresence or conditional rendering on the iframe. */}
         <div
           style={{
-            height: isExpanded ? 'auto' : 0,
+            height: isExpanded ? '460px' : 0,
             overflow: 'hidden',
-            transition: 'height 0.4s cubic-bezier(0.16,1,0.3,1)',
+            transition: 'height 0.45s cubic-bezier(0.16,1,0.3,1)',
           }}
         >
           <div className="px-4 pb-4 space-y-4">
@@ -110,18 +110,18 @@ const CurrentlyPlaying = () => {
               </motion.form>
             )}
 
-            {/* Spotify iframe — no loading="lazy", always rendered, never conditionally mounted */}
-            <div className="bg-[var(--bg)] border border-[var(--border)] rounded-2xl overflow-hidden h-[380px] shadow-inner">
+            {/* Spotify iframe — no loading="lazy", always rendered, explicit pixel height */}
+            <div className="bg-[var(--bg)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-inner" style={{ height: '352px' }}>
               <iframe
                 key={iframeKey}
                 title="Spotify Embed"
-                src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
+                src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator`}
                 width="100%"
-                height="380"
+                height="352"
                 frameBorder="0"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 allowFullScreen
-                className="w-full h-full"
+                style={{ display: 'block', width: '100%', height: '352px' }}
               />
             </div>
           </div>
