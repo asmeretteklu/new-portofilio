@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 
 const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
-const MAX_REQUESTS_PER_WINDOW = 5;
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour window
+const MAX_REQUESTS_PER_WINDOW = 3;            // matches frontend 3-question cap
 
 export const handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
@@ -47,9 +47,11 @@ export const handler = async (event, context) => {
 
   try {
     const bodyPayload = JSON.parse(event.body);
+  console.log('Groq proxy received payload:', JSON.stringify(bodyPayload).slice(0, 200));
     
     // Use the non-prefixed key in production, fallback to prefixed for local if needed
     const apiKey = process.env.GROK_KEY || process.env.GROQ_API_KEY || process.env.VITE_GROK_KEY || process.env.VITE_GROQ_API_KEY;
+  console.log('Groq proxy using API key:', apiKey ? '***' + apiKey.slice(-4) : 'undefined');
     
     if (!apiKey) {
       return {

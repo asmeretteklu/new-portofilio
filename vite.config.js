@@ -109,5 +109,25 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [react(), geminiProxyPlugin(env), groqProxyPlugin(env)],
+    server: {
+      headers: {
+        // Allow Spotify embeds; block everything else not needed
+        'Content-Security-Policy': [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src https://fonts.gstatic.com",
+          "frame-src https://open.spotify.com",
+          "img-src 'self' data: https://i.scdn.co https://mosaic.scdn.co",
+          "connect-src 'self' https://api.groq.com https://generativelanguage.googleapis.com https://api.emailjs.com",
+          "media-src 'self'",
+        ].join('; '),
+        'X-Frame-Options': 'SAMEORIGIN',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+      },
+    },
   };
 })
+

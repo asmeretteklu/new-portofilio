@@ -61,14 +61,14 @@ const ChatPanel = ({ isOpen, onClose }) => {
   };
 
   const [messageCount, setMessageCount] = useState(0);
-  const MESSAGE_LIMIT = 5;
+  const MESSAGE_LIMIT = 3; // Hard cap at 3 questions per session
 
   const sendMessage = async (textToSend = input) => {
     if (!textToSend.trim() || isLoading) return;
     if (messageCount >= MESSAGE_LIMIT) {
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I've answered a few questions today and I'm getting a bit sleepy 🌙 Let's continue this conversation on LinkedIn or via Email! I'd love to connect officially. ✦", 
+        content: "I've shared what I can for now 🌙 Reach out to Asmeret directly via LinkedIn or Email to continue the conversation — she'd love to hear from you! ✦", 
         typewriter: true 
       }]);
       setInput('');
