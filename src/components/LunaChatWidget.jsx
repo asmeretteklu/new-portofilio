@@ -4,8 +4,7 @@ import { Send } from 'lucide-react';
 
 const SYSTEM_PROMPT = "You are Luna, a warm, friendly, and knowledgeable AI assistant for women's health, built for Ethiopian and African women by Asmeret Teklu. You answer health questions with empathy, warmth, and accuracy. You are not a doctor but you give clear, helpful, culturally sensitive information. Always be encouraging and kind. Keep responses concise and clear. Sign off warmly.";
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_URL = '/api/gemini';
 
 const TypingDots = () => (
   <div className="flex space-x-1.5 p-2 px-3 bg-[var(--blush-light)] rounded-2xl w-fit border border-[var(--blush)]">

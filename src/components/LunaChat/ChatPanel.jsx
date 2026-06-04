@@ -6,8 +6,6 @@ import TypingDots from './TypingDots';
 import StarterChips from './StarterChips';
 import { lunaSystemPrompt } from '../../data/portfolio';
 
-const API_KEY = import.meta.env.VITE_GROK_KEY || import.meta.env.VITE_GROQ_API_KEY;
-
 const CrescentMoonSmall = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="currentColor" strokeWidth="1" />
@@ -84,15 +82,12 @@ const ChatPanel = ({ isOpen, onClose }) => {
     setMessageCount(prev => prev + 1);
 
     try {
-      // Note: Since the API key in .env starts with gsk_ (Groq), we must use the Groq API endpoint.
-      // x.ai will reject this key with a 401 Unauthorized.
       const response = await fetch(
-        'https://api.groq.com/openai/v1/chat/completions',
+        '/api/groq',
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`,
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             model: 'llama-3.3-70b-versatile',
