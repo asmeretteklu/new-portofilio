@@ -111,15 +111,14 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), geminiProxyPlugin(env), groqProxyPlugin(env)],
     server: {
       headers: {
-        // Allow Spotify embeds; block everything else not needed
         'Content-Security-Policy': [
           "default-src 'self'",
           "script-src 'self' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src https://fonts.gstatic.com",
           "frame-src https://open.spotify.com",
-          "img-src 'self' data: https://i.scdn.co https://mosaic.scdn.co",
-          "connect-src 'self' https://api.groq.com https://generativelanguage.googleapis.com https://api.emailjs.com",
+          "img-src 'self' data: blob: https://images.unsplash.com https://i.scdn.co https://mosaic.scdn.co https://image-cdn-ak.spotifycdn.com https://image-cdn-fa.spotifycdn.com",
+          "connect-src 'self' ws://localhost:5173 ws://localhost:5174 https://api.github.com https://api.groq.com https://generativelanguage.googleapis.com https://api.emailjs.com",
           "media-src 'self'",
         ].join('; '),
         'X-Frame-Options': 'SAMEORIGIN',
