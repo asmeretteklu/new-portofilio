@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { skills, certifications, businessImpact } from '../data/portfolio';
-import { Code2, Layout, Database, Sparkles, Trophy, Zap } from 'lucide-react';
+import { skills, certifications, currentlyLearning } from '../data/portfolio';
+import { Code2, Layout, Database, Sparkles, Trophy, Compass } from 'lucide-react';
 
 const SKILL_ICONS = {
   'Languages & Core': Code2,
@@ -72,26 +72,30 @@ const Skills = () => {
               className="font-display text-6xl md:text-8xl leading-[0.9] font-light"
             >
               My Stack <br />
-              <span className="italic font-normal text-[var(--accent)] ml-8 md:ml-16">& Tools</span>
+              <span className="italic font-normal text-[var(--accent)] ml-8 md:ml-16">&amp; Tools</span>
             </motion.h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-12 pt-4">
-            {/* Project Leadership */}
+            {/* What I'm Building Toward — replaces fabricated impact metrics */}
             <div className="space-y-8">
               <div className="flex items-center gap-3">
-                <Zap className="w-4 h-4 text-[var(--accent)]" />
-                <h3 className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-bold">Impact</h3>
+                <Compass className="w-4 h-4 text-[var(--accent)]" />
+                <h3 className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-bold">What I'm Building Toward</h3>
               </div>
               <div className="grid grid-cols-1 gap-6">
-                {businessImpact.map((item) => (
-                  <div key={item.label} className="group flex flex-col">
-                    <div className="flex items-end gap-2">
-                      <span className="font-display text-4xl text-[var(--accent)] group-hover:italic transition-all leading-none">{item.metric}</span>
-                      <div className="h-px flex-1 bg-[var(--border)] mb-1" />
+                {currentlyLearning.map((item) => (
+                  <motion.div 
+                    key={item.topic} 
+                    whileHover={{ x: 4 }}
+                    className="group flex items-start gap-4 p-4 rounded-xl bg-[var(--accent-light)] border border-[var(--border)] hover:border-[var(--accent)] transition-all duration-300 cursor-default"
+                  >
+                    <span className="text-2xl flex-shrink-0 mt-0.5">{item.icon}</span>
+                    <div className="flex flex-col">
+                      <span className="font-display text-lg text-[var(--text)] group-hover:text-[var(--accent)] transition-colors leading-tight">{item.topic}</span>
+                      <span className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] mt-1 font-medium">{item.detail}</span>
                     </div>
-                    <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] mt-2 font-medium">{item.label}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -127,7 +131,7 @@ const Skills = () => {
             className="p-8 rounded-3xl bg-[var(--accent-light)] border border-[var(--border)] relative overflow-hidden group"
           >
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
-              <Zap className="w-12 h-12 text-[var(--accent)]" />
+              <Compass className="w-12 h-12 text-[var(--accent)]" />
             </div>
             <p className="font-body text-sm text-[var(--accent)] leading-relaxed font-light italic">
               "Currently specializing in bilingual AI architectures (Tigrinya/English) and offline-first mobile synchronization systems for resilient deployments."
@@ -140,4 +144,3 @@ const Skills = () => {
 };
 
 export default Skills;
-

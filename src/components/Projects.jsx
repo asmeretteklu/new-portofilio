@@ -37,8 +37,11 @@ const ProjectCard = ({ project, index }) => {
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               <h3 className="font-display text-2xl font-light tracking-tight">{project.name}</h3>
-              {project.status === 'live' && (
-                <span className="text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-[var(--accent)] text-[var(--onyx)] font-bold">Live</span>
+              {project.status === 'complete' && (
+                <span className="text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-[var(--accent)] text-[var(--onyx)] font-bold">Complete</span>
+              )}
+              {project.status === 'dev' && (
+                <span className="text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-[var(--accent-light)] text-[var(--accent)] font-bold border border-[var(--accent)]">In Dev</span>
               )}
             </div>
             <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold opacity-80">{project.statusLabel}</p>
@@ -106,7 +109,7 @@ const Projects = () => {
           viewport={{ once: true }}
           className="font-body text-[var(--text-muted)] max-w-xs leading-relaxed font-light text-sm"
         >
-          A selection of production-grade systems, automated college infrastructures, and AI health solutions.
+          A selection of complete systems, automated college infrastructures, and AI health solutions.
         </motion.p>
       </div>
 

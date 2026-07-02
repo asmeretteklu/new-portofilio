@@ -18,7 +18,7 @@ const BeyondCode = () => {
     {
       icon: '🌙',
       title: 'Product Builder',
-      body: 'From architecture to deployment — I own the full journey of every product I put my name on.',
+      body: 'From architecture to implementation — I own the full journey of every product I put my name on.',
     }
   ];
 

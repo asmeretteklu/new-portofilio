@@ -8,13 +8,13 @@ export const person = {
   phone: '+251 930 679 039',
   github: 'https://github.com/asmeretteklu',
   linkedin: 'https://linkedin.com/in/asmeretteklu',
-  bio: "Forged in resilience, engineered for impact. ✍️ My journey began with handwritten notes during internet blackouts—a testament to a conviction that technology isn't just code, but a lifeline. 🕯️ Today, I architect production-grade systems, from real-time lottery infrastructures to AI-driven health ecosystems for women across Africa. 🌍 I build with the intent to solve structural problems, proving that exceptional software can emerge from the toughest constraints. ✨",
+  bio: "Forged in resilience, engineered for impact. ✍️ My journey began with handwritten notes during internet blackouts—a testament to a conviction that technology isn't just code, but a lifeline. 🕯️ Today, I build complete, real-time systems — from lottery infrastructure to AI-driven health ecosystems — designed to work under real-world constraints. 🌍 I build with the intent to solve structural problems, proving that exceptional software can emerge from the toughest constraints. ✨",
 };
 
 export const stats = [
-  { id: 'apps', value: '4', label: 'Production Systems', sub: 'Built & Deployed' },
-  { id: 'users', value: '800+', label: 'Total Users Served', sub: 'Keno (500+), Microlink (300+)' },
-  { id: 'gpa', value: '3.74', label: 'GPA', sub: 'Great Distinction' },
+  { id: 'gpa', value: '3.74', label: 'GPA', sub: 'Great Distinction', featured: true },
+  { id: 'apps', value: '4', label: 'Complete Systems', sub: 'Built & Delivered' },
+  { id: 'years', value: '5+', label: 'Years Self-Taught', sub: 'Relentless Learning' },
 ];
 
 export const projects = [
@@ -22,17 +22,17 @@ export const projects = [
     id: 'keno',
     name: 'Keno Lottery Platform',
     accent: 'Full-Stack',
-    status: 'live',
-    statusLabel: 'Live and running',
+    status: 'complete',
+    statusLabel: 'Fully built, ready for deployment',
     featured: true,
     description: 'I built this entire lottery management system from scratch. It handles real-time draws and live results without the page ever refreshing. It has different dashboards for admins, cashiers, agents, and players to keep everything secure and organized.',
     metrics: [
       { value: '5', label: 'Different roles' },
-      { value: 'Live', label: 'Status' }
+      { value: 'Complete', label: 'Status' }
     ],
     tags: ['React', 'Node.js', 'Socket.io', 'MySQL', 'RBAC'],
     github: 'https://github.com/asmeretteklu/keno-system',
-    demo: 'https://asmeret-keno.vercel.app', // Example demo link
+    demo: 'https://asmeret-keno.vercel.app',
   },
   {
     id: 'luna',
@@ -54,13 +54,13 @@ export const projects = [
     id: 'registration',
     name: 'Microlink Registration System',
     accent: 'Automation',
-    status: 'live',
-    statusLabel: 'Used by Microlink students',
+    status: 'complete',
+    statusLabel: 'Built for Microlink IT College',
     featured: true,
     description: 'I noticed students at Microlink IT College were waiting up to 7 days just to register and pay fees. I built a system that automated the whole process, cutting the time down to about 5 minutes per student.',
     metrics: [
-      { value: '99%', label: 'Faster registration' },
-      { value: 'Microlink', label: 'Used at' }
+      { value: '7 days → minutes', label: 'Registration time' },
+      { value: 'Microlink', label: 'Built for' }
     ],
     tags: ['HTML/CSS/JS', 'MySQL', 'PHP'],
     github: 'https://github.com/asmeretteklu/microlink-registration',
@@ -121,10 +121,10 @@ export const community = [
   },
 ];
 
-export const businessImpact = [
-  { metric: '40%', label: 'Search Visibility', sub: 'Technical SEO' },
-  { metric: '60%', label: 'Organic Reach', sub: 'Startup Growth' },
-  { metric: '75%', label: 'Engagement', sub: 'Social Strategy' },
+export const currentlyLearning = [
+  { topic: 'Bilingual AI', detail: 'Tigrinya & English NLP', icon: '🧠' },
+  { topic: 'Offline-First', detail: 'Mobile sync for low-connectivity', icon: '📡' },
+  { topic: 'System Design', detail: 'Scalable architecture patterns', icon: '🏗️' },
 ];
 
 export const testimonials = [
@@ -148,4 +148,3 @@ export const starterQuestions = [
   "Tell me about her work at Microlink",
   "What are her core technical skills?"
 ];
-

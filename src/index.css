@@ -1054,3 +1054,226 @@ img {
 .skill-group.writing .skill-item:hover {
   color: var(--lavender);
 }
+
+/* ══════════════════════════════════════════
+   FEATURED GPA STAT — PREMIUM VISUAL WEIGHT
+   ══════════════════════════════════════════ */
+.stat-featured {
+  position: relative;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, rgba(224, 163, 135, 0.08) 0%, rgba(224, 163, 135, 0.02) 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(224, 163, 135, 0.15);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stat-featured::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(224, 163, 135, 0.4), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.stat-featured::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(224, 163, 135, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: gpa-glow 3s ease-in-out infinite alternate;
+}
+@keyframes gpa-glow {
+  0% { opacity: 0.4; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+.stat-featured:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(224, 163, 135, 0.15);
+  border-color: rgba(224, 163, 135, 0.3);
+}
+
+/* ══════════════════════════════════════════
+   STATS BAR — RESPONSIVE GRID
+   ══════════════════════════════════════════ */
+.stats-bar {
+  position: relative;
+}
+.stats-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+/* ══════════════════════════════════════════
+   ENHANCED SECTIONS — VISUAL POLISH
+   ══════════════════════════════════════════ */
+
+/* Smooth section transitions */
+section {
+  transition: opacity 0.5s ease;
+  will-change: opacity;
+}
+
+/* Card hover lift effect — universal */
+.group:hover > .card-lift,
+[class*="rounded-2xl"]:hover {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+/* Improved focus accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 8px;
+  transition: outline-offset 0.2s ease;
+}
+
+/* Subtle text glow for accent elements on hover */
+.text-glow:hover {
+  text-shadow: 0 0 20px rgba(224, 163, 135, 0.3);
+}
+
+/* ══════════════════════════════════════════
+   ENHANCED MOBILE RESPONSIVE — PERFECTED
+   ══════════════════════════════════════════ */
+
+/* Tablet breakpoint */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .stats-bar {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .stat-featured {
+    padding: 1.2rem 1.5rem;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  /* Stats bar refinement */
+  .stats-bar {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .stat-featured {
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+  .stat-featured span:first-child {
+    font-size: 3.5rem !important;
+  }
+
+  /* Better hero heading on mobile */
+  .font-display.text-7xl {
+    font-size: 3.5rem !important;
+  }
+
+  /* Improved touch targets */
+  button,
+  a[href],
+  input,
+  textarea,
+  select {
+    min-height: 44px;
+  }
+
+  /* Better spacing for mobile forms */
+  form input,
+  form textarea {
+    font-size: 16px !important; /* Prevents iOS zoom on focus */
+  }
+
+  /* Photo navigation buttons — easier to tap on mobile */
+  button[aria-label="Previous photo"],
+  button[aria-label="Next photo"] {
+    width: 44px !important;
+    height: 44px !important;
+  }
+}
+
+/* Very small phones — refined */
+@media (max-width: 375px) {
+  .stat-featured span:first-child {
+    font-size: 2.8rem !important;
+  }
+
+  /* Tighter hero spacing */
+  .space-y-8 {
+    gap: 1.25rem;
+  }
+
+  /* CTA buttons stack properly */
+  .flex.flex-wrap.items-center.gap-4 {
+    flex-direction: column;
+    width: 100%;
+  }
+  .flex.flex-wrap.items-center.gap-4 > * {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* Landscape phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  .min-h-screen {
+    min-height: auto !important;
+  }
+}
+
+/* ══════════════════════════════════════════
+   REDUCED MOTION PREFERENCES
+   ══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-pulse,
+  .vinyl-spin {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════
+   PRINT STYLES
+   ══════════════════════════════════════════ */
+@media print {
+  nav,
+  .luna-chat-panel,
+  .luna-float-btn,
+  .now-playing,
+  .cursor-trail,
+  .matrix-bg {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  section {
+    page-break-inside: avoid;
+  }
+}

@@ -9,13 +9,24 @@ const StatCard = ({ stat }) => {
   const { ref, display } = useCountUp(stat.value, 2000);
   
   return (
-    <div ref={ref} className="flex flex-col">
-      <span className="font-display text-4xl sm:text-5xl text-[var(--accent)] font-light leading-none">
+    <div ref={ref} className={`flex flex-col ${stat.featured ? 'stat-featured' : ''}`}>
+      <span className={`font-display leading-none ${
+        stat.featured 
+          ? 'text-5xl sm:text-6xl md:text-7xl text-[var(--accent)] font-normal' 
+          : 'text-4xl sm:text-5xl text-[var(--accent)] font-light'
+      }`}>
         {stat.badge ? stat.value : display}
       </span>
-      <span className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)] mt-2">
+      <span className={`font-body uppercase tracking-[0.2em] text-[var(--text-muted)] mt-2 ${
+        stat.featured ? 'text-xs font-bold' : 'text-[10px]'
+      }`}>
         {stat.label}
       </span>
+      {stat.featured && stat.sub && (
+        <span className="text-[9px] uppercase tracking-widest text-[var(--accent)] mt-1 font-medium opacity-80">
+          {stat.sub}
+        </span>
+      )}
     </div>
   );
 };
@@ -198,12 +209,14 @@ const Hero = () => {
               <button 
                 onClick={prevPhoto}
                 className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-[var(--accent)] hover:text-white transition-all shadow-lg transform -translate-x-2 group-hover:translate-x-0"
+                aria-label="Previous photo"
               >
                 <ChevronLeft size={20} />
               </button>
               <button 
                 onClick={nextPhoto}
                 className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:bg-[var(--accent)] hover:text-white transition-all shadow-lg transform translate-x-2 group-hover:translate-x-0"
+                aria-label="Next photo"
               >
                 <ChevronRight size={20} />
               </button>
@@ -221,6 +234,7 @@ const Hero = () => {
                       key={i}
                       onClick={() => setFrontIndex(i)}
                       className={`w-1.5 h-1.5 rounded-full transition-all ${i === frontIndex ? 'bg-[var(--accent)] w-4' : 'bg-white/20'}`}
+                      aria-label={`Go to photo ${i + 1}`}
                     />
                   ))}
                 </div>
@@ -230,13 +244,13 @@ const Hero = () => {
         </motion.div>
       </motion.div>
 
-      {/* Stats Bar */}
+      {/* Stats Bar — GPA gets premium visual weight */}
       <motion.div 
         variants={item}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
-        className="mt-20 lg:mt-32 grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-y border-[var(--border)]"
+        className="mt-20 lg:mt-32 grid grid-cols-3 gap-8 py-12 border-y border-[var(--border)] stats-bar"
       >
         {stats.map((stat) => (
           <StatCard key={stat.id} stat={stat} />

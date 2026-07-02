@@ -49,10 +49,10 @@ const About = () => {
               I grew up in Mekelle, Tigray, before I owned a phone or a computer. I chose Software Engineering anyway — not because it was practical, but because I couldn't imagine choosing anything else.
             </p>
             <p>
-              I studied through internet blackouts and power cuts. I took handwritten notes when there was nothing else. When war came to Tigray in 2020, I kept studying. By candlelight sometimes. From printed pages when there was no electricity. I graduated in August 2025 with a 3.74 GPA — Great Distinction, top of my cohort.
+              I studied through internet blackouts and power cuts. I took handwritten notes when there was nothing else. When war came to Tigray in 2020, I kept studying. By candlelight sometimes. From printed pages when there was no electricity. I graduated in August 2025 with a 3.74 GPA — Great Distinction.
             </p>
             <p>
-              Since then I have built real systems for real people: a lottery platform running live in production, a student registration system that turned a 7-day process into 5 minutes, and Luna AI — a women's health app built specifically for Ethiopian and African women, powered by Gemini, because the global health tech industry largely forgot we exist.
+              Since then I have built real systems for real people: a lottery platform, complete and ready for deployment, a student registration system that turned a 7-day process into 5 minutes, and Luna AI — a women's health app built specifically for Ethiopian and African women, powered by Gemini, because the global health tech industry largely forgot we exist.
             </p>
             <p>
               I build software that works under difficult conditions because that is the only kind of software that matters where I come from. Slow internet. Power cuts. Users who speak Amharic and Tigrinya. Those are not edge cases to me. They are the main case.
@@ -77,7 +77,7 @@ const About = () => {
           <div className="space-y-8">
             <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
               <h3 className="font-display text-2xl font-light">Academic Progression</h3>
-              <span className="text-[10px] uppercase tracking-widest text-[var(--accent)]">Top of Cohort</span>
+              <span className="text-[10px] uppercase tracking-widest text-[var(--accent)]">Great Distinction</span>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">

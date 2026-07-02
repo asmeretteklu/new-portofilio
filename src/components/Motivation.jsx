@@ -53,7 +53,7 @@ const Motivation = () => {
             I fix things. That is the simplest version of what I do.
           </p>
           <p>
-            The longer version is this: I come from a region where technology has historically been something that happened to us — not something built by us or for us. I want to change that ratio. Every system I deploy in Ethiopia, every woman who uses Luna AI in her own language, every student who registers in 5 minutes instead of 7 days — that is what I am actually building toward.
+            The longer version is this: I come from a region where technology has historically been something that happened to us — not something built by us or for us. I want to change that ratio. Every system I build for Ethiopia, every woman who uses Luna AI in her own language, every student who registers in 5 minutes instead of 7 days — that is what I am actually building toward.
           </p>
           <p className="italic text-[var(--accent)]/80">
             The code is just how I get there.
