@@ -1,42 +1,40 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 export const useCountUp = (endValue, duration = 1500, startOnView = true) => {
   const [count, setCount] = useState(0);
-  const [suffix, setSuffix] = useState('');
   const [hasStarted, setHasStarted] = useState(false);
   const ref = useRef(null);
 
   // Parse the value
-  const parsed = useRef(null);
-  if (!parsed.current) {
+  const parsed = useMemo(() => {
     const str = String(endValue);
     if (str.startsWith('$')) {
-      // e.g. "$15k" -> count to 15, suffix = "k", prefix = "$"
       const num = parseFloat(str.replace(/[$k+]/g, ''));
       const sfx = str.includes('k') ? 'k' : str.includes('+') ? '+' : '';
-      parsed.current = { num, prefix: '$', suffix: sfx, decimals: 0 };
+      return { num, prefix: '$', suffix: sfx, decimals: 0 };
     } else if (str.includes('+')) {
       const num = parseFloat(str.replace('+', ''));
-      parsed.current = { num, prefix: '', suffix: '+', decimals: 0 };
+      return { num, prefix: '', suffix: '+', decimals: 0 };
     } else if (str.includes('.')) {
       const num = parseFloat(str);
       const decimalPlaces = str.split('.')[1]?.length || 2;
-      parsed.current = { num, prefix: '', suffix: '', decimals: decimalPlaces };
+      return { num, prefix: '', suffix: '', decimals: decimalPlaces };
     } else {
       const num = parseFloat(str);
-      parsed.current = { num, prefix: '', suffix: '', decimals: 0 };
+      return { num, prefix: '', suffix: '', decimals: 0 };
     }
-  }
+  }, [endValue]);
 
   const animate = useCallback(() => {
-    const { num, decimals } = parsed.current;
-    const startTime = performance.now();
+    const { num, decimals } = parsed;
     
+    let startTime = null;
     const tick = (currentTime) => {
+      if (!startTime) startTime = currentTime;
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       // easeOut curve
-      const eased = 1 - Math.pow(1 - progress, 3);
+      const eased = 1 - Math.pow(1 - Math.max(0, progress), 3);
       const current = eased * num;
       
       setCount(Number(current.toFixed(decimals)));
@@ -47,7 +45,7 @@ export const useCountUp = (endValue, duration = 1500, startOnView = true) => {
     };
     
     requestAnimationFrame(tick);
-  }, [duration]);
+  }, [duration, parsed]);
 
   useEffect(() => {
     if (!startOnView || !ref.current) return;
@@ -66,8 +64,8 @@ export const useCountUp = (endValue, duration = 1500, startOnView = true) => {
     return () => observer.disconnect();
   }, [startOnView, hasStarted, animate]);
 
-  const { prefix, suffix: sfx } = parsed.current || {};
-  const display = `${prefix || ''}${parsed.current?.decimals > 0 ? count.toFixed(parsed.current.decimals) : count}${sfx || ''}`;
+  const { prefix, suffix: sfx } = parsed;
+  const display = `${prefix || ''}${parsed.decimals > 0 ? count.toFixed(parsed.decimals) : count}${sfx || ''}`;
 
   return { ref, display };
 };

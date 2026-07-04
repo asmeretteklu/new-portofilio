@@ -5,10 +5,10 @@ export const person = {
   tagline: 'I write code to solve real-world problems and tell stories. ✦',
   location: 'Mekelle, Tigray, Ethiopia',
   email: 'asmeretteklu03@gmail.com',
-  phone: '+251 930 679 039',
+  phone: '+251 930 479 039',
   github: 'https://github.com/asmeretteklu',
   linkedin: 'https://linkedin.com/in/asmeretteklu',
-  bio: "Forged in resilience, engineered for impact. ✍️ My journey began with handwritten notes during internet blackouts—a testament to a conviction that technology isn't just code, but a lifeline. 🕯️ Today, I build complete, real-time systems — from lottery infrastructure to AI-driven health ecosystems — designed to work under real-world constraints. 🌍 I build with the intent to solve structural problems, proving that exceptional software can emerge from the toughest constraints. ✨",
+  bio: "Forged in resilience  engineered for impact. My journey began with handwritten notes during internet blackouts a testament to a conviction that technology isn't just code but a lifeline. Today, I build complete real-time systems from lottery infrastructure to AI-driven health ecosystems designed to work under real world constraints. I build with the intent to solve structural problems, proving that exceptional software can emerge from the toughest constraints.",
 };
 
 export const stats = [
@@ -69,30 +69,31 @@ export const projects = [
 ];
 
 export const skills = [
-  { 
-    group: 'Programming Languages', 
-    items: ['JavaScript', 'TypeScript', 'Node.js', 'Python', 'C++'] 
+  {
+    group: 'Programming Languages',
+    items: ['JavaScript', 'TypeScript', 'Node.js', 'Python', 'C++']
   },
-  { 
-    group: 'Frontend & Mobile', 
-    items: ['React', 'React Native', 'Expo', 'HTML/CSS', 'Tailwind CSS'] 
+  {
+    group: 'Frontend & Mobile',
+    items: ['React', 'React Native', 'Expo', 'HTML/CSS', 'Tailwind CSS']
   },
-  { 
-    group: 'Backend & Databases', 
-    items: ['Express.js', 'MySQL', 'Supabase', 'Socket.io', 'REST APIs'] 
+  {
+    group: 'Backend & Databases',
+    items: ['Express.js', 'MySQL', 'Supabase', 'Socket.io', 'REST APIs']
   },
-  { 
-    group: 'Tools & Extras', 
-    items: ['Gemini API', 'Git & GitHub', 'System Architecture', 'SEO'] 
+  {
+    group: 'Tools & Extras',
+    items: ['Gemini API', 'Git & GitHub', 'System Architecture', 'SEO']
   },
 ];
 
 export const certifications = [
   { name: 'Data Analysis Fundamentals', detail: 'Udacity (5 Million Ethiopian Coders Initiative)' },
   { name: 'Programming Fundamentals', detail: 'Udacity (5 Million Ethiopian Coders Initiative)' },
+  { name: 'AI Fundamentals', detail: 'Udacity (5 Million Ethiopian Coders Initiative)' },
   { name: 'Legacy Full Stack', detail: 'freeCodeCamp' },
+  { name: 'JavaScript Algorithms and Data Structures', detail: 'freeCodeCamp' },
   { name: 'Scientific Computing with Python', detail: 'freeCodeCamp' },
-  { name: 'CS50x — Intro to Computer Science', detail: 'Harvard University' },
 ];
 
 export const academicTimeline = [
@@ -104,20 +105,20 @@ export const academicTimeline = [
 ];
 
 export const community = [
-  { 
-    title: 'Mentor', 
-    org: 'Women in Tech Ethiopia', 
-    desc: 'Guiding female developers through bootcamps and career development.' 
+  {
+    title: 'Mentor',
+    org: 'Women in Tech Ethiopia',
+    desc: 'Guiding female developers through bootcamps and career development.'
   },
-  { 
-    title: 'Volunteer Instructor', 
-    org: 'Community Tech Hub, Mekelle', 
-    desc: 'Teaching coding skills to underserved youth in Mekelle.' 
+  {
+    title: 'Volunteer Instructor',
+    org: 'Community Tech Hub, Mekelle',
+    desc: 'Teaching coding skills to underserved youth in Mekelle.'
   },
-  { 
-    title: 'Active Member', 
-    org: 'Ethiopian Developers Community', 
-    desc: 'Open-source collaboration and knowledge sharing.' 
+  {
+    title: 'Active Member',
+    org: 'Ethiopian Developers Community',
+    desc: 'Open-source collaboration and knowledge sharing.'
   },
 ];
 
